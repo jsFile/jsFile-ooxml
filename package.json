@@ -18,7 +18,7 @@
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-jscs": "^2.0.0",
     "grunt-webpack": "^1.0.11",
-    "jsfile": "^0.0.1",
+    "jsfile": "0.0.1",
     "karma": "^0.13.8",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.0",

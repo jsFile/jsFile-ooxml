@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 
             externals: [
                 {
-                    "jsfile": {
+                    "JsFile": {
                         root: "JsFile",
                         commonjs2: "JsFile",
                         commonjs: "JsFile",
