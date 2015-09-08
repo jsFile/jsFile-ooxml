@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 
             stats: {
                 // Configure the console output
-                colors: false,
+                colors: true,
                 modules: true,
                 reasons: true
             },

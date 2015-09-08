@@ -18,6 +18,9 @@ module.exports = function () {
             esnext: true,
             verbose: true
         },
-        src: ['src/**/*.js']
+        src: [
+            'src/**/*.js',
+            'tests/unit/**/*.js'
+        ]
     };
 };

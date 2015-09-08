@@ -4,6 +4,7 @@ module.exports = function (config) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
+        browserNoActivityTimeout: 100000,
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -13,7 +14,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'tests/unit/**/*.spec.js',
-            'tests/filesCache.js'
+            'tests/filesCache.js',
+            {pattern: 'dist/workers/**/*.js', watched: false, include: false, serve: true}
         ],
 
         reporters: ['progress', 'coverage'],

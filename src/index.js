@@ -1,4 +1,4 @@
-import {assign, Engine, defineEngine} from 'JsFile';
+import {Engine, defineEngine} from 'JsFile';
 import createDocument from './reader/createDocument';
 
 /**
@@ -6,14 +6,20 @@ import createDocument from './reader/createDocument';
  * @type {{extension: Array, mime: Array}}
  */
 const files = {
-    extension: [],
-    mime: []
+    extension: ['docx'],
+    mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
 };
 
 class OoxmlEngine extends Engine {
     createDocument = createDocument
 
+    parser = 'parseFromArchive'
+
     files = files
+
+    isWordProcessingDocument () {
+
+    }
 
     static mimeTypes = files.mime.slice(0)
 }
