@@ -1,5 +1,6 @@
-import $ from './../../../../core/dom/index';
-import formatPropertyName from './../../../../core/engine/src/formatPropertyName';
+import JsFile from 'JsFile';
+const {dom: $} = JsFile;
+const {formatPropertyName} = JsFile.Engine;
 
 /**
  *
@@ -10,26 +11,19 @@ import formatPropertyName from './../../../../core/engine/src/formatPropertyName
  */
 export default function (xml) {
     let result = {};
-
     Array.prototype.forEach.call((xml && xml.querySelectorAll('font')) || [], function (node) {
         let name = node.attributes['w:name'] && node.attributes['w:name'].value;
-
         if (name) {
             result[name] = {};
-            
-            $.children(node).forEach(function (node) {
-                let attrValue,
-                    localName = node.localName;
-
+            $.children(node).forEach(({localName, attributes}) => {
                 if (localName === 'sig') {
                     result[name][localName] = {};
 
-                    Array.prototype.forEach.call(node.attributes || [], function (attr) {
-                        result[name][localName][formatPropertyName(attr.name)] = attr.value;
+                    Array.prototype.forEach.call(attributes || [], ({name, value}) => {
+                        result[name][localName][formatPropertyName(name)] = value;
                     });
                 } else {
-                    attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-                    result[name][localName] = attrValue;
+                    result[name][localName] = attributes['w:val'] && attributes['w:val'].value;
                 }
             });
         }

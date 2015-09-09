@@ -13,7 +13,7 @@ const effectPatterns = {
  * @private
  */
 export default function (node = {}) {
-    let attributes = node.attributes || {};
+    let {attributes = {}} = node;
 
     return effectPatterns[attributes['w:val'] && attributes['w:val'].value] || 'none';
 };

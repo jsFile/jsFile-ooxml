@@ -35,11 +35,11 @@ export default function (xml) {
             if (attr && !isNaN(attr.value)) {
                 result.zoom = Number(attr.value);
             }
+
             break;
         case 'proofState':
             attr = node.attributes['w:spelling'];
             result.checkSpelling = Boolean(attr && attr.value === 'clean');
-
             attr = node.attributes['w:grammar'];
             result.checkGrammar = Boolean(attr && attr.value === 'clean');
             break;
@@ -52,18 +52,18 @@ export default function (xml) {
             result.controlCharacterSpacing = Boolean(attr && attr.value !== 'doNotCompress');
             break;
         case 'compat':
-            Array.prototype.forEach.call(node.querySelectorAll('compatSetting'), function (node) {
-                let nameAttr = node.attributes['w:name'],
-                    uriAttr = node.attributes['w:uri'],
-                    valueAttr = node.attributes['w:val'];
-
+            Array.prototype.forEach.call(node.querySelectorAll('compatSetting'), ({attributes}) => {
+                const nameAttr = attributes['w:name'];
+                const uriAttr = attributes['w:uri'];
+                const valueAttr = attributes['w:val'];
                 if (nameAttr && nameAttr.value) {
                     result.compat[nameAttr.value] = {
                         uri: (uriAttr && uriAttr.value) || '',
                         value: (valueAttr && !isNaN(valueAttr.value)) ? Number(valueAttr.value) : 0
                     };
-                }    
+                }
             });
+
             break;
         case 'shapeDefaults':
             subNode = node.querySelector('shapedefaults');
@@ -78,25 +78,21 @@ export default function (xml) {
                 attr = subNode.attributes.spidmax;
                 result.shapeDefaults.defaults.spidMax = (attr && !isNaN(attr.value)) ? Number(attr.value) : 0;
             }
-            
+
             subNode = node.querySelector('shapelayout');
-            
             if (subNode) {
                 attr = subNode.attributes['v:ext'];
                 subNode = subNode.querySelector('idmap');
-                
                 result.shapeDefaults.layout.ext = (attr && attr.value) || '';
                 result.shapeDefaults.layout.idMap = {};
-                
                 if (subNode) {
                     attr = subNode.attributes['v:ext'];
-                    
                     result.shapeDefaults.layout.idMap.ext = (attr && attr.value) || '';
-
                     attr = subNode.attributes.data;
                     result.shapeDefaults.layout.idMap.data = (attr && !isNaN(attr.value)) ? Number(attr.value) : 0;
                 }
             }
+
             break;
         case 'themeFontLang':
             result.themeFontLanguage = parseLanguageNode(node);
@@ -137,7 +133,6 @@ export default function (xml) {
             $.children(node).forEach(function ({localName, attributes = {}}) {
                 const attr = attributes['m:val'];
                 const attrValue = attr && attr.value;
-                
                 switch (localName) {
                 case 'mathFont':
                     result.mathProperties.mathFont = attrValue || '';

@@ -1,25 +1,21 @@
-import Document from './../../../../core/document/index';
-import merge from './../../../../core/jdoc/helpers/merge';
-import $ from './../../../../core/dom/index';
+import JsFile from 'JsFile';
 import getMediaFromRelationship from './getMediaFromRelationship';
 import parseParagraph from './parseParagraph';
 import parseStyleAttribute from './parseStyleAttribute';
-
+const {dom: $, Document} = JsFile;
+const {merge} = JsFile.Engine;
 const denominator = 20;
 
 export default function (node, documentData) {
-    // TODO: parse all information about picture. It needs more .docx samples
 
-    let group,
-        attrValue,
-        result = Document.elementPrototype;
-    
+    // TODO: parse all information about picture. It needs more .docx samples
+    const result = Document.elementPrototype;
     if (!node) {
         return result;
     }
 
-    group = node.querySelector('group');
-
+    const group = node.querySelector('group');
+    let attrValue;
     if (group) {
         attrValue = group.attributes.style && group.attributes.style.value;
 
@@ -29,14 +25,13 @@ export default function (node, documentData) {
             }));
         }
 
-        $.children(group).forEach(function (node, i) {
-            let el = Document.elementPrototype,
-                localName = node.localName,
-                attrValue;
+        $.children(group).forEach((node) => {
+            const el = Document.elementPrototype;
+            const localName = node.localName;
+            let attrValue;
 
             if (localName === 'shape') {
                 attrValue = node.attributes.style && node.attributes.style.value;
-                
                 if (attrValue) {
                     merge(el.style, parseStyleAttribute(
                         {
@@ -58,7 +53,7 @@ export default function (node, documentData) {
                         let media = getMediaFromRelationship(attrValue, documentData);
 
                         if (media) {
-                            el.style.backgroundImage = 'url('' + media.data + '')';
+                            el.style.backgroundImage = `url('${media.data}')`;
                             el.style.backgroundRepeat = 'no-repeat';
                         }
                     }
@@ -77,7 +72,6 @@ export default function (node, documentData) {
                 }
 
                 let textBox = node.querySelector('textbox');
-
                 if (textBox) {
                     let textBoxContent = textBox.querySelector('txbxContent');
 

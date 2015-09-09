@@ -2,7 +2,6 @@ import JsFile from 'JsFile';
 import parseTextProperties from './parseTextProperties';
 import parseDrawing from './parseDrawing';
 import parsePicture from './parsePicture';
-
 const {dom: $, Document} = JsFile;
 const {merge, clone, formatPropertyName, nbHyphen, enDash, space, tabAsSpaces} = JsFile.Engine;
 
@@ -29,8 +28,8 @@ export default function (params = {}) {
                 result.children.push(el);
                 break;
             case 'br':
-                let type = attributes['w:type'] && attributes['w:type'].value,
-                    clear = attributes['w:clear'] && attributes['w:clear'].value;
+                const type = attributes['w:type'] && attributes['w:type'].value;
+                const clear = attributes['w:clear'] && attributes['w:clear'].value;
 
                 if (!type || type === 'textWrapping') {
                     el = Document.elementPrototype;
@@ -41,6 +40,7 @@ export default function (params = {}) {
 
                     result.children.push(el);
                 }
+
                 // TODO: parse types 'column' & 'page', parse clear 'left' & 'right'
                 break;
             case 'drawing':

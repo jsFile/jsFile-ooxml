@@ -10,12 +10,11 @@ export default function (node, documentData) {
         style: {}
     };
 
-    $.children(node).forEach((node) => {
+    $.children(node).forEach(({attributes, localName}) => {
         let attr;
         let attrValue;
-        const {attributes, localName} = node;
 
-        switch(localName) {
+        switch (localName) {
             case 'b':
                 result.style.fontWeight = attributeToBoolean(attributes['w:val']) ? 'normal' : 'bold';
                 break;
@@ -32,12 +31,14 @@ export default function (node, documentData) {
                 if (!attr || attributeToBoolean(attr)) {
                     result.style.textTransform = 'uppercase';
                 }
+
                 break;
             case 'color':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (attrValue) {
                     result.style.color = normalizeColorValue(attrValue);
                 }
+
                 //TODO: parse attributes  themeColor, themeShade, themeTint
                 break;
             case 'dstrike':
@@ -51,12 +52,14 @@ export default function (node, documentData) {
                 if (!attr || attributeToBoolean(attr)) {
                     result.style.textShadow = '-1pt -1pt 1pt #000000';
                 }
+
                 break;
             case 'outline':
                 attr = attributes['w:val'];
                 if (!attr || attributeToBoolean(attr)) {
                     result.style.textStroke = '1pt #000000';
                 }
+
                 break;
             case 'rStyle':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -67,6 +70,7 @@ export default function (node, documentData) {
                 if (usedStyleData) {
                     result = merge(result, usedStyleData.textProperties);
                 }
+
                 break;
             case 'shadow':
                 attr = attributes['w:val'];
@@ -81,12 +85,14 @@ export default function (node, documentData) {
                         value: attrValue / 2
                     };
                 }
+
                 break;
             case 'u':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (attrValue && attrValue !== 'none') {
                     result.style.textDecoration = 'underline';
                 }
+
                 break;
             case 'specVanish':
             case 'vanish':
@@ -98,6 +104,7 @@ export default function (node, documentData) {
                 if (attr) {
                     result.style.verticalAlign = normalizeVerticalAlign(attr);
                 }
+
                 break;
             case 'rtl':
                 result.style.direction = attributeToBoolean(attributes['w:val']) ? 'rtl' : 'ltr';
@@ -107,7 +114,9 @@ export default function (node, documentData) {
                 if (attr && !attributeToBoolean(attr)) {
                     result.style.fontStyle = 'italic';
                 }
+
                 break;
+
             //TODO parse 'w:cs'
             case 'rFonts':
                 attr = attributes['w:ascii'];
@@ -128,6 +137,7 @@ export default function (node, documentData) {
                         }
                     }
                 }
+
                 break;
             case 'oMath':
                 result.math = (attributeToBoolean(attributes['w:val']));
@@ -145,7 +155,6 @@ export default function (node, documentData) {
                 result.fitText = result.fitText || {};
                 attrValue = attributes['w:id'] && attributes['w:id'].value;
                 result.fitText.id = attrValue || null;
-
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 result.fitText.width = !isNaN(attrValue) ? {
                     value: attrValue / 20,
@@ -163,6 +172,7 @@ export default function (node, documentData) {
                     verticalCompress: Boolean(attributes['w:vertCompress']),
                     combineBrackets: attributes['w:combineBrackets'] && attributes['w:combineBrackets'].value
                 };
+
                 break;
             case 'position':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -172,6 +182,7 @@ export default function (node, documentData) {
                         unit: 'pt'
                     };
                 }
+
                 break;
             case 'kern':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -181,6 +192,7 @@ export default function (node, documentData) {
                         unit: 'pt'
                     };
                 }
+
                 break;
             case 'w':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;

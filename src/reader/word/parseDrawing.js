@@ -128,6 +128,7 @@ export default function (node, documentData) {
                             unit: 'emu'
                         };
                     }
+
                     break;
                 case 'r':
                     if (!isNaN(value)) {
@@ -136,6 +137,7 @@ export default function (node, documentData) {
                             unit: 'emu'
                         };
                     }
+
                     break;
                 case 'b':
                     if (!isNaN(value)) {
@@ -144,6 +146,7 @@ export default function (node, documentData) {
                             unit: 'emu'
                         };
                     }
+
                     break;
                 case 'top':
                     if (!isNaN(value)) {
@@ -152,6 +155,7 @@ export default function (node, documentData) {
                             unit: 'emu'
                         };
                     }
+
                     break;
                 default:
                     inline.effectExtent[attrName] = value;

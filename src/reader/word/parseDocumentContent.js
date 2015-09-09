@@ -27,6 +27,7 @@ export default function (params) {
                 pagePrototype.style = pagePrototype.style || {};
                 pagePrototype.style.backgroundColor = this.normalizeColorValue(attrValue);
             }
+
             // TODO: parse themeColor, themeShade, themeTint attributes
         }
 
@@ -51,6 +52,7 @@ export default function (params) {
                 page.children = response[0];
                 page.style = documentData.styles.defaults.sectionProperties &&
                 documentData.styles.defaults.sectionProperties.style || {};
+
                 //TODO: add page break
                 // because now it's only 1 page for all content
                 delete page.style.height;

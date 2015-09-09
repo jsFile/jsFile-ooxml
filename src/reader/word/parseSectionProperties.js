@@ -122,6 +122,7 @@ export default function (node = {}, documentData = {}) {
                         unit: 'pt'
                     };
                 }
+
                 break;
         }
     });

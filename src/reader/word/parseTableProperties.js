@@ -1,8 +1,8 @@
 import JsFile from 'JsFile';
 import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
-const {dom: $, Document} = JsFile;
-const {merge, normalizeColorValue, formatPropertyName, normalizeVerticalAlign, attributeToBoolean} = JsFile.Engine;
+const {dom: $} = JsFile;
+const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
 
 export default function (node) {
     let result = {
@@ -14,7 +14,7 @@ export default function (node) {
         let type;
         const {attributes, localName} = node;
 
-        switch(localName) {
+        switch (localName) {
             case 'jc':
                 attrValue = normalizeSideValue(attributes['w:val'] && attributes['w:val'].value);
                 if (attrValue === 'left' || attrValue === 'right') {
@@ -50,6 +50,7 @@ export default function (node) {
                         merge(result.colProperties.style, parseBorderProperties(verticalBorder));
                     }
                 }
+
                 break;
             case 'tblCaption':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -111,6 +112,7 @@ export default function (node) {
                 }
 
                 break;
+
             // TODO: handle tblLook, tblOverlap, tblpPr
             case 'tblStyle':
                 result.styleId = attributes['w:val'] && attributes['w:val'].value;

@@ -8,11 +8,10 @@
 export default function (xml) {
     let result = {};
 
-    Array.prototype.forEach.call((xml && xml.querySelectorAll('Relationship')) || [], (node) => {
-        let attrs = node.attributes || {},
-            idAttribute = attrs.Id,
-            typeAttribute = attrs.Type,
-            targetAttribute = attrs.Target;
+    Array.prototype.forEach.call((xml && xml.querySelectorAll('Relationship')) || [], ({attributes = {}}) => {
+        const idAttribute = attributes.Id;
+        const typeAttribute = attributes.Type;
+        const targetAttribute = attributes.Target;
 
         if (idAttribute && typeAttribute && targetAttribute) {
             result[idAttribute.value] = {

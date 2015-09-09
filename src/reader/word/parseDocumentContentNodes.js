@@ -1,14 +1,14 @@
 import parseParagraph from './parseParagraph';
 import parseTable from './parseTable';
-import Document from './../../../../core/document/index';
+import {Document} from 'JsFile';
 
 function parse(params) {
-    let listElement,
-        queue = [[]],
-        push2Result = function (response) {
-            queue[0].push(response[0] || response);
-        },
-        {nodes = [], documentData = {}} = params;
+    let listElement;
+    const queue = [[]];
+    const {nodes = [], documentData = {}} = params;
+    const push2Result = function (response) {
+        queue[0].push(response[0] || response);
+    };
 
     nodes.forEach(node => {
         let localName = node.localName;
@@ -20,8 +20,8 @@ function parse(params) {
                 parseDocumentContentNodes: parse
             }).then(push2Result));
         } else if (localName === 'p') {
-            let el = parseParagraph({node, documentData}),
-                isListItem = el.properties.tagName === 'LI';
+            const el = parseParagraph({node, documentData});
+            const isListItem = el.properties.tagName === 'LI';
 
             // if it's a list item
             if (isListItem) {

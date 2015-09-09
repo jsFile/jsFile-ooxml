@@ -3,7 +3,6 @@ import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
 const {dom: $} = JsFile;
 const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
-
 const verticalAlignValues = {
     bottom: 'bottom',
     top: 'top',
@@ -20,14 +19,16 @@ export default function (node) {
         let attrValue;
         const {localName, attributes} = node;
 
-        switch(localName) {
+        switch (localName) {
             case 'gridSpan':
                 attrValue = Number(attributes['w:val'] && attributes['w:val'].value);
 
                 if (attrValue && !isNaN(attrValue)) {
                     result.properties.colSpan = attrValue;
                 }
+
                 break;
+
             // TODO: parse hideMark. Maybe as tr.display = none
             case 'noWrap':
                 result.style.whiteSpace = 'nowrap';
@@ -37,12 +38,12 @@ export default function (node) {
                 if (attrValue) {
                     result.style.backgroundColor = normalizeColorValue(node);
                 }
+
                 break;
             case 'tcBorders':
                 merge(result.style, parseBorderProperties(node));
-
-                let horizontalBorder = node.querySelector('insideH'),
-                    verticalBorder = node.querySelector('insideV');
+                const horizontalBorder = node.querySelector('insideH');
+                const verticalBorder = node.querySelector('insideV');
 
                 if (horizontalBorder || verticalBorder) {
                     if (horizontalBorder) {
@@ -53,7 +54,9 @@ export default function (node) {
                         merge(result.style, parseBorderProperties(verticalBorder));
                     }
                 }
+
                 break;
+
             // TODO: parse tcFitText
             case 'tcMar':
                 $.children(node).forEach(({localName, attributes}) => {
@@ -93,7 +96,9 @@ export default function (node) {
                 if (attrValue) {
                     result.style.verticalAlign = attrValue;
                 }
+
                 break;
+
             // TODO: parse vMerge element
         }
     });

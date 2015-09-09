@@ -1,44 +1,40 @@
-import $ from './../../../../core/dom/index';
-import Document from './../../../../core/document/index';
-import merge from './../../../../core/jdoc/helpers/merge';
-import clone from './../../../../core/jdoc/helpers/clone';
+import JsFile from 'JsFile';
 import parseTableProperties from './parseTableProperties';
 import parseTableRowProperties from './parseTableRowProperties';
 import parseTableColProperties from './parseTableColProperties';
+const {dom: $, Document} = JsFile;
+const {merge, clone} = JsFile.Engine;
 
 /**
  *
  * @param params
  * @returns {*}
  */
-export default params => {
-    let {node, documentData, style, parseDocumentContentNodes} = params,
-        tableProperties,
-        rowProperties,
-        thead,
-        colProperties,
-        tbody = Document.elementPrototype,
-        queue = [Document.elementPrototype];
+export default (params) => {
+    const {node, documentData, style, parseDocumentContentNodes} = params;
+    if (!node || !documentData) {
+        return Promise.reject();
+    }
 
+    let rowProperties;
+    let thead;
+    const tbody = Document.elementPrototype;
+    const queue = [Document.elementPrototype];
+    const tableProperties = clone(documentData.styles.defaults.tableProperties) || {};
+    const colProperties = clone(tableProperties.colProperties);
     queue[0].properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
 
-    if (!node || !documentData) {
-        return reject();
-    }
-    tableProperties = clone(documentData.styles.defaults.tableProperties) || {};
-    colProperties = clone(tableProperties.colProperties);
-
-    $.children(node).forEach(node => {
-        let localName = node.localName;
+    $.children(node).forEach((node) => {
+        const localName = node.localName;
 
         if (localName === 'tblPr') {
             merge(tableProperties, parseTableProperties(node));
             merge(colProperties, tableProperties.colProperties);
         } else if (localName === 'tblGrid') {
-            Array.prototype.forEach.call(node.querySelectorAll('gridCol'), node => {
-                let el = Document.elementPrototype,
-                    attrValue = node.attributes['w:w'] && node.attributes['w:w'].value;
+            Array.prototype.forEach.call(node.querySelectorAll('gridCol'), ({attributes}) => {
+                const el = Document.elementPrototype;
+                const attrValue = attributes['w:w'] && attributes['w:w'].value;
 
                 el.properties.tagName = 'COL';
                 if (attrValue) {
@@ -51,15 +47,15 @@ export default params => {
                 queue[0].children.push(el);
             });
         } else if (localName === 'tr') {
-            let row = Document.elementPrototype,
-                localColProperties = colProperties;
+            const row = Document.elementPrototype;
+            let localColProperties = colProperties;
             row.properties.tagName = 'TR';
 
             //clear old value
             rowProperties = {};
 
-            $.children(node).forEach(node => {
-                let localName = node.localName;
+            $.children(node).forEach((node) => {
+                const localName = node.localName;
 
                 // TODO: parse tblPrEx (Table Property Exceptions)
                 if (localName === 'trPr') {
@@ -68,8 +64,8 @@ export default params => {
                     merge(tableProperties, rowProperties.tableProperties);
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
-                    let col = Document.elementPrototype,
-                        nodes = $.children(node);
+                    const col = Document.elementPrototype;
+                    const nodes = $.children(node);
                     col.properties.tagName = 'TD';
 
                     if (nodes[0]) {
@@ -107,6 +103,5 @@ export default params => {
     }
 
     queue[0].children.push(tbody);
-
     return Promise.all(queue);
 };

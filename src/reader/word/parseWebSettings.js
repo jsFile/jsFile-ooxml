@@ -1,5 +1,6 @@
-import $ from './../../../../core/dom/index';
-import attributeToBoolean from './../../../../core/engine/src/attributeToBoolean';
+import JsFile from 'JsFile';
+const {dom: $} = JsFile;
+const {attributeToBoolean} = JsFile.Engine;
 
 /**
  * @description Parsing document web settings
@@ -8,9 +9,9 @@ import attributeToBoolean from './../../../../core/engine/src/attributeToBoolean
  * @private
  */
 export default function (xml) {
-    let result = {};
+    const result = {};
 
-    $.children(xml && xml.querySelector('webSettings')).forEach(function (node) {
+    $.children(xml && xml.querySelector('webSettings')).forEach((node) => {
         result[node.localName] = attributeToBoolean(node.attributes['w:val']);
     });
 

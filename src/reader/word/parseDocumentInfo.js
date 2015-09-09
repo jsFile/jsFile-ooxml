@@ -1,5 +1,4 @@
-import JsFile from 'JsFile';
-const {dom: $} = JsFile;
+import {dom as $} from 'JsFile';
 
 /**
  *
@@ -11,17 +10,15 @@ const {dom: $} = JsFile;
 export default function (xml) {
     let result = {};
 
-    $.children(xml && xml.querySelector('coreProperties')).forEach(function (node) {
-        let value,
-            textContent = node.textContent || '',
-            localName = node.localName;
+    $.children(xml && xml.querySelector('coreProperties')).forEach(({textContent, localName}) => {
+        let value;
 
         if (localName === 'created' || localName === 'modified') {
             value = (textContent && new Date(textContent)) || null;
         } else if (!isNaN(textContent)) {
             value = Number(textContent);
         } else {
-            value = textContent;
+            value = textContent || '';
         }
 
         result[localName] = value;

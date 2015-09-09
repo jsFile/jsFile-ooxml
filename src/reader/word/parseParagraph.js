@@ -1,10 +1,9 @@
-import $ from './../../../../core/dom/index';
-import Document from './../../../../core/document/index';
-import merge from './../../../../core/jdoc/helpers/merge';
-import clone from './../../../../core/jdoc/helpers/clone';
+import JsFile from 'JsFile';
 import parseParagraphProperties from './parseParagraphProperties';
 import getRelationship from './getRelationship';
 import parseText from './parseText';
+const {dom: $, Document} = JsFile;
+const {merge, clone} = JsFile.Engine;
 
 /**
  *
@@ -12,38 +11,37 @@ import parseText from './parseText';
  * @returns {*}
  */
 export default function (params) {
-    let {node, documentData, style} = params,
-        paragraphProperties,
-        result = Document.elementPrototype;
-
+    const {node, documentData, style} = params;
+    const result = Document.elementPrototype;
+    let paragraphProperties;
     result.properties.tagName = 'P';
 
     if (!node || !documentData) {
         return result;
     }
+
     paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
     merge(result.style, paragraphProperties.style, style);
 
-    $.children(node).forEach(node => {
-        let attrValue,
-            el,
-            localName = node.localName;
+    $.children(node).forEach((node) => {
+        let attrValue;
+        let el;
+        const localName = node.localName;
 
         switch (localName) {
             case 'bookmarkStart':
                 attrValue = node.attributes['w:name'] && node.attributes['w:name'].value;
-
                 if (attrValue) {
                     el = Document.elementPrototype;
                     el.properties.tagName = 'A';
                     el.properties.name = attrValue;
                     result.children.push(el);
                 }
+
                 break;
             case 'pPr':
                 let props = parseParagraphProperties(node, documentData);
                 merge(paragraphProperties, props);
-
                 if (paragraphProperties.isListItem) {
                     /**
                      * @description Clear paragraph styles
@@ -52,26 +50,23 @@ export default function (params) {
                     result.style = {};
                     paragraphProperties.style = props.style;
                 }
+
                 merge(result.style, paragraphProperties.style);
                 break;
             case 'hyperlink':
-                let href = '#',
-                    relationship;
+                let href = '#';
 
                 el = Document.elementPrototype;
                 el.properties.tagName = 'A';
                 attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
+                const relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
 
-                relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
-
-                $.children(node).forEach(function (node) {
-                    let child = parseText({
+                $.children(node).forEach((node) => {
+                    el.children.push(parseText({
                         node,
                         documentData,
                         style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
-                    });
-
-                    el.children.push(child);
+                    }));
                 });
 
                 if (relationship) {
@@ -83,17 +78,16 @@ export default function (params) {
 
                 el.properties.href = href;
                 result.children.push(el);
-
                 break;
             case 'r':
-                el = parseText({
+                result.children.push(parseText({
                     node,
                     documentData,
                     style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
-                });
+                }));
 
-                result.children.push(el);
                 break;
+
             // ignore fldSimple node
         }
     });

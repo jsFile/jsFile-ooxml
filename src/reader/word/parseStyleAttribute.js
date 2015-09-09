@@ -1,20 +1,21 @@
-import cropUnit from './../../../../core/engine/src/cropUnit';
-
+import {Engine} from 'JsFile';
+const {cropUnit} = Engine;
+const sides = ['width', 'height', 'left', 'top'];
 /**
  *
  * @param params
  * @returns {*}
  */
 export default function (params) {
-    let styles = {},
-        {value = '', denominator = 1} = params;
+    let styles = {};
+    let {value = '', denominator = 1} = params;
 
-    String(value || '').split(';').forEach(function (rule) {
-        let stylePartitionData = rule.split(':'),
-            name = stylePartitionData[0],
-            value = stylePartitionData[1] || '';
+    String(value).split(';').forEach((rule) => {
+        const stylePartitionData = rule.split(':');
+        const name = stylePartitionData[0];
+        const value = stylePartitionData[1] || '';
 
-        if (name === 'width' || name === 'height' || name === 'left' || name === 'top') {
+        if (sides.indexOf(name) >= 0) {
             styles[name] = {
                 value: cropUnit(value.trim()) / denominator,
                 unit: 'pt'
