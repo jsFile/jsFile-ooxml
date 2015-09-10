@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiJsonSchema from 'chai-json-schema';
 import schemas from 'jsfile-schemas';
 import JsFile from 'JsFile';
-import OoxmlEngine from './../../dist/jsfile-ooxml.js';
+import OoxmlEngine from './../../src/index';
 
 chai.use(chaiJsonSchema);
 const assert = chai.assert;
@@ -16,7 +16,7 @@ describe('jsFile-ooxml', () => {
     });
 
     it('should exist', () => {
-        assert.isFunction(TxtEngine);
+        assert.isFunction(OoxmlEngine);
     });
 
     it('should read the file', () => {
@@ -35,7 +35,8 @@ describe('jsFile-ooxml', () => {
                     assert.instanceOf(result, JsFile.Document, name);
                     const json = result.json();
                     assert.jsonSchema(json, documentSchema, name);
-                    assert.notEqual(json.length, 0, `File ${name} shouldn't be empty`);
+                    const isEmpty = !/textContent":"[^"]+"/.test(JSON.stringify(json));
+                    assert.isFalse(isEmpty, `File ${name} shouldn't be empty`);
                 }
             }
         }

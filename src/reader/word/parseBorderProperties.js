@@ -2,6 +2,7 @@ import JsFile from 'JsFile';
 import prepareLineStyle from './prepareLineStyle';
 import normalizeSideValue from './normalizeSideValue';
 const {dom: $} = JsFile;
+const {normalizeColorValue} = JsFile.Engine;
 
 export default function (node) {
     const result = {};
@@ -15,7 +16,7 @@ export default function (node) {
 
         if (side && color) {
             let borderName = 'border' + side;
-            result[borderName + 'Color'] = this.normalizeColorValue(color);
+            result[borderName + 'Color'] = normalizeColorValue(color);
             result[borderName + 'Style'] = style;
             result[borderName + 'Width'] = {
                 value: width / 8,

@@ -76,14 +76,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _readerCreateDocument2 = _interopRequireDefault(_readerCreateDocument);
 
+	var wordProcessingFiles = {
+	    extension: ['docx'],
+	    mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
+	};
+
 	/**
 	 * @description Supported files by engine
 	 * @type {{extension: Array, mime: Array}}
 	 */
 	var files = {
-	    extension: ['docx'],
-	    mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
+	    extension: [],
+	    mime: []
 	};
+
+	[wordProcessingFiles].forEach(function (_ref) {
+	    var extension = _ref.extension;
+	    var mime = _ref.mime;
+
+	    files.extension.push.apply(files.extension, extension);
+	    files.mime.push.apply(files.mime, mime);
+	});
 
 	var OoxmlEngine = (function (_Engine) {
 	    _inherits(OoxmlEngine, _Engine);
@@ -94,14 +107,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _get(Object.getPrototypeOf(OoxmlEngine.prototype), 'constructor', this).apply(this, arguments);
 
 	        this.createDocument = _readerCreateDocument2['default'];
-	        this.parser = 'parseFromArchive';
+	        this.parser = 'readArchive';
 	        this.files = files;
 	    }
 
 	    _createClass(OoxmlEngine, [{
 	        key: 'isWordProcessingDocument',
-	        value: function isWordProcessingDocument() {}
+	        value: function isWordProcessingDocument() {
+	            return Boolean(this.file && _JsFile.Engine.validateFile(this.file, wordProcessingFiles));
+	        }
 	    }], [{
+	        key: 'test',
+	        value: function test(file) {
+	            return Boolean(file && _JsFile.Engine.validateFile(file, files));
+	        }
+	    }, {
 	        key: 'mimeTypes',
 	        value: files.mime.slice(0),
 	        enumerable: true
@@ -160,6 +180,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	var _JsFile = __webpack_require__(1);
+
+	var _JsFile2 = _interopRequireDefault(_JsFile);
+
 	var _parseRelationships = __webpack_require__(4);
 
 	var _parseRelationships2 = _interopRequireDefault(_parseRelationships);
@@ -195,6 +219,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _parseDocumentContent = __webpack_require__(22);
 
 	var _parseDocumentContent2 = _interopRequireDefault(_parseDocumentContent);
+
+	var normalizeDataUri = _JsFile2['default'].Engine.normalizeDataUri;
 
 	/**
 	 *
@@ -240,7 +266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (isMediaSource) {
 	                    documentData.media[filename] = {
 	                        fileData: fileEntry,
-	                        data: this.normalizeDataUri(result, filename)
+	                        data: normalizeDataUri(result, filename)
 	                    };
 	                } else {
 	                    xml = domParser.parseFromString(result, 'application/xml');
@@ -274,7 +300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, this);
 
 	        Promise.all(queue).then((function () {
-	            (0, _parseDocumentContent2['default'])({
+	            _parseDocumentContent2['default'].call(this, {
 	                xml: document,
 	                documentData: documentData,
 	                fileName: fileName
@@ -1658,6 +1684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
 	var $ = _JsFile2['default'].dom;
+	var normalizeColorValue = _JsFile2['default'].Engine.normalizeColorValue;
 
 	exports['default'] = function (node) {
 	    var _this = this;
@@ -1676,7 +1703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (side && color) {
 	            var borderName = 'border' + side;
-	            result[borderName + 'Color'] = _this.normalizeColorValue(color);
+	            result[borderName + 'Color'] = normalizeColorValue(color);
 	            result[borderName + 'Style'] = style;
 	            result[borderName + 'Width'] = {
 	                value: width / 8,
@@ -1692,13 +1719,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _JsFile = __webpack_require__(1);
+
+	var _JsFile2 = _interopRequireDefault(_JsFile);
+
+	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
+
 	var sides = {
 	    top: 'top',
 	    bottom: 'bottom',
@@ -1709,7 +1745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports['default'] = function (value) {
-	    var capitalizedValue = this.formatPropertyName(value, { capitalize: true });
+	    var capitalizedValue = formatPropertyName(value, { capitalize: true });
 	    return sides[capitalizedValue] || capitalizedValue;
 	};
 
@@ -1917,6 +1953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
+	var normalizeColorValue = _JsFile2['default'].Engine.normalizeColorValue;
 
 	/**
 	 * @description Parsing content of document
@@ -1933,6 +1970,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _params$fileName = params.fileName;
 	        var fileName = _params$fileName === undefined ? '' : _params$fileName;
 
+	        var node = xml && xml.querySelector('parsererror');
+	        if (node) {
+	            return reject(this.errors.invalidReadFile);
+	        }
+
 	        var result = {
 	            name: fileName,
 	            wordsCount: documentData.applicationInfo && documentData.applicationInfo.wordsCount || null,
@@ -1940,13 +1982,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            pages: []
 	        };
 	        var pagePrototype = {};
-	        var node = xml && xml.querySelector('background');
+	        node = xml && xml.querySelector('background');
 
 	        if (node) {
 	            var attrValue = node.attributes['w:color'] && node.attributes['w:color'].value;
 	            if (attrValue) {
 	                pagePrototype.style = pagePrototype.style || {};
-	                pagePrototype.style.backgroundColor = this.normalizeColorValue(attrValue);
+	                pagePrototype.style.backgroundColor = normalizeColorValue(attrValue);
 	            }
 
 	            // TODO: parse themeColor, themeShade, themeTint attributes

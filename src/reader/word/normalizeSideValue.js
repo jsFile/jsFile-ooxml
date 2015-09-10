@@ -1,3 +1,5 @@
+import JsFile from 'JsFile';
+const {formatPropertyName} = JsFile.Engine;
 const sides = {
     top: 'top',
     bottom: 'bottom',
@@ -8,6 +10,6 @@ const sides = {
 };
 
 export default function (value) {
-    let capitalizedValue = this.formatPropertyName(value, {capitalize: true});
+    let capitalizedValue = formatPropertyName(value, {capitalize: true});
     return sides[capitalizedValue] || capitalizedValue;
 }

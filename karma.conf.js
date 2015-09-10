@@ -31,7 +31,7 @@ module.exports = function (config) {
 
 
         preprocessors: {
-            'dist/jsfile.js': ['coverage'],
+            'src/**/*.js': ['coverage'],
             'tests/unit/**/*.spec.js': ['webpack']
         },
 
@@ -39,7 +39,7 @@ module.exports = function (config) {
             module: {
                 loaders: [
                     {
-                        test: /\.spec\.js/,
+                        test: /(spec|src)/,
                         loader: 'babel',
                         query: {
                             stage: 0

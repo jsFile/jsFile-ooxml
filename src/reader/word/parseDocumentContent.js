@@ -2,6 +2,7 @@ import JsFile from 'JsFile';
 import parseSectionProperties from './parseSectionProperties';
 import parseDocumentContentNodes from './parseDocumentContentNodes';
 const {dom: $, Document} = JsFile;
+const {normalizeColorValue, errors: {invalidReadFile}} = JsFile.Engine;
 
 /**
  * @description Parsing content of document
@@ -12,6 +13,11 @@ const {dom: $, Document} = JsFile;
 export default function (params) {
     return new Promise(function (resolve, reject) {
         const {xml, documentData = {}, fileName = ''} = params;
+        let node = xml && xml.querySelector('parsererror');
+        if (node) {
+            return reject(new Error(invalidReadFile));
+        }
+
         const result = {
             name: fileName,
             wordsCount: (documentData.applicationInfo && documentData.applicationInfo.wordsCount) || null,
@@ -19,13 +25,13 @@ export default function (params) {
             pages: []
         };
         const pagePrototype = {};
-        let node = xml && xml.querySelector('background');
+        node = xml && xml.querySelector('background');
 
         if (node) {
             const attrValue = node.attributes['w:color'] && node.attributes['w:color'].value;
             if (attrValue) {
                 pagePrototype.style = pagePrototype.style || {};
-                pagePrototype.style.backgroundColor = this.normalizeColorValue(attrValue);
+                pagePrototype.style.backgroundColor = normalizeColorValue(attrValue);
             }
 
             // TODO: parse themeColor, themeShade, themeTint attributes

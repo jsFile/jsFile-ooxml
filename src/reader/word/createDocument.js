@@ -1,3 +1,4 @@
+import JsFile from 'JsFile';
 import parseRelationships from './parseRelationships';
 import parseApplicationInfo from './parseApplicationInfo';
 import parseDocumentInfo from './parseDocumentInfo';
@@ -7,6 +8,7 @@ import parseDocumentSettings from './parseDocumentSettings';
 import parseDocumentThemes from './parseDocumentThemes';
 import parseDocumentStyles from './parseDocumentStyles';
 import parseDocumentContent from './parseDocumentContent';
+const {normalizeDataUri} = JsFile.Engine;
 
 /**
  *
@@ -51,7 +53,7 @@ export default function (filesEntry) {
                 if (isMediaSource) {
                     documentData.media[filename] = {
                         fileData: fileEntry,
-                        data: this.normalizeDataUri(result, filename)
+                        data: normalizeDataUri(result, filename)
                     };
                 } else {
                     xml = domParser.parseFromString(result, 'application/xml');
