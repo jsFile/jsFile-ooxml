@@ -2,7 +2,8 @@ import JsFile from 'JsFile';
 import parseTextProperties from './parseTextProperties';
 import parseParagraphProperties from './parseParagraphProperties';
 import parseTableProperties from './parseTableProperties';
-const {dom: $, formatPropertyName, attributeToBoolean} = JsFile;
+const {dom: $} = JsFile;
+const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
 /**
  * @description Parsing document styles

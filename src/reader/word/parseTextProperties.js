@@ -2,8 +2,9 @@ import JsFile from 'JsFile';
 import parseStyleEffectProperty from './parseStyleEffectProperty';
 import parseEmphasis from './parseEmphasis';
 import parseLanguageNode from './parseLanguageNode';
+import normalizeVerticalAlign from './normalizeVerticalAlign';
 const {dom: $} = JsFile;
-const {merge, attributeToBoolean, normalizeColorValue, normalizeVerticalAlign} = JsFile.Engine;
+const {merge, attributeToBoolean, normalizeColorValue} = JsFile.Engine;
 
 export default function (node, documentData) {
     let result = {

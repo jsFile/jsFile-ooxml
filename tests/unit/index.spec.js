@@ -19,7 +19,8 @@ describe('jsFile-ooxml', () => {
         assert.isFunction(OoxmlEngine);
     });
 
-    it('should read the file', () => {
+    it('should read the file', function () {
+        this.timeout(15000);
         const queue = [];
         for (let name in files) {
             if (files.hasOwnProperty(name)) {

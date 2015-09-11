@@ -9,7 +9,7 @@ export default function (node) {
 
     $.children(node).forEach(({localName, attributes}) => {
         localName = localName || '';
-        const side = this.normalizeSideValue(localName);
+        const side = normalizeSideValue(localName);
         const color = attributes['w:color'] && attributes['w:color'].value;
         const style = prepareLineStyle(attributes['w:val'] && attributes['w:val'].value);
         const width = attributes['w:sz'] && attributes['w:sz'].value || 0;

@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import getMediaFromRelationship from './getMediaFromRelationship';
 import convertEmu from './convertEmu';
 const {Document} = JsFile;
-const {formatPropertyName, attributeToBoolean} = JsFile.Engine.prototype;
+const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
 export default function (node, documentData) {
     let result = Document.elementPrototype;

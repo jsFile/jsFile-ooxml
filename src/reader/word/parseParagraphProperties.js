@@ -3,8 +3,9 @@ import prepareLineStyle from './prepareLineStyle';
 import parseTextProperties from './parseTextProperties';
 import normalizeLineHeight from './normalizeLineHeight';
 import parseBorderProperties from './parseBorderProperties';
+import normalizeVerticalAlign from './normalizeVerticalAlign';
 const {dom: $} = JsFile;
-const {merge, normalizeColorValue, normalizeVerticalAlign} = JsFile.Engine;
+const {merge, normalizeColorValue} = JsFile.Engine;
 const alignmentValues = ['left', 'right', 'center'];
 
 export default function (node, documentData) {

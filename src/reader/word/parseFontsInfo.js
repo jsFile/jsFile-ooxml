@@ -19,9 +19,9 @@ export default function (xml) {
                 if (localName === 'sig') {
                     result[name][localName] = {};
 
-                    Array.prototype.forEach.call(attributes || [], ({name, value}) => {
-                        result[name][localName][formatPropertyName(name)] = value;
-                    });
+                    Array.prototype.forEach.call(attributes || [], function ({name, value}) {
+                        this[formatPropertyName(name)] = value;
+                    }, result[name][localName]);
                 } else {
                     result[name][localName] = attributes['w:val'] && attributes['w:val'].value;
                 }

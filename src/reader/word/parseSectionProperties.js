@@ -1,5 +1,6 @@
 import JsFile from 'JsFile';
-const {dom: $, attributeToBoolean, formatPropertyName} = JsFile.Engine;
+const {dom: $} = JsFile;
+const {attributeToBoolean, formatPropertyName} = JsFile.Engine;
 
 export default function (node = {}, documentData = {}) {
     let attrValue;
@@ -127,7 +128,7 @@ export default function (node = {}, documentData = {}) {
         }
     });
 
-    Array.prototype.forEach.call(attributes, function ({name, value}) {
+    Array.prototype.forEach.call(node.attributes || [], ({name, value}) => {
         if (value) {
             properties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
         }
