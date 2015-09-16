@@ -32,3 +32,4 @@ DS_Store
 .git
 npm-debug.log
 tests/filesCache.js
+dist/workers
