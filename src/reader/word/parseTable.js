@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import parseTableProperties from './parseTableProperties';
 import parseTableRowProperties from './parseTableRowProperties';
 import parseTableColProperties from './parseTableColProperties';
-const {dom: $, Document} = JsFile;
+const {Document} = JsFile;
 const {merge, clone} = JsFile.Engine;
 
 /**
@@ -25,7 +25,7 @@ export default (params) => {
     queue[0].properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
 
-    $.children(node).forEach((node) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         const localName = node.localName;
 
         if (localName === 'tblPr') {
@@ -54,7 +54,7 @@ export default (params) => {
             //clear old value
             rowProperties = {};
 
-            $.children(node).forEach((node) => {
+            [].forEach.call(node && node.childNodes || [], (node) => {
                 const localName = node.localName;
 
                 // TODO: parse tblPrEx (Table Property Exceptions)
@@ -65,7 +65,7 @@ export default (params) => {
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
                     const col = Document.elementPrototype;
-                    const nodes = $.children(node);
+                    const nodes = [].slice.call(node.childNodes || [], 0);
                     col.properties.tagName = 'TD';
 
                     if (nodes[0]) {

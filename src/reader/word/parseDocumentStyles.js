@@ -2,7 +2,6 @@ import JsFile from 'JsFile';
 import parseTextProperties from './parseTextProperties';
 import parseParagraphProperties from './parseParagraphProperties';
 import parseTableProperties from './parseTableProperties';
-const {dom: $} = JsFile;
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
 /**
@@ -23,7 +22,8 @@ export default function (xml) {
         usedStyles: {}
     };
 
-    $.children(xml.querySelector('styles')).forEach(function (node) {
+    const node = xml.querySelector('styles');
+    [].forEach.call(node && node.childNodes || [], function (node) {
         let localName = node.localName;
         if (localName === 'docDefaults') {
             let prNode = node.querySelector('rPrDefault rPr');

@@ -1,13 +1,12 @@
 import JsFile from 'JsFile';
 import prepareLineStyle from './prepareLineStyle';
 import normalizeSideValue from './normalizeSideValue';
-const {dom: $} = JsFile;
 const {normalizeColorValue} = JsFile.Engine;
 
 export default function (node) {
     const result = {};
 
-    $.children(node).forEach(({localName, attributes}) => {
+    [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
         localName = localName || '';
         const side = normalizeSideValue(localName);
         const color = attributes['w:color'] && attributes['w:color'].value;

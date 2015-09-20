@@ -3,7 +3,6 @@ import parseStyleEffectProperty from './parseStyleEffectProperty';
 import parseEmphasis from './parseEmphasis';
 import parseLanguageNode from './parseLanguageNode';
 import normalizeVerticalAlign from './normalizeVerticalAlign';
-const {dom: $} = JsFile;
 const {merge, attributeToBoolean, normalizeColorValue} = JsFile.Engine;
 
 export default function (node, documentData) {
@@ -11,7 +10,7 @@ export default function (node, documentData) {
         style: {}
     };
 
-    $.children(node).forEach(({attributes, localName}) => {
+    [].forEach.call(node && node.childNodes || [], ({attributes, localName}) => {
         let attr;
         let attrValue;
 

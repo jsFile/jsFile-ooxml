@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
 import parseSectionProperties from './parseSectionProperties';
 import parseDocumentContentNodes from './parseDocumentContentNodes';
-const {dom: $, Document} = JsFile;
+const {Document} = JsFile;
 const {normalizeColorValue, errors: {invalidReadFile}} = JsFile.Engine;
 
 /**
@@ -39,7 +39,7 @@ export default function (params) {
 
         node = xml && xml.querySelector('body');
         if (node) {
-            const nodes = $.children(node);
+            const nodes = [].slice.call(node && node.childNodes || [], 0);
             const lastNode = nodes[nodes.length - 1];
             if (lastNode.localName === 'sectPr') {
                 /**

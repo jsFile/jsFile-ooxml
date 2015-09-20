@@ -1,5 +1,4 @@
 import JsFile from 'JsFile';
-const {dom: $} = JsFile;
 const {attributeToBoolean} = JsFile.Engine;
 
 /**
@@ -10,8 +9,8 @@ const {attributeToBoolean} = JsFile.Engine;
  */
 export default function (xml) {
     const result = {};
-
-    $.children(xml && xml.querySelector('webSettings')).forEach((node) => {
+    const node = xml && xml.querySelector('webSettings');
+    [].forEach.call(node && node.childNodes || [], (node) => {
         result[node.localName] = attributeToBoolean(node.attributes['w:val']);
     });
 

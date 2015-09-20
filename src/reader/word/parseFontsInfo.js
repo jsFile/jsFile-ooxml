@@ -1,5 +1,4 @@
 import JsFile from 'JsFile';
-const {dom: $} = JsFile;
 const {formatPropertyName} = JsFile.Engine;
 
 /**
@@ -15,7 +14,7 @@ export default function (xml) {
         let name = node.attributes['w:name'] && node.attributes['w:name'].value;
         if (name) {
             result[name] = {};
-            $.children(node).forEach(({localName, attributes}) => {
+            [].forEach.call(node.childNodes || [], ({localName, attributes}) => {
                 if (localName === 'sig') {
                     result[name][localName] = {};
 

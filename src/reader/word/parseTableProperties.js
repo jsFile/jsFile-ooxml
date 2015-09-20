@@ -1,7 +1,6 @@
 import JsFile from 'JsFile';
 import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
-const {dom: $} = JsFile;
 const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
 
 export default function (node) {
@@ -9,7 +8,7 @@ export default function (node) {
         style: {}
     };
 
-    $.children(node).forEach(function (node) {
+    [].forEach.call(node && node.childNodes || [], function (node) {
         let attrValue;
         let type;
         const {attributes, localName} = node;
@@ -64,7 +63,7 @@ export default function (node) {
                     style: {}
                 };
 
-                $.children(node).forEach(node => {
+                [].forEach.call(node && node.childNodes || [], node => {
                     const side = formatPropertyName(normalizeSideValue(node.localName), {
                         capitalize: true
                     });

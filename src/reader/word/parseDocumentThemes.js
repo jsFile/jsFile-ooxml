@@ -1,5 +1,4 @@
 import JsFile from 'JsFile';
-const {dom: $} = JsFile;
 
 /**
  *
@@ -8,12 +7,12 @@ const {dom: $} = JsFile;
  * @private
  */
 export default function (xml) {
-    const themeElementsNode = xml.querySelector('themeElements');
+    const node = xml && xml.querySelector('themeElements');
     const result = {
         style: {}
     };
 
-    $.children(themeElementsNode).forEach(function (node) {
+    [].forEach.call(node && node.childNodes || [], function (node) {
         if (node.localName === 'fontScheme') {
             let font = node.querySelector('minorFont > latin');
             if (font && font.attributes.typeface && font.attributes.typeface.value) {

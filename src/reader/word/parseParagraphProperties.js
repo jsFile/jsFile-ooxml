@@ -4,7 +4,6 @@ import parseTextProperties from './parseTextProperties';
 import normalizeLineHeight from './normalizeLineHeight';
 import parseBorderProperties from './parseBorderProperties';
 import normalizeVerticalAlign from './normalizeVerticalAlign';
-const {dom: $} = JsFile;
 const {merge, normalizeColorValue} = JsFile.Engine;
 const alignmentValues = ['left', 'right', 'center'];
 
@@ -13,7 +12,7 @@ export default function (node, documentData) {
         style: {}
     };
 
-    $.children(node).forEach((node) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const localName = node.localName;
 
@@ -147,7 +146,7 @@ export default function (node, documentData) {
                 break;
             case 'tabs':
                 let value = 0;
-                $.children(node).forEach((node) => {
+                [].forEach.call(node && node.childNodes || [], (node) => {
                     const attrValue = node.attributes['w:pos'] && node.attributes['w:pos'].value;
                     value += isNaN(attrValue) ? 0 : Number(attrValue);
                 });

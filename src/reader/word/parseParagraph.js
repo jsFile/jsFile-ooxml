@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import parseParagraphProperties from './parseParagraphProperties';
 import getRelationship from './getRelationship';
 import parseText from './parseText';
-const {dom: $, Document} = JsFile;
+const {Document} = JsFile;
 const {merge, clone} = JsFile.Engine;
 
 /**
@@ -23,7 +23,7 @@ export default function (params) {
     paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
     merge(result.style, paragraphProperties.style, style);
 
-    $.children(node).forEach((node) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         let el;
         const localName = node.localName;
@@ -61,7 +61,7 @@ export default function (params) {
                 attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
                 const relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
 
-                $.children(node).forEach((node) => {
+                [].forEach.call(node && node.childNodes || [], (node) => {
                     el.children.push(parseText({
                         node,
                         documentData,

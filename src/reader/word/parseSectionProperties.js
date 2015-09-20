@@ -1,5 +1,4 @@
 import JsFile from 'JsFile';
-const {dom: $} = JsFile;
 const {attributeToBoolean, formatPropertyName} = JsFile.Engine;
 
 export default function (node = {}, documentData = {}) {
@@ -8,7 +7,7 @@ export default function (node = {}, documentData = {}) {
     const properties = {};
     const style = {};
 
-    $.children(node).forEach(({localName, attributes}) => {
+    [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
         switch (localName) {
             case 'pgSz':
                 attrValue = attributes['w:w'] && attributes['w:w'].value;

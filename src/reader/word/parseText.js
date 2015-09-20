@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import parseTextProperties from './parseTextProperties';
 import parseDrawing from './parseDrawing';
 import parsePicture from './parsePicture';
-const {dom: $, Document} = JsFile;
+const {Document} = JsFile;
 const {merge, clone, formatPropertyName, nbHyphen, enDash, space, tabAsSpaces} = JsFile.Engine;
 
 export default function (params = {}) {
@@ -13,12 +13,13 @@ export default function (params = {}) {
         return result;
     }
 
+    const forEach = [].forEach;
     const textProperties = clone(documentData.styles.defaults.textProperties);
-    Array.prototype.forEach.call((node && node.attributes) || [], ({value, name}) => {
+    forEach.call((node && node.attributes) || [], ({value, name}) => {
         textProperties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
     });
 
-    $.children(node).forEach(({textContent, localName, attributes}) => {
+    forEach.call(node && node.childNodes || [], ({textContent, localName, attributes}) => {
         let el;
 
         switch (localName) {

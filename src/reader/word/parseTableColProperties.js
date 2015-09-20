@@ -1,7 +1,6 @@
 import JsFile from 'JsFile';
 import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
-const {dom: $} = JsFile;
 const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
 const verticalAlignValues = {
     bottom: 'bottom',
@@ -15,7 +14,7 @@ export default function (node) {
         style: {}
     };
 
-    $.children(node).forEach((node) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const {localName, attributes} = node;
 
@@ -59,7 +58,7 @@ export default function (node) {
 
             // TODO: parse tcFitText
             case 'tcMar':
-                $.children(node).forEach(({localName, attributes}) => {
+                [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
                     const side = formatPropertyName(normalizeSideValue(localName));
                     const value = Number(attributes['w:w'] && attributes['w:w'].value);
 

@@ -216,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseDocumentStyles2 = _interopRequireDefault(_parseDocumentStyles);
 
-	var _parseDocumentContent = __webpack_require__(22);
+	var _parseDocumentContent = __webpack_require__(23);
 
 	var _parseDocumentContent2 = _interopRequireDefault(_parseDocumentContent);
 
@@ -300,7 +300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, this);
 
 	        Promise.all(queue).then((function () {
-	            _parseDocumentContent2['default'].call(this, {
+	            (0, _parseDocumentContent2['default'])({
 	                xml: document,
 	                documentData: documentData,
 	                fileName: fileName
@@ -375,7 +375,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var $ = _JsFile2['default'].dom;
 	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
 
 	/**
@@ -388,8 +387,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports['default'] = function (xml) {
 	    var result = {};
+	    var node = xml && xml.querySelector('Properties');
 
-	    $.children(xml && xml.querySelector('Properties')).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var value = undefined;
 	        var textContent = node.textContent || '';
 	        var localName = (node.localName || '').split('');
@@ -418,15 +418,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _JsFile = __webpack_require__(1);
+/***/ function(module, exports) {
 
 	/**
 	 *
@@ -435,11 +427,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 * @return {Object}
 	 */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
 
 	exports['default'] = function (xml) {
 	    var result = {};
+	    var node = xml && xml.querySelector('coreProperties');
 
-	    _JsFile.dom.children(xml && xml.querySelector('coreProperties')).forEach(function (_ref) {
+	    [].forEach.call(node && node.childNodes || [], function (_ref) {
 	        var textContent = _ref.textContent;
 	        var localName = _ref.localName;
 
@@ -478,7 +476,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var $ = _JsFile2['default'].dom;
 	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
 
 	/**
@@ -495,7 +492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var name = node.attributes['w:name'] && node.attributes['w:name'].value;
 	        if (name) {
 	            result[name] = {};
-	            $.children(node).forEach(function (_ref) {
+	            [].forEach.call(node.childNodes || [], function (_ref) {
 	                var localName = _ref.localName;
 	                var attributes = _ref.attributes;
 
@@ -506,8 +503,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        var name = _ref2.name;
 	                        var value = _ref2.value;
 
-	                        result[name][localName][formatPropertyName(name)] = value;
-	                    });
+	                        this[formatPropertyName(name)] = value;
+	                    }, result[name][localName]);
 	                } else {
 	                    result[name][localName] = attributes['w:val'] && attributes['w:val'].value;
 	                }
@@ -537,7 +534,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var $ = _JsFile2['default'].dom;
 	var attributeToBoolean = _JsFile2['default'].Engine.attributeToBoolean;
 
 	/**
@@ -549,8 +545,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports['default'] = function (xml) {
 	    var result = {};
-
-	    $.children(xml && xml.querySelector('webSettings')).forEach(function (node) {
+	    var node = xml && xml.querySelector('webSettings');
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        result[node.localName] = attributeToBoolean(node.attributes['w:val']);
 	    });
 
@@ -580,7 +576,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseLanguageNode2 = _interopRequireDefault(_parseLanguageNode);
 
-	var $ = _JsFile2['default'].dom;
 	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
 
 	/**
@@ -606,7 +601,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        colorSchemeMapping: {}
 	    };
 
-	    $.children(xml && xml.querySelector('settings')).forEach(function (node) {
+	    var node = xml && xml.querySelector('settings');
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attr = undefined;
 	        var subNode = undefined;
 
@@ -713,7 +709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'mathPr':
 	                result.mathProperties.intLimit = '';
 
-	                $.children(node).forEach(function (_ref2) {
+	                [].forEach.call(node && node.childNodes || [], function (_ref2) {
 	                    var localName = _ref2.localName;
 	                    var _ref2$attributes = _ref2.attributes;
 	                    var attributes = _ref2$attributes === undefined ? {} : _ref2$attributes;
@@ -865,8 +861,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var $ = _JsFile2['default'].dom;
-
 	/**
 	 *
 	 * @param xml
@@ -875,12 +869,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	exports['default'] = function (xml) {
-	    var themeElementsNode = xml.querySelector('themeElements');
+	    var node = xml && xml.querySelector('themeElements');
 	    var result = {
 	        style: {}
 	    };
 
-	    $.children(themeElementsNode).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        if (node.localName === 'fontScheme') {
 	            var font = node.querySelector('minorFont > latin');
 	            if (font && font.attributes.typeface && font.attributes.typeface.value) {
@@ -920,17 +914,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseTextProperties2 = _interopRequireDefault(_parseTextProperties);
 
-	var _parseParagraphProperties = __webpack_require__(16);
+	var _parseParagraphProperties = __webpack_require__(17);
 
 	var _parseParagraphProperties2 = _interopRequireDefault(_parseParagraphProperties);
 
-	var _parseTableProperties = __webpack_require__(21);
+	var _parseTableProperties = __webpack_require__(22);
 
 	var _parseTableProperties2 = _interopRequireDefault(_parseTableProperties);
 
-	var $ = _JsFile2['default'].dom;
-	var formatPropertyName = _JsFile2['default'].formatPropertyName;
-	var attributeToBoolean = _JsFile2['default'].attributeToBoolean;
+	var _JsFile$Engine = _JsFile2['default'].Engine;
+	var formatPropertyName = _JsFile$Engine.formatPropertyName;
+	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 
 	/**
 	 * @description Parsing document styles
@@ -951,7 +945,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        usedStyles: {}
 	    };
 
-	    $.children(xml.querySelector('styles')).forEach(function (node) {
+	    var node = xml.querySelector('styles');
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var localName = node.localName;
 	        if (localName === 'docDefaults') {
 	            var prNode = node.querySelector('rPrDefault rPr');
@@ -1093,19 +1088,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseLanguageNode2 = _interopRequireDefault(_parseLanguageNode);
 
-	var $ = _JsFile2['default'].dom;
+	var _normalizeVerticalAlign = __webpack_require__(16);
+
+	var _normalizeVerticalAlign2 = _interopRequireDefault(_normalizeVerticalAlign);
+
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
-	var normalizeVerticalAlign = _JsFile$Engine.normalizeVerticalAlign;
 
 	exports['default'] = function (node, documentData) {
 	    var result = {
 	        style: {}
 	    };
 
-	    $.children(node).forEach(function (_ref) {
+	    [].forEach.call(node && node.childNodes || [], function (_ref) {
 	        var attributes = _ref.attributes;
 	        var localName = _ref.localName;
 
@@ -1199,7 +1196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'vertAlign':
 	                attr = attributes['w:val'];
 	                if (attr) {
-	                    result.style.verticalAlign = normalizeVerticalAlign(attr);
+	                    result.style.verticalAlign = (0, _normalizeVerticalAlign2['default'])(attr);
 	                }
 
 	                break;
@@ -1396,6 +1393,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 16 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var aligns = {
+	  superscript: 'top',
+	  subscript: 'bottom'
+	};
+
+	var defaultAlign = 'baseline';
+
+	/**
+	 *
+	 * @param value
+	 * @return {String}
+	 * @private
+	 */
+
+	exports['default'] = function (value) {
+	  return value && aligns[String(value).toLowerCase()] || defaultAlign;
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1410,7 +1436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _prepareLineStyle = __webpack_require__(17);
+	var _prepareLineStyle = __webpack_require__(18);
 
 	var _prepareLineStyle2 = _interopRequireDefault(_prepareLineStyle);
 
@@ -1418,19 +1444,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseTextProperties2 = _interopRequireDefault(_parseTextProperties);
 
-	var _normalizeLineHeight = __webpack_require__(18);
+	var _normalizeLineHeight = __webpack_require__(19);
 
 	var _normalizeLineHeight2 = _interopRequireDefault(_normalizeLineHeight);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(20);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
-	var $ = _JsFile2['default'].dom;
+	var _normalizeVerticalAlign = __webpack_require__(16);
+
+	var _normalizeVerticalAlign2 = _interopRequireDefault(_normalizeVerticalAlign);
+
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
-	var normalizeVerticalAlign = _JsFile$Engine.normalizeVerticalAlign;
 
 	var alignmentValues = ['left', 'right', 'center'];
 
@@ -1439,7 +1467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        style: {}
 	    };
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
 	        var localName = node.localName;
 
@@ -1576,7 +1604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'tabs':
 	                var value = 0;
-	                $.children(node).forEach(function (node) {
+	                [].forEach.call(node && node.childNodes || [], function (node) {
 	                    var attrValue = node.attributes['w:pos'] && node.attributes['w:pos'].value;
 	                    value += isNaN(attrValue) ? 0 : Number(attrValue);
 	                });
@@ -1593,7 +1621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'textAlignment':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-	                result.style.verticalAlign = normalizeVerticalAlign(attrValue);
+	                result.style.verticalAlign = (0, _normalizeVerticalAlign2['default'])(attrValue);
 	                break;
 	        }
 	    });
@@ -1604,7 +1632,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1636,7 +1664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
@@ -1660,7 +1688,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1675,28 +1703,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _prepareLineStyle = __webpack_require__(17);
+	var _prepareLineStyle = __webpack_require__(18);
 
 	var _prepareLineStyle2 = _interopRequireDefault(_prepareLineStyle);
 
-	var _normalizeSideValue = __webpack_require__(20);
+	var _normalizeSideValue = __webpack_require__(21);
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	var $ = _JsFile2['default'].dom;
 	var normalizeColorValue = _JsFile2['default'].Engine.normalizeColorValue;
 
 	exports['default'] = function (node) {
-	    var _this = this;
-
 	    var result = {};
 
-	    $.children(node).forEach(function (_ref) {
+	    [].forEach.call(node && node.childNodes || [], function (_ref) {
 	        var localName = _ref.localName;
 	        var attributes = _ref.attributes;
 
 	        localName = localName || '';
-	        var side = _this.normalizeSideValue(localName);
+	        var side = (0, _normalizeSideValue2['default'])(localName);
 	        var color = attributes['w:color'] && attributes['w:color'].value;
 	        var style = (0, _prepareLineStyle2['default'])(attributes['w:val'] && attributes['w:val'].value);
 	        var width = attributes['w:sz'] && attributes['w:sz'].value || 0;
@@ -1718,7 +1743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1752,7 +1777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1767,15 +1792,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(20);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
-	var _normalizeSideValue = __webpack_require__(20);
+	var _normalizeSideValue = __webpack_require__(21);
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	var $ = _JsFile2['default'].dom;
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
@@ -1786,7 +1810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        style: {}
 	    };
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
 	        var type = undefined;
 	        var attributes = node.attributes;
@@ -1842,7 +1866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    style: {}
 	                };
 
-	                $.children(node).forEach(function (node) {
+	                [].forEach.call(node && node.childNodes || [], function (node) {
 	                    var side = formatPropertyName((0, _normalizeSideValue2['default'])(node.localName), {
 	                        capitalize: true
 	                    });
@@ -1928,7 +1952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1943,17 +1967,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseSectionProperties = __webpack_require__(23);
+	var _parseSectionProperties = __webpack_require__(24);
 
 	var _parseSectionProperties2 = _interopRequireDefault(_parseSectionProperties);
 
-	var _parseDocumentContentNodes = __webpack_require__(24);
+	var _parseDocumentContentNodes = __webpack_require__(25);
 
 	var _parseDocumentContentNodes2 = _interopRequireDefault(_parseDocumentContentNodes);
 
-	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
-	var normalizeColorValue = _JsFile2['default'].Engine.normalizeColorValue;
+	var _JsFile$Engine = _JsFile2['default'].Engine;
+	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
+	var invalidReadFile = _JsFile$Engine.errors.invalidReadFile;
 
 	/**
 	 * @description Parsing content of document
@@ -1972,7 +1997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        var node = xml && xml.querySelector('parsererror');
 	        if (node) {
-	            return reject(this.errors.invalidReadFile);
+	            return reject(new Error(invalidReadFile));
 	        }
 
 	        var result = {
@@ -1996,7 +2021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        node = xml && xml.querySelector('body');
 	        if (node) {
-	            var nodes = $.children(node);
+	            var nodes = [].slice.call(node && node.childNodes || [], 0);
 	            var lastNode = nodes[nodes.length - 1];
 	            if (lastNode.localName === 'sectPr') {
 	                /**
@@ -2032,7 +2057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2048,7 +2073,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
 	var _JsFile$Engine = _JsFile2['default'].Engine;
-	var $ = _JsFile$Engine.dom;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 
@@ -2061,7 +2085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var properties = {};
 	    var style = {};
 
-	    $.children(node).forEach(function (_ref) {
+	    [].forEach.call(node && node.childNodes || [], function (_ref) {
 	        var localName = _ref.localName;
 	        var attributes = _ref.attributes;
 
@@ -2184,7 +2208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    Array.prototype.forEach.call(attributes, function (_ref2) {
+	    Array.prototype.forEach.call(node.attributes || [], function (_ref2) {
 	        var name = _ref2.name;
 	        var value = _ref2.value;
 
@@ -2202,7 +2226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2213,11 +2237,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _parseParagraph = __webpack_require__(25);
+	var _parseParagraph = __webpack_require__(26);
 
 	var _parseParagraph2 = _interopRequireDefault(_parseParagraph);
 
-	var _parseTable = __webpack_require__(33);
+	var _parseTable = __webpack_require__(34);
 
 	var _parseTable2 = _interopRequireDefault(_parseTable);
 
@@ -2292,7 +2316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2307,19 +2331,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseParagraphProperties = __webpack_require__(16);
+	var _parseParagraphProperties = __webpack_require__(17);
 
 	var _parseParagraphProperties2 = _interopRequireDefault(_parseParagraphProperties);
 
-	var _getRelationship = __webpack_require__(26);
+	var _getRelationship = __webpack_require__(27);
 
 	var _getRelationship2 = _interopRequireDefault(_getRelationship);
 
-	var _parseText = __webpack_require__(27);
+	var _parseText = __webpack_require__(28);
 
 	var _parseText2 = _interopRequireDefault(_parseText);
 
-	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
@@ -2347,7 +2370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
 	    merge(result.style, paragraphProperties.style, style);
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
 	        var el = undefined;
 	        var localName = node.localName;
@@ -2385,7 +2408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
 	                var relationship = attrValue && (0, _getRelationship2['default'])(attrValue, documentData) || null;
 
-	                $.children(node).forEach(function (node) {
+	                [].forEach.call(node && node.childNodes || [], function (node) {
 	                    el.children.push((0, _parseText2['default'])({
 	                        node: node,
 	                        documentData: documentData,
@@ -2422,7 +2445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	/**
@@ -2449,7 +2472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2468,15 +2491,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseTextProperties2 = _interopRequireDefault(_parseTextProperties);
 
-	var _parseDrawing = __webpack_require__(28);
+	var _parseDrawing = __webpack_require__(29);
 
 	var _parseDrawing2 = _interopRequireDefault(_parseDrawing);
 
-	var _parsePicture = __webpack_require__(31);
+	var _parsePicture = __webpack_require__(32);
 
 	var _parsePicture2 = _interopRequireDefault(_parsePicture);
 
-	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
@@ -2499,15 +2521,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return result;
 	    }
 
+	    var forEach = [].forEach;
 	    var textProperties = clone(documentData.styles.defaults.textProperties);
-	    Array.prototype.forEach.call(node && node.attributes || [], function (_ref) {
+	    forEach.call(node && node.attributes || [], function (_ref) {
 	        var value = _ref.value;
 	        var name = _ref.name;
 
 	        textProperties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
 	    });
 
-	    $.children(node).forEach(function (_ref2) {
+	    forEach.call(node && node.childNodes || [], function (_ref2) {
 	        var textContent = _ref2.textContent;
 	        var localName = _ref2.localName;
 	        var attributes = _ref2.attributes;
@@ -2574,7 +2597,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2589,18 +2612,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _getMediaFromRelationship = __webpack_require__(29);
+	var _getMediaFromRelationship = __webpack_require__(30);
 
 	var _getMediaFromRelationship2 = _interopRequireDefault(_getMediaFromRelationship);
 
-	var _convertEmu = __webpack_require__(30);
+	var _convertEmu = __webpack_require__(31);
 
 	var _convertEmu2 = _interopRequireDefault(_convertEmu);
 
 	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine$prototype = _JsFile2['default'].Engine.prototype;
-	var formatPropertyName = _JsFile$Engine$prototype.formatPropertyName;
-	var attributeToBoolean = _JsFile$Engine$prototype.attributeToBoolean;
+	var _JsFile$Engine = _JsFile2['default'].Engine;
+	var formatPropertyName = _JsFile$Engine.formatPropertyName;
+	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 
 	exports['default'] = function (node, documentData) {
 	    var result = Document.elementPrototype;
@@ -2768,7 +2791,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2779,7 +2802,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _getRelationship = __webpack_require__(26);
+	var _getRelationship = __webpack_require__(27);
 
 	var _getRelationship2 = _interopRequireDefault(_getRelationship);
 
@@ -2802,7 +2825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/**
@@ -2829,7 +2852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2844,19 +2867,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _getMediaFromRelationship = __webpack_require__(29);
+	var _getMediaFromRelationship = __webpack_require__(30);
 
 	var _getMediaFromRelationship2 = _interopRequireDefault(_getMediaFromRelationship);
 
-	var _parseParagraph = __webpack_require__(25);
+	var _parseParagraph = __webpack_require__(26);
 
 	var _parseParagraph2 = _interopRequireDefault(_parseParagraph);
 
-	var _parseStyleAttribute = __webpack_require__(32);
+	var _parseStyleAttribute = __webpack_require__(33);
 
 	var _parseStyleAttribute2 = _interopRequireDefault(_parseStyleAttribute);
 
-	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
 	var merge = _JsFile2['default'].Engine.merge;
 
@@ -2881,7 +2903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }));
 	        }
 
-	        $.children(group).forEach(function (node) {
+	        Array.prototype.forEach.call(group && group.childNodes || [], function (node) {
 	            var el = Document.elementPrototype;
 	            var localName = node.localName;
 	            var attrValue = undefined;
@@ -2925,9 +2947,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                var textBox = node.querySelector('textbox');
 	                if (textBox) {
-	                    var textBoxContent = textBox.querySelector('txbxContent');
-
-	                    $.children(textBoxContent).forEach(function (node) {
+	                    var _node = textBox.querySelector('txbxContent');
+	                    [].forEach.call(_node && _node.childNodes || [], function (node) {
 	                        if (node.localName === 'p') {
 	                            el.children.push((0, _parseParagraph2['default'])({
 	                                node: node,
@@ -2948,7 +2969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2997,7 +3018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3012,19 +3033,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseTableProperties = __webpack_require__(21);
+	var _parseTableProperties = __webpack_require__(22);
 
 	var _parseTableProperties2 = _interopRequireDefault(_parseTableProperties);
 
-	var _parseTableRowProperties = __webpack_require__(34);
+	var _parseTableRowProperties = __webpack_require__(35);
 
 	var _parseTableRowProperties2 = _interopRequireDefault(_parseTableRowProperties);
 
-	var _parseTableColProperties = __webpack_require__(35);
+	var _parseTableColProperties = __webpack_require__(36);
 
 	var _parseTableColProperties2 = _interopRequireDefault(_parseTableColProperties);
 
-	var $ = _JsFile2['default'].dom;
 	var Document = _JsFile2['default'].Document;
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
@@ -3055,7 +3075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    queue[0].properties.tagName = 'TABLE';
 	    tbody.properties.tagName = 'TBODY';
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var localName = node.localName;
 
 	        if (localName === 'tblPr') {
@@ -3087,7 +3107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                //clear old value
 	                rowProperties = {};
 
-	                $.children(node).forEach(function (node) {
+	                [].forEach.call(node && node.childNodes || [], function (node) {
 	                    var localName = node.localName;
 
 	                    // TODO: parse tblPrEx (Table Property Exceptions)
@@ -3099,7 +3119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    } else if (localName === 'tc') {
 	                        (function () {
 	                            var col = Document.elementPrototype;
-	                            var nodes = $.children(node);
+	                            var nodes = [].slice.call(node.childNodes || [], 0);
 	                            col.properties.tagName = 'TD';
 
 	                            if (nodes[0]) {
@@ -3147,7 +3167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3162,18 +3182,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _normalizeSideValue = __webpack_require__(20);
+	var _normalizeSideValue = __webpack_require__(21);
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
-
-	var $ = _JsFile2['default'].dom;
 
 	exports['default'] = function (node) {
 	    var result = {
 	        style: {}
 	    };
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
 	        var localName = node.localName;
 
@@ -3222,7 +3240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3237,15 +3255,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(20);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
-	var _normalizeSideValue = __webpack_require__(20);
+	var _normalizeSideValue = __webpack_require__(21);
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	var $ = _JsFile2['default'].dom;
 	var _JsFile$Engine = _JsFile2['default'].Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
@@ -3263,7 +3280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        style: {}
 	    };
 
-	    $.children(node).forEach(function (node) {
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
 	        var localName = node.localName;
 	        var attributes = node.attributes;
@@ -3308,7 +3325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // TODO: parse tcFitText
 	            case 'tcMar':
-	                $.children(node).forEach(function (_ref) {
+	                [].forEach.call(node && node.childNodes || [], function (_ref) {
 	                    var localName = _ref.localName;
 	                    var attributes = _ref.attributes;
 

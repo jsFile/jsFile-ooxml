@@ -1,13 +1,12 @@
 import JsFile from 'JsFile';
 import normalizeSideValue from './normalizeSideValue';
-const {dom: $} = JsFile;
 
 export default function (node) {
     let result = {
         style: {}
     };
 
-    $.children(node).forEach(function (node) {
+    [].forEach.call(node && node.childNodes || [], function (node) {
         let attrValue;
         const localName = node.localName;
 

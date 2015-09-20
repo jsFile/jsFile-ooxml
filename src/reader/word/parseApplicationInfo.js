@@ -1,5 +1,4 @@
 import JsFile from 'JsFile';
-const {dom: $} = JsFile;
 const {formatPropertyName} = JsFile.Engine;
 
 /**
@@ -11,8 +10,9 @@ const {formatPropertyName} = JsFile.Engine;
  */
 export default function (xml) {
     let result = {};
+    const node = xml && xml.querySelector('Properties');
 
-    $.children(xml && xml.querySelector('Properties')).forEach((node) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let value;
         const textContent = node.textContent || '';
         const localName = (node.localName || '').split('');

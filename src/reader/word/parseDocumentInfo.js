@@ -1,5 +1,3 @@
-import {dom as $} from 'JsFile';
-
 /**
  *
  * @description Parsing information about document
@@ -9,8 +7,9 @@ import {dom as $} from 'JsFile';
  */
 export default function (xml) {
     let result = {};
+    const node = xml && xml.querySelector('coreProperties');
 
-    $.children(xml && xml.querySelector('coreProperties')).forEach(({textContent, localName}) => {
+    [].forEach.call(node && node.childNodes || [], ({textContent, localName}) => {
         let value;
 
         if (localName === 'created' || localName === 'modified') {

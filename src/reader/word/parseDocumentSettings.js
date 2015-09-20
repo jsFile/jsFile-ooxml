@@ -1,6 +1,5 @@
 import JsFile from 'JsFile';
 import parseLanguageNode from './parseLanguageNode';
-const {dom: $} = JsFile;
 const {formatPropertyName} = JsFile.Engine;
 
 /**
@@ -25,7 +24,8 @@ export default function (xml) {
         colorSchemeMapping: {}
     };
 
-    $.children(xml && xml.querySelector('settings')).forEach(function (node) {
+    const node = xml && xml.querySelector('settings');
+    [].forEach.call(node && node.childNodes || [], function (node) {
         let attr;
         let subNode;
 
@@ -130,7 +130,7 @@ export default function (xml) {
         case 'mathPr':
             result.mathProperties.intLimit = '';
 
-            $.children(node).forEach(function ({localName, attributes = {}}) {
+            [].forEach.call(node && node.childNodes || [], function ({localName, attributes = {}}) {
                 const attr = attributes['m:val'];
                 const attrValue = attr && attr.value;
                 switch (localName) {

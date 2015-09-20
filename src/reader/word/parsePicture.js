@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import getMediaFromRelationship from './getMediaFromRelationship';
 import parseParagraph from './parseParagraph';
 import parseStyleAttribute from './parseStyleAttribute';
-const {dom: $, Document} = JsFile;
+const {Document} = JsFile;
 const {merge} = JsFile.Engine;
 const denominator = 20;
 
@@ -25,7 +25,7 @@ export default function (node, documentData) {
             }));
         }
 
-        $.children(group).forEach((node) => {
+        Array.prototype.forEach.call(group && group.childNodes || [], (node) => {
             const el = Document.elementPrototype;
             const localName = node.localName;
             let attrValue;
@@ -73,9 +73,8 @@ export default function (node, documentData) {
 
                 let textBox = node.querySelector('textbox');
                 if (textBox) {
-                    let textBoxContent = textBox.querySelector('txbxContent');
-
-                    $.children(textBoxContent).forEach(function (node) {
+                    let node = textBox.querySelector('txbxContent');
+                    [].forEach.call(node && node.childNodes || [], function (node) {
                         if (node.localName === 'p') {
                             el.children.push(parseParagraph({
                                 node,
