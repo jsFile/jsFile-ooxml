@@ -22,7 +22,7 @@ export default function (params) {
             name: fileName,
             wordsCount: (documentData.applicationInfo && documentData.applicationInfo.wordsCount) || null,
             zoom: (documentData.settings && documentData.settings.zoom) || 100,
-            pages: []
+            content: []
         };
         const pagePrototype = {};
         node = xml && xml.querySelector('background');
@@ -61,9 +61,12 @@ export default function (params) {
 
                 //TODO: add page break
                 // because now it's only 1 page for all content
-                delete page.style.height;
+                if (page.style.height) {
+                    page.style.minHeight = page.style.height;
+                    delete page.style.height;
+                }
 
-                result.pages = [page];
+                result.content.push(page);
                 resolve(new Document(result));
             }, reject);
         } else {
