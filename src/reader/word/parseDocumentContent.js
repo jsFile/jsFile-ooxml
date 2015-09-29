@@ -39,7 +39,7 @@ export default function (params) {
 
         node = xml && xml.querySelector('body');
         if (node) {
-            const nodes = [].slice.call(node && node.childNodes || [], 0);
+            const nodes = [].slice.call(node.childNodes || [], 0);
             const lastNode = nodes[nodes.length - 1];
             if (lastNode.localName === 'sectPr') {
                 /**

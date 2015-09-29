@@ -9,12 +9,13 @@ const verticalAlignValues = {
 };
 
 export default function (node) {
-    let result = {
+    const result = {
         properties: {},
         style: {}
     };
+    const forEach = [].forEach;
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
+    forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const {localName, attributes} = node;
 
@@ -58,7 +59,7 @@ export default function (node) {
 
             // TODO: parse tcFitText
             case 'tcMar':
-                [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
+                forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
                     const side = formatPropertyName(normalizeSideValue(localName));
                     const value = Number(attributes['w:w'] && attributes['w:w'].value);
 

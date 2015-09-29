@@ -14,6 +14,7 @@ export default function (node, documentData) {
         return result;
     }
 
+    const forEach = [].forEach;
     const group = node.querySelector('group');
     let attrValue;
     if (group) {
@@ -25,7 +26,7 @@ export default function (node, documentData) {
             }));
         }
 
-        Array.prototype.forEach.call(group && group.childNodes || [], (node) => {
+        forEach.call(group.childNodes || [], (node) => {
             const el = Document.elementPrototype;
             const localName = node.localName;
             let attrValue;
@@ -73,8 +74,9 @@ export default function (node, documentData) {
 
                 let textBox = node.querySelector('textbox');
                 if (textBox) {
-                    let node = textBox.querySelector('txbxContent');
-                    [].forEach.call(node && node.childNodes || [], function (node) {
+                    let textBoxContent = textBox.querySelector('txbxContent');
+
+                    forEach.call(textBoxContent && textBoxContent.childNodes || [], (node) => {
                         if (node.localName === 'p') {
                             el.children.push(parseParagraph({
                                 node,

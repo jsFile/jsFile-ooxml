@@ -11,7 +11,7 @@ const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
  * @private
  */
 export default function (xml) {
-    let result = {
+    const result = {
         defaults: {
             paragraphProperties: {},
             textProperties: {}
@@ -21,9 +21,10 @@ export default function (xml) {
         },
         usedStyles: {}
     };
-
     const node = xml.querySelector('styles');
-    [].forEach.call(node && node.childNodes || [], function (node) {
+    const forEach = [].forEach;
+
+    forEach.call(node && node.childNodes || [], (node) => {
         let localName = node.localName;
         if (localName === 'docDefaults') {
             let prNode = node.querySelector('rPrDefault rPr');
@@ -36,15 +37,14 @@ export default function (xml) {
                 result.defaults.paragraphProperties = parseParagraphProperties(prNode);
             }
         } else if (localName === 'latentStyles') {
-            Array.prototype.forEach.call(node.attributes || [], function (attr) {
-                let value = attr.value || '';
-                result.latentStyles[formatPropertyName(attr.name)] = isNaN(value) ? value : Number(value);
+            forEach.call(node.attributes || [], ({name, value = ''}) => {
+                result.latentStyles[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
             });
 
-            Array.prototype.forEach.call(node.querySelectorAll('lsdException'), function (node) {
+            forEach.call(node.querySelectorAll('lsdException'), (node) => {
                 const data = {};
 
-                Array.prototype.forEach.call(node.attributes, function (attr) {
+                forEach.call(node.attributes || [], function (attr) {
                     const formattedName = formatPropertyName(attr.name);
                     let name;
                     if (formattedName === 'name') {
@@ -58,7 +58,7 @@ export default function (xml) {
                     } else {
                         data[formattedName] = isNaN(attr.value) ? (attr.value || '') : Number(attr.value);
                     }
-                }, this);
+                });
             });
         } else if (localName === 'style') {
             let attr = node.attributes['w:styleId'];
@@ -132,7 +132,7 @@ export default function (xml) {
                     attributeToBoolean(propertiesNode && propertiesNode.attributes['w:val']);
             }
         }
-    }, this);
+    });
 
     return result;
 };

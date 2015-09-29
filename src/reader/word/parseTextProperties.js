@@ -2,12 +2,12 @@ import JsFile from 'JsFile';
 import parseStyleEffectProperty from './parseStyleEffectProperty';
 import parseEmphasis from './parseEmphasis';
 import parseLanguageNode from './parseLanguageNode';
-import normalizeVerticalAlign from './normalizeVerticalAlign';
 const {merge, attributeToBoolean, normalizeColorValue} = JsFile.Engine;
 
 export default function (node, documentData) {
     let result = {
-        style: {}
+        style: {},
+        properties: {}
     };
 
     [].forEach.call(node && node.childNodes || [], ({attributes, localName}) => {
@@ -100,9 +100,11 @@ export default function (node, documentData) {
                 result.style.visibility = (attr && !attributeToBoolean(attr)) ? 'visible' : 'hidden';
                 break;
             case 'vertAlign':
-                attr = attributes['w:val'];
-                if (attr) {
-                    result.style.verticalAlign = normalizeVerticalAlign(attr);
+                attr = attributes['w:val'] && attributes['w:val'].value;
+                if (attr === 'subscript') {
+                    result.properties.tagName = 'SUB';
+                } else if (attr === 'superscript') {
+                    result.properties.tagName = 'SUP';
                 }
 
                 break;
@@ -198,12 +200,23 @@ export default function (node, documentData) {
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 result.textScale = !isNaN(attrValue) ? Number(attrValue) : result.textScale;
                 break;
+            case 'shd':
+                attrValue = attributes['w:fill'] && attributes['w:fill'].value;
+                if (attrValue) {
+                    result.style.backgroundColor = normalizeColorValue(attrValue);
+                }
+
+                break;
             case 'em':
                 result.emphasis = parseEmphasis(attributes['w:val']);
                 break;
             case 'highlight':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
-                result.highlight = attrValue ? normalizeColorValue(attrValue) : result.highlight;
+                attrValue = attrValue && normalizeColorValue(attrValue);
+                if (attrValue) {
+                    result.style.backgroundColor = attrValue;
+                }
+
                 break;
             case 'bdr':
                 result.textBorder = {

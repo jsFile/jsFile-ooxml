@@ -9,7 +9,7 @@ const {formatPropertyName} = JsFile.Engine;
  * @private
  */
 export default function (xml) {
-    let result = {
+    const result = {
         zoom: 100,
         compat: {},
         rsids: {
@@ -23,9 +23,9 @@ export default function (xml) {
         },
         colorSchemeMapping: {}
     };
-
     const node = xml && xml.querySelector('settings');
-    [].forEach.call(node && node.childNodes || [], function (node) {
+
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attr;
         let subNode;
 
@@ -130,7 +130,7 @@ export default function (xml) {
         case 'mathPr':
             result.mathProperties.intLimit = '';
 
-            [].forEach.call(node && node.childNodes || [], function ({localName, attributes = {}}) {
+            [].forEach.call(node && node.childNodes || [], ({localName, attributes = {}}) => {
                 const attr = attributes['m:val'];
                 const attrValue = attr && attr.value;
                 switch (localName) {

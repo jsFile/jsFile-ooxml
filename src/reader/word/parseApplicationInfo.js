@@ -9,7 +9,7 @@ const {formatPropertyName} = JsFile.Engine;
  * @return {Object}
  */
 export default function (xml) {
-    let result = {};
+    const result = {};
     const node = xml && xml.querySelector('Properties');
 
     [].forEach.call(node && node.childNodes || [], (node) => {

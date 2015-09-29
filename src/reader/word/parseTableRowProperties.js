@@ -2,11 +2,11 @@ import JsFile from 'JsFile';
 import normalizeSideValue from './normalizeSideValue';
 
 export default function (node) {
-    let result = {
+    const result = {
         style: {}
     };
 
-    [].forEach.call(node && node.childNodes || [], function (node) {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const localName = node.localName;
 

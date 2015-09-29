@@ -4,11 +4,12 @@ import normalizeSideValue from './normalizeSideValue';
 const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
 
 export default function (node) {
-    let result = {
+    const result = {
         style: {}
     };
+    const forEach = [].forEach;
 
-    [].forEach.call(node && node.childNodes || [], function (node) {
+    forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         let type;
         const {attributes, localName} = node;
@@ -63,7 +64,7 @@ export default function (node) {
                     style: {}
                 };
 
-                [].forEach.call(node && node.childNodes || [], node => {
+                forEach.call(node && node.childNodes || [], (node) => {
                     const side = formatPropertyName(normalizeSideValue(node.localName), {
                         capitalize: true
                     });

@@ -35,9 +35,11 @@ describe('jsFile-ooxml', () => {
                 function done (result) {
                     assert.instanceOf(result, JsFile.Document, name);
                     const json = result.json();
-                    assert.jsonSchema(json, documentSchema, name);
-                    const isEmpty = !/textContent":"[^"]+"/.test(JSON.stringify(json));
-                    assert.isFalse(isEmpty, `File ${name} shouldn't be empty`);
+                    const html = result.html();
+                    const text = html.textContent || '';
+                    assert.jsonSchema(json.content, documentSchema, name);
+                    assert.notEqual(text.length, 0, `File ${name} shouldn't be empty`);
+                    assert.notEqual(result.name.length, 0, `Engine should parse a name of file ${name}`);
                 }
             }
         }

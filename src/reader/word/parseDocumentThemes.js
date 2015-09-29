@@ -7,12 +7,12 @@ import JsFile from 'JsFile';
  * @private
  */
 export default function (xml) {
-    const node = xml && xml.querySelector('themeElements');
+    const node = xml.querySelector('themeElements');
     const result = {
         style: {}
     };
 
-    [].forEach.call(node && node.childNodes || [], function (node) {
+    [].some.call(node && node.childNodes || [], (node) => {
         if (node.localName === 'fontScheme') {
             let font = node.querySelector('minorFont > latin');
             if (font && font.attributes.typeface && font.attributes.typeface.value) {
@@ -23,6 +23,8 @@ export default function (xml) {
             if (font && font.attributes.typeface && font.attributes.typeface.value) {
                 result.style.fontFamily = font.attributes.typeface.value;
             }
+
+            return true;
         }
     });
 

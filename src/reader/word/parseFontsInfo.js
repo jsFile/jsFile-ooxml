@@ -9,16 +9,17 @@ const {formatPropertyName} = JsFile.Engine;
  * @private
  */
 export default function (xml) {
-    let result = {};
-    Array.prototype.forEach.call((xml && xml.querySelectorAll('font')) || [], function (node) {
+    const result = {};
+    const forEach = [].forEach;
+
+    forEach.call((xml && xml.querySelectorAll('font')) || [], function (node) {
         let name = node.attributes['w:name'] && node.attributes['w:name'].value;
         if (name) {
             result[name] = {};
-            [].forEach.call(node.childNodes || [], ({localName, attributes}) => {
+            forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
                 if (localName === 'sig') {
                     result[name][localName] = {};
-
-                    Array.prototype.forEach.call(attributes || [], function ({name, value}) {
+                    forEach.call(attributes || [], function ({name, value}) {
                         this[formatPropertyName(name)] = value;
                     }, result[name][localName]);
                 } else {

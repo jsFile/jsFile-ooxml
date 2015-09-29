@@ -3,16 +3,19 @@ import prepareLineStyle from './prepareLineStyle';
 import parseTextProperties from './parseTextProperties';
 import normalizeLineHeight from './normalizeLineHeight';
 import parseBorderProperties from './parseBorderProperties';
-import normalizeVerticalAlign from './normalizeVerticalAlign';
 const {merge, normalizeColorValue} = JsFile.Engine;
 const alignmentValues = ['left', 'right', 'center'];
 
 export default function (node, documentData) {
     let result = {
-        style: {}
+        style: {},
+        textProperties: {
+            properties: {}
+        }
     };
+    const forEach = [].forEach;
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
+    forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const localName = node.localName;
 
@@ -38,13 +41,25 @@ export default function (node, documentData) {
                     };
                 }
 
-                attrValue = node.attributes['w:firstLine'] && node.attributes['w:firstLine'].value;
+                //hanging and firstLine are mutually exclusive
+                attrValue = node.attributes['w:hanging'] && node.attributes['w:hanging'].value;
                 if (!isNaN(attrValue)) {
                     result.style.textIndent = result.style.textIndent || {
                         unit: 'pt',
                         value: 0
                     };
-                    result.style.textIndent.value += attrValue / 20;
+
+                    result.style.textIndent.value = -attrValue / 20;
+                } else {
+                    attrValue = node.attributes['w:firstLine'] && node.attributes['w:firstLine'].value;
+                    if (!isNaN(attrValue)) {
+                        result.style.textIndent = result.style.textIndent || {
+                            unit: 'pt',
+                            value: 0
+                        };
+
+                        result.style.textIndent.value = attrValue / 20;
+                    }
                 }
 
                 break;
@@ -108,7 +123,7 @@ export default function (node, documentData) {
             case 'shd':
                 attrValue = node.attributes['w:fill'] && node.attributes['w:fill'].value;
                 if (attrValue) {
-                    result.style.backgroundColor = normalizeColorValue(node);
+                    result.style.backgroundColor = normalizeColorValue(attrValue);
                 }
 
                 break;
@@ -144,26 +159,14 @@ export default function (node, documentData) {
                 }
 
                 break;
-            case 'tabs':
-                let value = 0;
-                [].forEach.call(node && node.childNodes || [], (node) => {
-                    const attrValue = node.attributes['w:pos'] && node.attributes['w:pos'].value;
-                    value += isNaN(attrValue) ? 0 : Number(attrValue);
-                });
-
-                if (value) {
-                    result.style.textIndent = result.style.textIndent || {
-                        value: 0,
-                        unit: 'pt'
-                    };
-
-                    result.style.textIndent.value += value / 20;
-                }
-
-                break;
             case 'textAlignment':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-                result.style.verticalAlign = normalizeVerticalAlign(attrValue);
+                if (attrValue === 'subscript') {
+                    result.textProperties.properties.tagName = 'SUB';
+                } else if (attrValue === 'superscript') {
+                    result.textProperties.properties.tagName = 'SUP';
+                }
+
                 break;
         }
     });

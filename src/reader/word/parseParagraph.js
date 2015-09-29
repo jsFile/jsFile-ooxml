@@ -13,6 +13,7 @@ const {merge, clone} = JsFile.Engine;
 export default function (params) {
     const {node, documentData, style} = params;
     const result = Document.elementPrototype;
+    const forEach = [].forEach;
     let paragraphProperties;
     result.properties.tagName = 'P';
 
@@ -23,7 +24,7 @@ export default function (params) {
     paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
     merge(result.style, paragraphProperties.style, style);
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
+    forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         let el;
         const localName = node.localName;
@@ -55,13 +56,12 @@ export default function (params) {
                 break;
             case 'hyperlink':
                 let href = '#';
-
                 el = Document.elementPrototype;
                 el.properties.tagName = 'A';
                 attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
                 const relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
 
-                [].forEach.call(node && node.childNodes || [], (node) => {
+                forEach.call(node && node.childNodes || [], (node) => {
                     el.children.push(parseText({
                         node,
                         documentData,

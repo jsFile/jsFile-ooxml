@@ -18,6 +18,7 @@ export default (params) => {
 
     let rowProperties;
     let thead;
+    const forEach = [].forEach;
     const tbody = Document.elementPrototype;
     const queue = [Document.elementPrototype];
     const tableProperties = clone(documentData.styles.defaults.tableProperties) || {};
@@ -25,7 +26,7 @@ export default (params) => {
     queue[0].properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
+    forEach.call(node && node.childNodes || [], (node) => {
         const localName = node.localName;
 
         if (localName === 'tblPr') {
@@ -54,7 +55,7 @@ export default (params) => {
             //clear old value
             rowProperties = {};
 
-            [].forEach.call(node && node.childNodes || [], (node) => {
+            forEach.call(node && node.childNodes || [], (node) => {
                 const localName = node.localName;
 
                 // TODO: parse tblPrEx (Table Property Exceptions)
@@ -65,7 +66,7 @@ export default (params) => {
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
                     const col = Document.elementPrototype;
-                    const nodes = [].slice.call(node.childNodes || [], 0);
+                    const nodes = [].slice.call(node && node.childNodes || [], 0);
                     col.properties.tagName = 'TD';
 
                     if (nodes[0]) {

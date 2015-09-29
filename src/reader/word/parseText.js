@@ -8,21 +8,23 @@ const {merge, clone, formatPropertyName, nbHyphen, enDash, space, tabAsSpaces} =
 export default function (params = {}) {
     const {node, documentData, style} = params;
     const result = Document.elementPrototype;
+    const forEach = [].forEach;
+    result.properties.tagName = 'SPAN';
 
     if (!node || !documentData) {
         return result;
     }
 
-    const forEach = [].forEach;
     const textProperties = clone(documentData.styles.defaults.textProperties);
     forEach.call((node && node.attributes) || [], ({value, name}) => {
         textProperties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
     });
 
-    forEach.call(node && node.childNodes || [], ({textContent, localName, attributes}) => {
+    forEach.call(node && node.childNodes || [], (node) => {
         let el;
+        const {textContent = '', attributes} = node;
 
-        switch (localName) {
+        switch (node.localName) {
             case 'cr':
                 el = Document.elementPrototype;
                 el.properties.tagName = 'BR';
@@ -63,7 +65,7 @@ export default function (params = {}) {
 
             case 't':
                 result.properties.textContent = result.properties.textContent || '';
-                result.properties.textContent += ((textContent) || '').replace(/\s/g, space);
+                result.properties.textContent += textContent.replace(/\s/g, space);
                 break;
             case 'tab':
                 result.properties.textContent = result.properties.textContent || '';
@@ -76,5 +78,6 @@ export default function (params = {}) {
     });
 
     merge(result.style, textProperties.style, style);
+    merge(result.properties, textProperties.properties, style);
     return result;
 }
