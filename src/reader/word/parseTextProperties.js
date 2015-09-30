@@ -63,12 +63,8 @@ export default function (node, documentData) {
                 break;
             case 'rStyle':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
-                let usedStyleData = attrValue && documentData && documentData.styles &&
-                    documentData.styles.usedStyles && documentData.styles.usedStyles[attrValue];
-
-                result.styleId = attrValue;
-                if (usedStyleData) {
-                    result = merge(result, usedStyleData.textProperties);
+                if (attrValue) {
+                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
                 }
 
                 break;

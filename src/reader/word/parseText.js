@@ -6,7 +6,7 @@ const {Document} = JsFile;
 const {merge, clone, formatPropertyName, nbHyphen, enDash, space, tabAsSpaces} = JsFile.Engine;
 
 export default function (params = {}) {
-    const {node, documentData, style} = params;
+    const {node, documentData} = params;
     const result = Document.elementPrototype;
     const forEach = [].forEach;
     result.properties.tagName = 'SPAN';
@@ -15,10 +15,11 @@ export default function (params = {}) {
         return result;
     }
 
-    const textProperties = clone(documentData.styles.defaults.textProperties);
-    forEach.call((node && node.attributes) || [], ({value, name}) => {
-        textProperties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
-    });
+    const textProperties = {
+        style: {},
+        properties: documentData.styles.defaults.textProperties &&
+            clone(documentData.styles.defaults.textProperties.properties) || {}
+    };
 
     forEach.call(node && node.childNodes || [], (node) => {
         let el;
@@ -77,7 +78,6 @@ export default function (params = {}) {
         }
     });
 
-    merge(result.style, textProperties.style, style);
-    merge(result.properties, textProperties.properties, style);
+    merge(result, textProperties);
     return result;
 }

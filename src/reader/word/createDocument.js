@@ -39,8 +39,8 @@ export default function (filesEntry) {
             }
 
             let method;
-            let isMediaSource = Boolean(filename && (filename.includes('media/')));
             const filename = fileEntry.entry.filename;
+            let isMediaSource = Boolean(filename && (filename.includes('media/')));
             if (isMediaSource) {
                 method = 'readAsDataURL';
             }

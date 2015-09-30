@@ -11,7 +11,7 @@ const {merge, clone} = JsFile.Engine;
  * @returns {*}
  */
 export default (params) => {
-    const {node, documentData, style, parseDocumentContentNodes} = params;
+    const {node, documentData, parseDocumentContentNodes} = params;
     if (!node || !documentData) {
         return Promise.reject();
     }
@@ -21,7 +21,11 @@ export default (params) => {
     const forEach = [].forEach;
     const tbody = Document.elementPrototype;
     const queue = [Document.elementPrototype];
-    const tableProperties = clone(documentData.styles.defaults.tableProperties) || {};
+    const tableProperties = {
+        style: {},
+        properties: documentData.styles.defaults.tableProperties &&
+            clone(documentData.styles.defaults.tableProperties.properties) || {}
+    };
     const colProperties = clone(tableProperties.colProperties);
     queue[0].properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
@@ -98,7 +102,7 @@ export default (params) => {
         }
     });
 
-    merge(queue[0].style, tableProperties.style, style);
+    merge(queue[0].style, tableProperties);
     if (thead) {
         queue[0].children.push(thead);
     }

@@ -3,6 +3,23 @@ import parseTextProperties from './parseTextProperties';
 import parseParagraphProperties from './parseParagraphProperties';
 import parseTableProperties from './parseTableProperties';
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
+const parsers = {
+    rPr: {
+        name: 'textProperties',
+        selector: 'p',//set for all content in paragraph
+        exec: parseTextProperties
+    },
+    pPr: {
+        name: 'paragraphProperties',
+        selector: 'p',
+        exec: parseParagraphProperties
+    },
+    tblPr: {
+        name: 'tableProperties',
+        selector: 'table',
+        exec: parseTableProperties
+    }
+};
 
 /**
  * @description Parsing document styles
@@ -19,23 +36,25 @@ export default function (xml) {
         latentStyles: {
             exceptions: {}
         },
-        usedStyles: {}
+        computed: [],
+        named: {}
     };
     const node = xml.querySelector('styles');
     const forEach = [].forEach;
 
     forEach.call(node && node.childNodes || [], (node) => {
-        let localName = node.localName;
+        const {localName} = node;
         if (localName === 'docDefaults') {
-            let prNode = node.querySelector('rPrDefault rPr');
-            if (prNode) {
-                result.defaults.textProperties = parseTextProperties(prNode);
-            }
-
-            prNode = node.querySelector('pPrDefault pPr');
-            if (prNode) {
-                result.defaults.paragraphProperties = parseParagraphProperties(prNode);
-            }
+            forEach.call(node.querySelectorAll('rPr, pPr'), (node) => {
+                const {exec, name, selector} = parsers[node.localName] || {};
+                if (exec) {
+                    result.defaults[name] = exec(node);
+                    result.computed.push({
+                        selector: selector,
+                        properties: result.defaults[name].style
+                    });
+                }
+            });
         } else if (localName === 'latentStyles') {
             forEach.call(node.attributes || [], ({name, value = ''}) => {
                 result.latentStyles[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
@@ -43,20 +62,19 @@ export default function (xml) {
 
             forEach.call(node.querySelectorAll('lsdException'), (node) => {
                 const data = {};
+                let exName;
 
-                forEach.call(node.attributes || [], function (attr) {
-                    const formattedName = formatPropertyName(attr.name);
-                    let name;
+                forEach.call(node.attributes || [], ({name, value = ''}) => {
+                    const formattedName = formatPropertyName(name);
                     if (formattedName === 'name') {
-                        name = formattedName;
-                        result.latentStyles.exceptions[name] = data;
+                        exName = formattedName;
+                        result.latentStyles.exceptions[exName] = data;
                     }
 
-                    if (name) {
-                        result.latentStyles.exceptions[name][formattedName] =
-                            isNaN(attr.value) ? (attr.value || '') : Number(attr.value);
+                    if (exName) {
+                        result.latentStyles.exceptions[exName][formattedName] = isNaN(value) ? value : Number(value);
                     } else {
-                        data[formattedName] = isNaN(attr.value) ? (attr.value || '') : Number(attr.value);
+                        data[formattedName] = isNaN(value) ? value : Number(value);
                     }
                 });
             });
@@ -65,71 +83,27 @@ export default function (xml) {
             const value = attr && attr.value;
 
             if (value) {
-                result.usedStyles[value] = {
-                    isDefault: attributeToBoolean(node.attributes['w:default'])
+                result.named[value] = {
+                    isDefault: attributeToBoolean(node.attributes['w:default']),
+                    type: node.attributes['w:type'] &&  node.attributes['w:type'].value
                 };
 
-                let propertiesNode = node.querySelector('pPr');
-                if (propertiesNode) {
-                    result.usedStyles[value].paragraphProperties = parseParagraphProperties(propertiesNode);
-                }
-
-                propertiesNode = node.querySelector('rPr');
-                if (propertiesNode) {
-                    result.usedStyles[value].textProperties = parseTextProperties(propertiesNode);
-                }
-
-                propertiesNode = node.querySelector('tblPr');
-                if (propertiesNode) {
-                    result.usedStyles[value].tableProperties = parseTableProperties(propertiesNode);
-                }
-
-                attr = node.attributes['w:type'];
-                result.usedStyles[value].type = (attr && attr.value) || '';
-
-                propertiesNode = node.querySelector('name');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].name = attr.value;
-                }
-
-                propertiesNode = node.querySelector('rsid');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].rsid = attr.value;
-                }
-
-                propertiesNode = node.querySelector('basedOn');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].parentStyleId = attr.value;
-                }
-
-                propertiesNode = node.querySelector('next');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].nextElementStyle = attr.value;
-                }
-
-                propertiesNode = node.querySelector('uiPriority');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].uiPriority = Number(attr.value);
-                }
-
-                propertiesNode = node.querySelector('link');
-                attr = propertiesNode && propertiesNode.attributes['w:val'];
-                if (attr && attr.value) {
-                    result.usedStyles[value].linkedStyle = attr.value;
-                }
-
-                propertiesNode = node.querySelector('unhideWhenUsed');
-                result.usedStyles[value].unHideWhenUsed =
-                    attributeToBoolean(propertiesNode && propertiesNode.attributes['w:val']);
-
-                propertiesNode = node.querySelector('qFormat');
-                result.usedStyles[value].isPrimary =
-                    attributeToBoolean(propertiesNode && propertiesNode.attributes['w:val']);
+                forEach.call(node.childNodes || [], function (node) {
+                    const {localName, attributes} = node;
+                    const {exec, name, selector} = parsers[localName] || {};
+                    if (exec) {
+                        this[name] = exec(node);
+                    } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
+                        attr = attributes['w:val'];
+                        if (attr && attr.value) {
+                            this[localName] = attr.value;
+                        }
+                    } else if (localName === 'unhideWhenUsed') {
+                        this.unHideWhenUsed = attributeToBoolean(attributes['w:val']);
+                    } else if (localName === 'qFormat') {
+                        this.isPrimary = attributeToBoolean(attributes['w:val']);
+                    }
+                }, result.named[value]);
             }
         }
     });

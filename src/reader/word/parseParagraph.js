@@ -11,18 +11,18 @@ const {merge, clone} = JsFile.Engine;
  * @returns {*}
  */
 export default function (params) {
-    const {node, documentData, style} = params;
+    const {node, documentData} = params;
     const result = Document.elementPrototype;
     const forEach = [].forEach;
-    let paragraphProperties;
     result.properties.tagName = 'P';
 
     if (!node || !documentData) {
         return result;
     }
 
-    paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
-    merge(result.style, paragraphProperties.style, style);
+    if (documentData.styles.defaults.paragraphProperties) {
+        merge(result.properties, documentData.styles.defaults.paragraphProperties.properties);
+    }
 
     forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
@@ -42,17 +42,15 @@ export default function (params) {
                 break;
             case 'pPr':
                 let props = parseParagraphProperties(node, documentData);
-                merge(paragraphProperties, props);
-                if (paragraphProperties.isListItem) {
+                if (result.properties.tagName === 'LI') {
                     /**
                      * @description Clear paragraph styles
                      * @type {*}
                      */
                     result.style = {};
-                    paragraphProperties.style = props.style;
                 }
 
-                merge(result.style, paragraphProperties.style);
+                merge(result, props);
                 break;
             case 'hyperlink':
                 let href = '#';
@@ -64,8 +62,7 @@ export default function (params) {
                 forEach.call(node && node.childNodes || [], (node) => {
                     el.children.push(parseText({
                         node,
-                        documentData,
-                        style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
+                        documentData
                     }));
                 });
 
@@ -82,8 +79,7 @@ export default function (params) {
             case 'r':
                 result.children.push(parseText({
                     node,
-                    documentData,
-                    style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
+                    documentData
                 }));
 
                 break;

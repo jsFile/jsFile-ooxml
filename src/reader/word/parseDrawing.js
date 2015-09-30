@@ -7,6 +7,7 @@ const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 export default function (node, documentData) {
     let result = Document.elementPrototype;
     let attrValue;
+    let childNode = node.querySelector('prstGeom');
     const extents = {};
     const inline = {
         extent: {},
@@ -17,10 +18,10 @@ export default function (node, documentData) {
             bottom: 0
         }
     };
+    const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
+    const forEach = [].forEach;
 
     result.properties.tagName = 'IMG';
-    let childNode = node.querySelector('prstGeom');
-    const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
     childNode = node.querySelector('blip');
     attrValue = childNode && childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
     if (attrValue) {
@@ -84,7 +85,7 @@ export default function (node, documentData) {
 
     childNode = node.querySelector('inline');
     if (childNode) {
-        Array.prototype.forEach.call(childNode.attributes || [], function (attr) {
+        forEach.call(childNode.attributes || [], function (attr) {
             let value = attr.value;
 
             if (value) {
@@ -92,76 +93,90 @@ export default function (node, documentData) {
                 result.properties.inline[formatPropertyName(attr.name)] = isNaN(value) ? value : Number(value);
             }
         });
-    }
 
-    childNode = node.querySelector('docPr');
-    attrValue = childNode && childNode.attributes.id && childNode.attributes.id.value;
-    if (attrValue) {
-        result.properties.id = attrValue;
-    }
-
-    attrValue = childNode && childNode.attributes.name && childNode.attributes.name.value;
-    if (attrValue) {
-        result.properties.name = attrValue;
-    }
-
-    if (attributeToBoolean(childNode.attributes.hidden)) {
-        result.style.visibility = 'hidden';
-    }
-
-    attrValue = childNode && childNode.attributes.descr && childNode.attributes.descr.value;
-    if (attrValue) {
-        result.properties.alt = attrValue;
-    }
-
-    // TODO: parse childNode = node.querySelector('extent');
-    childNode = node.querySelector('effectExtent');
-    Array.prototype.forEach.call((childNode && childNode.attributes) || [], function (attr) {
-        const value = attr.value;
-        if (value) {
-            const attrName = formatPropertyName(attr.name);
-            switch (attrName) {
-                case 'l':
-                    if (!isNaN(value)) {
-                        result.style.left = {
-                            value: Number(value),
-                            unit: 'emu'
-                        };
+        childNode = childNode.querySelector('blipFill blip');
+        if (childNode) {
+            attrValue = childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
+            const rel = attrValue && documentData.relationships && documentData.relationships.document[attrValue];
+            if (rel) {
+                for (let k in documentData.media) {
+                    if (documentData.media.hasOwnProperty(k) && k.indexOf(rel.target) >= 0) {
+                        result.properties.src = documentData.media[k].data;
+                        break;
                     }
-
-                    break;
-                case 'r':
-                    if (!isNaN(value)) {
-                        result.style.right = {
-                            value: Number(value),
-                            unit: 'emu'
-                        };
-                    }
-
-                    break;
-                case 'b':
-                    if (!isNaN(value)) {
-                        result.style.bottom = {
-                            value: Number(value),
-                            unit: 'emu'
-                        };
-                    }
-
-                    break;
-                case 'top':
-                    if (!isNaN(value)) {
-                        result.style.top = {
-                            value: Number(value),
-                            unit: 'emu'
-                        };
-                    }
-
-                    break;
-                default:
-                    inline.effectExtent[attrName] = value;
+                }
             }
         }
-    });
+
+        childNode = node.querySelector('docPr');
+        attrValue = childNode && childNode.attributes.id && childNode.attributes.id.value;
+        if (attrValue) {
+            result.properties.id = attrValue;
+        }
+
+        attrValue = childNode && childNode.attributes.name && childNode.attributes.name.value;
+        if (attrValue) {
+            result.properties.name = attrValue;
+        }
+
+        if (attributeToBoolean(childNode.attributes.hidden)) {
+            result.style.visibility = 'hidden';
+        }
+
+        attrValue = childNode && childNode.attributes.descr && childNode.attributes.descr.value;
+        if (attrValue) {
+            result.properties.alt = attrValue;
+        }
+
+        // TODO: parse childNode = node.querySelector('extent');
+        childNode = node.querySelector('effectExtent');
+        forEach.call((childNode && childNode.attributes) || [], function (attr) {
+            const value = attr.value;
+            if (value) {
+                const attrName = formatPropertyName(attr.name);
+                switch (attrName) {
+                    case 'l':
+                        if (!isNaN(value)) {
+                            result.style.left = {
+                                value: Number(value),
+                                unit: 'emu'
+                            };
+                        }
+
+                        break;
+                    case 'r':
+                        if (!isNaN(value)) {
+                            result.style.right = {
+                                value: Number(value),
+                                unit: 'emu'
+                            };
+                        }
+
+                        break;
+                    case 'b':
+                        if (!isNaN(value)) {
+                            result.style.bottom = {
+                                value: Number(value),
+                                unit: 'emu'
+                            };
+                        }
+
+                        break;
+                    case 'top':
+                        if (!isNaN(value)) {
+                            result.style.top = {
+                                value: Number(value),
+                                unit: 'emu'
+                            };
+                        }
+
+                        break;
+                    default:
+                        inline.effectExtent[attrName] = value;
+                }
+            }
+        });
+    }
 
     // TODO: parse inline, extents objects and shapeType property
     return result;

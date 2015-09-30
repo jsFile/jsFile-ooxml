@@ -22,7 +22,8 @@ export default function (params) {
             name: fileName,
             wordsCount: (documentData.applicationInfo && documentData.applicationInfo.wordsCount) || null,
             zoom: (documentData.settings && documentData.settings.zoom) || 100,
-            content: []
+            content: [],
+            styles: documentData.styles.computed
         };
         const pagePrototype = {};
         node = xml && xml.querySelector('background');
@@ -57,7 +58,7 @@ export default function (params) {
                 const page = Document.elementPrototype;
                 page.children = response[0];
                 page.style = documentData.styles.defaults.sectionProperties &&
-                documentData.styles.defaults.sectionProperties.style || {};
+                    documentData.styles.defaults.sectionProperties.style || {};
 
                 //TODO: add page break
                 // because now it's only 1 page for all content

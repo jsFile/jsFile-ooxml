@@ -9,8 +9,10 @@ const alignmentValues = ['left', 'right', 'center'];
 export default function (node, documentData) {
     let result = {
         style: {},
-        textProperties: {
-            properties: {}
+        properties: {
+            textProperties: {
+                properties: {}
+            }
         }
     };
     const forEach = [].forEach;
@@ -82,7 +84,7 @@ export default function (node, documentData) {
                 const id = idAttrs && idAttrs['w:val'] && idAttrs['w:val'].value;
                 const level = levelAttrs && levelAttrs['w:val'] && levelAttrs['w:val'].value;
 
-                result.numbering = {
+                result.properties.numbering = {
                     id: !isNaN(id) ? Number(id) : 0,
                     level: !isNaN(level) ? Number(level) : 0
                 };
@@ -90,35 +92,36 @@ export default function (node, documentData) {
                 break;
             case 'outlineLvl':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-                result.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
+                result.properties.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
                 break;
             case 'pBdr':
                 merge(result.style, parseBorderProperties(node));
                 break;
             case 'pStyle':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-                let usedStyleData = attrValue && documentData && documentData.styles &&
-                    documentData.styles.usedStyles && documentData.styles.usedStyles[attrValue];
-
-                result.styleId = attrValue;
-                if (usedStyleData) {
-                    const headingInfo = (/Heading\s*([0-9]+)/i).exec(usedStyleData.name);
+                if (attrValue) {
+                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+                    const headingInfo = (/Heading\s*([0-9]+)/i).exec(attrValue);
 
                     if (headingInfo) {
-                        result.heading = {
+                        result.properties.heading = {
                             level: isNaN(headingInfo[1]) ? 0 : Number(headingInfo[1])
                         };
-                    } else if ((/List\s*Paragraph/i).test(usedStyleData.name)) {
-                        result.isListItem = true;
+                    } else if ((/List\s*Paragraph/i).test(attrValue)) {
+                        /**
+                         * @description mark it as a list item
+                         * @type {string}
+                         */
+                        result.properties.tagName = 'LI';
                     }
-
-                    result.textProperties = merge(result.textProperties, usedStyleData.textProperties);
-                    result = merge(result, usedStyleData.paragraphProperties);
                 }
 
                 break;
             case 'rPr':
-                result.textProperties = merge(result.textProperties, parseTextProperties(node, documentData));
+                result.properties.textProperties = merge(
+                    result.properties.textProperties,
+                    parseTextProperties(node, documentData)
+                );
                 break;
             case 'shd':
                 attrValue = node.attributes['w:fill'] && node.attributes['w:fill'].value;
@@ -162,9 +165,9 @@ export default function (node, documentData) {
             case 'textAlignment':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
                 if (attrValue === 'subscript') {
-                    result.textProperties.properties.tagName = 'SUB';
+                    result.properties.textProperties.properties.tagName = 'SUB';
                 } else if (attrValue === 'superscript') {
-                    result.textProperties.properties.tagName = 'SUP';
+                    result.properties.textProperties.properties.tagName = 'SUP';
                 }
 
                 break;

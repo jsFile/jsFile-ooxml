@@ -252,8 +252,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            var method = undefined;
-	            var isMediaSource = Boolean(filename && filename.includes('media/'));
 	            var filename = fileEntry.entry.filename;
+	            var isMediaSource = Boolean(filename && filename.includes('media/'));
 	            if (isMediaSource) {
 	                method = 'readAsDataURL';
 	            }
@@ -930,6 +930,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 
+	var parsers = {
+	    rPr: {
+	        name: 'textProperties',
+	        selector: 'p', //set for all content in paragraph
+	        exec: _parseTextProperties2['default']
+	    },
+	    pPr: {
+	        name: 'paragraphProperties',
+	        selector: 'p',
+	        exec: _parseParagraphProperties2['default']
+	    },
+	    tblPr: {
+	        name: 'tableProperties',
+	        selector: 'table',
+	        exec: _parseTableProperties2['default']
+	    }
+	};
+
 	/**
 	 * @description Parsing document styles
 	 * @param xml
@@ -946,119 +964,98 @@ return /******/ (function(modules) { // webpackBootstrap
 	        latentStyles: {
 	            exceptions: {}
 	        },
-	        usedStyles: {}
+	        computed: [],
+	        named: {}
 	    };
 	    var node = xml.querySelector('styles');
 	    var forEach = [].forEach;
 
 	    forEach.call(node && node.childNodes || [], function (node) {
 	        var localName = node.localName;
-	        if (localName === 'docDefaults') {
-	            var prNode = node.querySelector('rPrDefault rPr');
-	            if (prNode) {
-	                result.defaults.textProperties = (0, _parseTextProperties2['default'])(prNode);
-	            }
 
-	            prNode = node.querySelector('pPrDefault pPr');
-	            if (prNode) {
-	                result.defaults.paragraphProperties = (0, _parseParagraphProperties2['default'])(prNode);
-	            }
-	        } else if (localName === 'latentStyles') {
-	            forEach.call(node.attributes || [], function (_ref) {
+	        if (localName === 'docDefaults') {
+	            forEach.call(node.querySelectorAll('rPr, pPr'), function (node) {
+	                var _ref = parsers[node.localName] || {};
+
+	                var exec = _ref.exec;
 	                var name = _ref.name;
-	                var _ref$value = _ref.value;
-	                var value = _ref$value === undefined ? '' : _ref$value;
+	                var selector = _ref.selector;
+
+	                if (exec) {
+	                    result.defaults[name] = exec(node);
+	                    result.computed.push({
+	                        selector: selector,
+	                        properties: result.defaults[name].style
+	                    });
+	                }
+	            });
+	        } else if (localName === 'latentStyles') {
+	            forEach.call(node.attributes || [], function (_ref2) {
+	                var name = _ref2.name;
+	                var _ref2$value = _ref2.value;
+	                var value = _ref2$value === undefined ? '' : _ref2$value;
 
 	                result.latentStyles[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
 	            });
 
 	            forEach.call(node.querySelectorAll('lsdException'), function (node) {
 	                var data = {};
+	                var exName = undefined;
 
-	                forEach.call(node.attributes || [], function (attr) {
-	                    var formattedName = formatPropertyName(attr.name);
-	                    var name = undefined;
+	                forEach.call(node.attributes || [], function (_ref3) {
+	                    var name = _ref3.name;
+	                    var _ref3$value = _ref3.value;
+	                    var value = _ref3$value === undefined ? '' : _ref3$value;
+
+	                    var formattedName = formatPropertyName(name);
 	                    if (formattedName === 'name') {
-	                        name = formattedName;
-	                        result.latentStyles.exceptions[name] = data;
+	                        exName = formattedName;
+	                        result.latentStyles.exceptions[exName] = data;
 	                    }
 
-	                    if (name) {
-	                        result.latentStyles.exceptions[name][formattedName] = isNaN(attr.value) ? attr.value || '' : Number(attr.value);
+	                    if (exName) {
+	                        result.latentStyles.exceptions[exName][formattedName] = isNaN(value) ? value : Number(value);
 	                    } else {
-	                        data[formattedName] = isNaN(attr.value) ? attr.value || '' : Number(attr.value);
+	                        data[formattedName] = isNaN(value) ? value : Number(value);
 	                    }
 	                });
 	            });
 	        } else if (localName === 'style') {
-	            var attr = node.attributes['w:styleId'];
-	            var value = attr && attr.value;
+	            (function () {
+	                var attr = node.attributes['w:styleId'];
+	                var value = attr && attr.value;
 
-	            if (value) {
-	                result.usedStyles[value] = {
-	                    isDefault: attributeToBoolean(node.attributes['w:default'])
-	                };
+	                if (value) {
+	                    result.named[value] = {
+	                        isDefault: attributeToBoolean(node.attributes['w:default']),
+	                        type: node.attributes['w:type'] && node.attributes['w:type'].value
+	                    };
 
-	                var propertiesNode = node.querySelector('pPr');
-	                if (propertiesNode) {
-	                    result.usedStyles[value].paragraphProperties = (0, _parseParagraphProperties2['default'])(propertiesNode);
+	                    forEach.call(node.childNodes || [], function (node) {
+	                        var localName = node.localName;
+	                        var attributes = node.attributes;
+
+	                        var _ref4 = parsers[localName] || {};
+
+	                        var exec = _ref4.exec;
+	                        var name = _ref4.name;
+	                        var selector = _ref4.selector;
+
+	                        if (exec) {
+	                            this[name] = exec(node);
+	                        } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
+	                            attr = attributes['w:val'];
+	                            if (attr && attr.value) {
+	                                this[localName] = attr.value;
+	                            }
+	                        } else if (localName === 'unhideWhenUsed') {
+	                            this.unHideWhenUsed = attributeToBoolean(attributes['w:val']);
+	                        } else if (localName === 'qFormat') {
+	                            this.isPrimary = attributeToBoolean(attributes['w:val']);
+	                        }
+	                    }, result.named[value]);
 	                }
-
-	                propertiesNode = node.querySelector('rPr');
-	                if (propertiesNode) {
-	                    result.usedStyles[value].textProperties = (0, _parseTextProperties2['default'])(propertiesNode);
-	                }
-
-	                propertiesNode = node.querySelector('tblPr');
-	                if (propertiesNode) {
-	                    result.usedStyles[value].tableProperties = (0, _parseTableProperties2['default'])(propertiesNode);
-	                }
-
-	                attr = node.attributes['w:type'];
-	                result.usedStyles[value].type = attr && attr.value || '';
-
-	                propertiesNode = node.querySelector('name');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].name = attr.value;
-	                }
-
-	                propertiesNode = node.querySelector('rsid');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].rsid = attr.value;
-	                }
-
-	                propertiesNode = node.querySelector('basedOn');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].parentStyleId = attr.value;
-	                }
-
-	                propertiesNode = node.querySelector('next');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].nextElementStyle = attr.value;
-	                }
-
-	                propertiesNode = node.querySelector('uiPriority');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].uiPriority = Number(attr.value);
-	                }
-
-	                propertiesNode = node.querySelector('link');
-	                attr = propertiesNode && propertiesNode.attributes['w:val'];
-	                if (attr && attr.value) {
-	                    result.usedStyles[value].linkedStyle = attr.value;
-	                }
-
-	                propertiesNode = node.querySelector('unhideWhenUsed');
-	                result.usedStyles[value].unHideWhenUsed = attributeToBoolean(propertiesNode && propertiesNode.attributes['w:val']);
-
-	                propertiesNode = node.querySelector('qFormat');
-	                result.usedStyles[value].isPrimary = attributeToBoolean(propertiesNode && propertiesNode.attributes['w:val']);
-	            }
+	            })();
 	        }
 	    });
 
@@ -1163,11 +1160,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'rStyle':
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
-	                var usedStyleData = attrValue && documentData && documentData.styles && documentData.styles.usedStyles && documentData.styles.usedStyles[attrValue];
-
-	                result.styleId = attrValue;
-	                if (usedStyleData) {
-	                    result = merge(result, usedStyleData.textProperties);
+	                if (attrValue) {
+	                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
 	                }
 
 	                break;
@@ -1450,8 +1444,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = function (node, documentData) {
 	    var result = {
 	        style: {},
-	        textProperties: {
-	            properties: {}
+	        properties: {
+	            textProperties: {
+	                properties: {}
+	            }
 	        }
 	    };
 	    var forEach = [].forEach;
@@ -1527,7 +1523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var id = idAttrs && idAttrs['w:val'] && idAttrs['w:val'].value;
 	                var level = levelAttrs && levelAttrs['w:val'] && levelAttrs['w:val'].value;
 
-	                result.numbering = {
+	                result.properties.numbering = {
 	                    id: !isNaN(id) ? Number(id) : 0,
 	                    level: !isNaN(level) ? Number(level) : 0
 	                };
@@ -1535,34 +1531,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'outlineLvl':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-	                result.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
+	                result.properties.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
 	                break;
 	            case 'pBdr':
 	                merge(result.style, (0, _parseBorderProperties2['default'])(node));
 	                break;
 	            case 'pStyle':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-	                var usedStyleData = attrValue && documentData && documentData.styles && documentData.styles.usedStyles && documentData.styles.usedStyles[attrValue];
-
-	                result.styleId = attrValue;
-	                if (usedStyleData) {
-	                    var headingInfo = /Heading\s*([0-9]+)/i.exec(usedStyleData.name);
+	                if (attrValue) {
+	                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+	                    var headingInfo = /Heading\s*([0-9]+)/i.exec(attrValue);
 
 	                    if (headingInfo) {
-	                        result.heading = {
+	                        result.properties.heading = {
 	                            level: isNaN(headingInfo[1]) ? 0 : Number(headingInfo[1])
 	                        };
-	                    } else if (/List\s*Paragraph/i.test(usedStyleData.name)) {
-	                        result.isListItem = true;
+	                    } else if (/List\s*Paragraph/i.test(attrValue)) {
+	                        /**
+	                         * @description mark it as a list item
+	                         * @type {string}
+	                         */
+	                        result.properties.tagName = 'LI';
 	                    }
-
-	                    result.textProperties = merge(result.textProperties, usedStyleData.textProperties);
-	                    result = merge(result, usedStyleData.paragraphProperties);
 	                }
 
 	                break;
 	            case 'rPr':
-	                result.textProperties = merge(result.textProperties, (0, _parseTextProperties2['default'])(node, documentData));
+	                result.properties.textProperties = merge(result.properties.textProperties, (0, _parseTextProperties2['default'])(node, documentData));
 	                break;
 	            case 'shd':
 	                attrValue = node.attributes['w:fill'] && node.attributes['w:fill'].value;
@@ -1606,9 +1601,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'textAlignment':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
 	                if (attrValue === 'subscript') {
-	                    result.textProperties.properties.tagName = 'SUB';
+	                    result.properties.textProperties.properties.tagName = 'SUB';
 	                } else if (attrValue === 'superscript') {
-	                    result.textProperties.properties.tagName = 'SUP';
+	                    result.properties.textProperties.properties.tagName = 'SUP';
 	                }
 
 	                break;
@@ -1994,7 +1989,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            name: fileName,
 	            wordsCount: documentData.applicationInfo && documentData.applicationInfo.wordsCount || null,
 	            zoom: documentData.settings && documentData.settings.zoom || 100,
-	            content: []
+	            content: [],
+	            styles: documentData.styles.computed
 	        };
 	        var pagePrototype = {};
 	        node = xml && xml.querySelector('background');
@@ -2350,19 +2346,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = function (params) {
 	    var node = params.node;
 	    var documentData = params.documentData;
-	    var style = params.style;
 
 	    var result = Document.elementPrototype;
 	    var forEach = [].forEach;
-	    var paragraphProperties = undefined;
 	    result.properties.tagName = 'P';
 
 	    if (!node || !documentData) {
 	        return result;
 	    }
 
-	    paragraphProperties = clone(documentData.styles.defaults.paragraphProperties);
-	    merge(result.style, paragraphProperties.style, style);
+	    if (documentData.styles.defaults.paragraphProperties) {
+	        merge(result.properties, documentData.styles.defaults.paragraphProperties.properties);
+	    }
 
 	    forEach.call(node && node.childNodes || [], function (node) {
 	        var attrValue = undefined;
@@ -2382,17 +2377,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'pPr':
 	                var props = (0, _parseParagraphProperties2['default'])(node, documentData);
-	                merge(paragraphProperties, props);
-	                if (paragraphProperties.isListItem) {
+	                if (result.properties.tagName === 'LI') {
 	                    /**
 	                     * @description Clear paragraph styles
 	                     * @type {*}
 	                     */
 	                    result.style = {};
-	                    paragraphProperties.style = props.style;
 	                }
 
-	                merge(result.style, paragraphProperties.style);
+	                merge(result, props);
 	                break;
 	            case 'hyperlink':
 	                var href = '#';
@@ -2404,8 +2397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                forEach.call(node && node.childNodes || [], function (node) {
 	                    el.children.push((0, _parseText2['default'])({
 	                        node: node,
-	                        documentData: documentData,
-	                        style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
+	                        documentData: documentData
 	                    }));
 	                });
 
@@ -2422,8 +2414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'r':
 	                result.children.push((0, _parseText2['default'])({
 	                    node: node,
-	                    documentData: documentData,
-	                    style: paragraphProperties.textProperties && paragraphProperties.textProperties.style
+	                    documentData: documentData
 	                }));
 
 	                break;
@@ -2506,7 +2497,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var node = params.node;
 	    var documentData = params.documentData;
-	    var style = params.style;
 
 	    var result = Document.elementPrototype;
 	    var forEach = [].forEach;
@@ -2516,13 +2506,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return result;
 	    }
 
-	    var textProperties = clone(documentData.styles.defaults.textProperties);
-	    forEach.call(node && node.attributes || [], function (_ref) {
-	        var value = _ref.value;
-	        var name = _ref.name;
-
-	        textProperties[formatPropertyName(name)] = isNaN(value) ? value : Number(value);
-	    });
+	    var textProperties = {
+	        style: {},
+	        properties: documentData.styles.defaults.textProperties && clone(documentData.styles.defaults.textProperties.properties) || {}
+	    };
 
 	    forEach.call(node && node.childNodes || [], function (node) {
 	        var el = undefined;
@@ -2583,8 +2570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    merge(result.style, textProperties.style, style);
-	    merge(result.properties, textProperties.properties, style);
+	    merge(result, textProperties);
 	    return result;
 	};
 
@@ -2622,6 +2608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = function (node, documentData) {
 	    var result = Document.elementPrototype;
 	    var attrValue = undefined;
+	    var childNode = node.querySelector('prstGeom');
 	    var extents = {};
 	    var inline = {
 	        extent: {},
@@ -2632,10 +2619,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            bottom: 0
 	        }
 	    };
+	    var shapeType = childNode && childNode.attributes.prst && childNode.attributes.prst.value || '';
+	    var forEach = [].forEach;
 
 	    result.properties.tagName = 'IMG';
-	    var childNode = node.querySelector('prstGeom');
-	    var shapeType = childNode && childNode.attributes.prst && childNode.attributes.prst.value || '';
 	    childNode = node.querySelector('blip');
 	    attrValue = childNode && childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
 	    if (attrValue) {
@@ -2699,7 +2686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    childNode = node.querySelector('inline');
 	    if (childNode) {
-	        Array.prototype.forEach.call(childNode.attributes || [], function (attr) {
+	        forEach.call(childNode.attributes || [], function (attr) {
 	            var value = attr.value;
 
 	            if (value) {
@@ -2707,76 +2694,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.properties.inline[formatPropertyName(attr.name)] = isNaN(value) ? value : Number(value);
 	            }
 	        });
-	    }
 
-	    childNode = node.querySelector('docPr');
-	    attrValue = childNode && childNode.attributes.id && childNode.attributes.id.value;
-	    if (attrValue) {
-	        result.properties.id = attrValue;
-	    }
-
-	    attrValue = childNode && childNode.attributes.name && childNode.attributes.name.value;
-	    if (attrValue) {
-	        result.properties.name = attrValue;
-	    }
-
-	    if (attributeToBoolean(childNode.attributes.hidden)) {
-	        result.style.visibility = 'hidden';
-	    }
-
-	    attrValue = childNode && childNode.attributes.descr && childNode.attributes.descr.value;
-	    if (attrValue) {
-	        result.properties.alt = attrValue;
-	    }
-
-	    // TODO: parse childNode = node.querySelector('extent');
-	    childNode = node.querySelector('effectExtent');
-	    Array.prototype.forEach.call(childNode && childNode.attributes || [], function (attr) {
-	        var value = attr.value;
-	        if (value) {
-	            var attrName = formatPropertyName(attr.name);
-	            switch (attrName) {
-	                case 'l':
-	                    if (!isNaN(value)) {
-	                        result.style.left = {
-	                            value: Number(value),
-	                            unit: 'emu'
-	                        };
+	        childNode = childNode.querySelector('blipFill blip');
+	        if (childNode) {
+	            attrValue = childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
+	            var rel = attrValue && documentData.relationships && documentData.relationships.document[attrValue];
+	            if (rel) {
+	                for (var k in documentData.media) {
+	                    if (documentData.media.hasOwnProperty(k) && k.indexOf(rel.target) >= 0) {
+	                        result.properties.src = documentData.media[k].data;
+	                        break;
 	                    }
-
-	                    break;
-	                case 'r':
-	                    if (!isNaN(value)) {
-	                        result.style.right = {
-	                            value: Number(value),
-	                            unit: 'emu'
-	                        };
-	                    }
-
-	                    break;
-	                case 'b':
-	                    if (!isNaN(value)) {
-	                        result.style.bottom = {
-	                            value: Number(value),
-	                            unit: 'emu'
-	                        };
-	                    }
-
-	                    break;
-	                case 'top':
-	                    if (!isNaN(value)) {
-	                        result.style.top = {
-	                            value: Number(value),
-	                            unit: 'emu'
-	                        };
-	                    }
-
-	                    break;
-	                default:
-	                    inline.effectExtent[attrName] = value;
+	                }
 	            }
 	        }
-	    });
+
+	        childNode = node.querySelector('docPr');
+	        attrValue = childNode && childNode.attributes.id && childNode.attributes.id.value;
+	        if (attrValue) {
+	            result.properties.id = attrValue;
+	        }
+
+	        attrValue = childNode && childNode.attributes.name && childNode.attributes.name.value;
+	        if (attrValue) {
+	            result.properties.name = attrValue;
+	        }
+
+	        if (attributeToBoolean(childNode.attributes.hidden)) {
+	            result.style.visibility = 'hidden';
+	        }
+
+	        attrValue = childNode && childNode.attributes.descr && childNode.attributes.descr.value;
+	        if (attrValue) {
+	            result.properties.alt = attrValue;
+	        }
+
+	        // TODO: parse childNode = node.querySelector('extent');
+	        childNode = node.querySelector('effectExtent');
+	        forEach.call(childNode && childNode.attributes || [], function (attr) {
+	            var value = attr.value;
+	            if (value) {
+	                var attrName = formatPropertyName(attr.name);
+	                switch (attrName) {
+	                    case 'l':
+	                        if (!isNaN(value)) {
+	                            result.style.left = {
+	                                value: Number(value),
+	                                unit: 'emu'
+	                            };
+	                        }
+
+	                        break;
+	                    case 'r':
+	                        if (!isNaN(value)) {
+	                            result.style.right = {
+	                                value: Number(value),
+	                                unit: 'emu'
+	                            };
+	                        }
+
+	                        break;
+	                    case 'b':
+	                        if (!isNaN(value)) {
+	                            result.style.bottom = {
+	                                value: Number(value),
+	                                unit: 'emu'
+	                            };
+	                        }
+
+	                        break;
+	                    case 'top':
+	                        if (!isNaN(value)) {
+	                            result.style.top = {
+	                                value: Number(value),
+	                                unit: 'emu'
+	                            };
+	                        }
+
+	                        break;
+	                    default:
+	                        inline.effectExtent[attrName] = value;
+	                }
+	            }
+	        });
+	    }
 
 	    // TODO: parse inline, extents objects and shapeType property
 	    return result;
@@ -3055,7 +3056,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = function (params) {
 	    var node = params.node;
 	    var documentData = params.documentData;
-	    var style = params.style;
 	    var parseDocumentContentNodes = params.parseDocumentContentNodes;
 
 	    if (!node || !documentData) {
@@ -3067,7 +3067,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var forEach = [].forEach;
 	    var tbody = Document.elementPrototype;
 	    var queue = [Document.elementPrototype];
-	    var tableProperties = clone(documentData.styles.defaults.tableProperties) || {};
+	    var tableProperties = {
+	        style: {},
+	        properties: documentData.styles.defaults.tableProperties && clone(documentData.styles.defaults.tableProperties.properties) || {}
+	    };
 	    var colProperties = clone(tableProperties.colProperties);
 	    queue[0].properties.tagName = 'TABLE';
 	    tbody.properties.tagName = 'TBODY';
@@ -3152,7 +3155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    merge(queue[0].style, tableProperties.style, style);
+	    merge(queue[0].style, tableProperties);
 	    if (thead) {
 	        queue[0].children.push(thead);
 	    }
