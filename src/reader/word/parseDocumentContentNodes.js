@@ -38,16 +38,6 @@ function parse(params) {
                     };
                 }
 
-                if (el.style.paddingLeft) {
-                    listElement.style.paddingLeft = el.style.paddingLeft;
-                    delete el.style.paddingLeft;
-                }
-
-                if (el.style.marginLeft) {
-                    listElement.style.marginLeft = el.style.marginLeft;
-                    delete el.style.marginLeft;
-                }
-
                 listElement.children.push(el);
             } else {
                 if (listElement) {

@@ -80,10 +80,10 @@ export default function (xml) {
             });
         } else if (localName === 'style') {
             let attr = node.attributes['w:styleId'];
-            const value = attr && attr.value;
+            const styleId = attr && attr.value;
 
-            if (value) {
-                result.named[value] = {
+            if (styleId) {
+                result.named[styleId] = {
                     isDefault: attributeToBoolean(node.attributes['w:default']),
                     type: node.attributes['w:type'] &&  node.attributes['w:type'].value
                 };
@@ -93,6 +93,10 @@ export default function (xml) {
                     const {exec, name, selector} = parsers[localName] || {};
                     if (exec) {
                         this[name] = exec(node);
+                        result.computed.push({
+                            selector: `.${styleId}`,
+                            properties: this[name].style
+                        });
                     } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
                         attr = attributes['w:val'];
                         if (attr && attr.value) {
@@ -103,7 +107,7 @@ export default function (xml) {
                     } else if (localName === 'qFormat') {
                         this.isPrimary = attributeToBoolean(attributes['w:val']);
                     }
-                }, result.named[value]);
+                }, result.named[styleId]);
             }
         }
     });

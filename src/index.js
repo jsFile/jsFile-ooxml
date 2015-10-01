@@ -1,5 +1,6 @@
 import {Engine, defineEngine} from 'JsFile';
 import createDocument from './reader/createDocument';
+import polyfill from './polyfill';
 
 const wordProcessingFiles = {
     extension: ['docx'],

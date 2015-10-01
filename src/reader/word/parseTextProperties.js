@@ -10,9 +10,10 @@ export default function (node, documentData) {
         properties: {}
     };
 
-    [].forEach.call(node && node.childNodes || [], ({attributes, localName}) => {
+    [].forEach.call(node && node.childNodes || [], (node) => {
         let attr;
         let attrValue;
+        const {attributes, localName} = node;
 
         switch (localName) {
             case 'b':
@@ -64,7 +65,13 @@ export default function (node, documentData) {
             case 'rStyle':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (attrValue) {
-                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+                    if (!result.properties.className) {
+                        result.properties.className = '';
+                    } else {
+                        attrValue = ' ' + attrValue;
+                    }
+
+                    result.properties.className += attrValue;
                 }
 
                 break;
@@ -128,9 +135,9 @@ export default function (node, documentData) {
                         attr = attributes['w:asciiTheme'];
                         if (attr) {
                             if ((/major/ig).test(attr.value)) {
-                                result.majorFontFamily = true;
+                                result.properties.majorFontFamily = true;
                             } else if ((/minor/ig).test(attr.value)) {
-                                result.minorFontFamily = true;
+                                result.properties.minorFontFamily = true;
                             }
                         }
                     }
@@ -138,19 +145,19 @@ export default function (node, documentData) {
 
                 break;
             case 'oMath':
-                result.math = (attributeToBoolean(attributes['w:val']));
+                result.properties.math = (attributeToBoolean(attributes['w:val']));
                 break;
             case 'snapToGrid':
-                result.useDocumentGrid = (attributeToBoolean(attributes['w:val']));
+                result.properties.useDocumentGrid = (attributeToBoolean(attributes['w:val']));
                 break;
             case 'webHidden':
-                result.webHiddenText = (attributeToBoolean(attributes['w:val']));
+                result.properties.webHiddenText = (attributeToBoolean(attributes['w:val']));
                 break;
             case 'noProof':
-                result.checkSpellingGrammar = !(attributeToBoolean(attributes['w:val']));
+                result.properties.checkSpellingGrammar = !(attributeToBoolean(attributes['w:val']));
                 break;
             case 'fitText':
-                result.fitText = result.fitText || {};
+                result.properties.fitText = result.properties.fitText || {};
                 attrValue = attributes['w:id'] && attributes['w:id'].value;
                 result.fitText.id = attrValue || null;
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -160,10 +167,10 @@ export default function (node, documentData) {
                 } : null;
                 break;
             case 'effect':
-                result.effect = parseStyleEffectProperty(node);
+                result.properties.effect = parseStyleEffectProperty(node);
                 break;
             case 'eastAsianLayout':
-                result.eastAsianSettings = {
+                result.properties.eastAsianSettings = {
                     id: attributes['w:id'] ? attributes['w:id'].value : null,
                     combines: Boolean(attributes['w:combine']),
                     isVertical: Boolean(attributes['w:vert']),
@@ -175,7 +182,7 @@ export default function (node, documentData) {
             case 'position':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (!isNaN(attrValue)) {
-                    result.position = {
+                    result.properties.position = {
                         value: attrValue / 2,
                         unit: 'pt'
                     };
@@ -192,10 +199,6 @@ export default function (node, documentData) {
                 }
 
                 break;
-            case 'w':
-                attrValue = attributes['w:val'] && attributes['w:val'].value;
-                result.textScale = !isNaN(attrValue) ? Number(attrValue) : result.textScale;
-                break;
             case 'shd':
                 attrValue = attributes['w:fill'] && attributes['w:fill'].value;
                 if (attrValue) {
@@ -204,7 +207,7 @@ export default function (node, documentData) {
 
                 break;
             case 'em':
-                result.emphasis = parseEmphasis(attributes['w:val']);
+                result.properties.emphasis = parseEmphasis(attributes['w:val']);
                 break;
             case 'highlight':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -215,24 +218,26 @@ export default function (node, documentData) {
 
                 break;
             case 'bdr':
-                result.textBorder = {
-                    color: (attributes['w:color'] && normalizeColorValue(attributes['w:color'].value)) || '',
-                    themeColor: (attributes['w:themeColor'] && normalizeColorValue(attributes['w:themeColor'].value)) || '',
-                    shadow: attributeToBoolean(attributes['w:shadow']),
-                    frame: attributeToBoolean(attributes['w:frame'])
-                };
+                const color = attributes['w:color'] && normalizeColorValue(attributes['w:color'].value);
+                const width = attributes['w:sz'] && (attributes['w:sz'].value / 8);
 
-                attrValue = attributes['w:sz'] && attributes['w:sz'].value;
-                if (!isNaN(attrValue)) {
-                    result.textBorder.width = {
-                        value: attrValue / 8,
+                if (color && !isNaN(width)) {
+                    result.style.borderWidth = {
+                        //can't show the border with small width
+                        value: (width > 1 || width <= 0) ? width : Math.ceil(width / 8),
                         unit: 'pt'
                     };
+                    result.style.borderColor = color;
+                    result.style.borderStyle = 'solid';
                 }
 
                 break;
             case 'lang':
-                result.language = parseLanguageNode(node);
+                const lang = parseLanguageNode(node).latin;
+                if (lang) {
+                    result.properties.lang = lang;
+                }
+
                 break;
         }
     });

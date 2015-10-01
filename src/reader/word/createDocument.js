@@ -48,7 +48,7 @@ export default function (filesEntry) {
             queue.push(this.readFileEntry({
                 file: fileEntry.file,
                 method
-            }).then((result) => {
+            }).then(function (result) {
                 let xml;
                 if (isMediaSource) {
                     documentData.media[filename] = {
@@ -83,10 +83,10 @@ export default function (filesEntry) {
                         document = xml;
                     }
                 }
-            }));
+            }.bind(this)));
         }, this);
 
-        Promise.all(queue).then(() => {
+        Promise.all(queue).then(function () {
             parseDocumentContent({
                 xml: document,
                 documentData,
@@ -96,6 +96,6 @@ export default function (filesEntry) {
             }, reject);
 
             documentData = document = null;
-        }, reject);
+        }.bind(this), reject);
     }.bind(this));
 };

@@ -76,6 +76,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _readerCreateDocument2 = _interopRequireDefault(_readerCreateDocument);
 
+	var _polyfill = __webpack_require__(36);
+
+	var _polyfill2 = _interopRequireDefault(_polyfill);
+
 	var wordProcessingFiles = {
 	    extension: ['docx'],
 	    mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -1023,10 +1027,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else if (localName === 'style') {
 	            (function () {
 	                var attr = node.attributes['w:styleId'];
-	                var value = attr && attr.value;
+	                var styleId = attr && attr.value;
 
-	                if (value) {
-	                    result.named[value] = {
+	                if (styleId) {
+	                    result.named[styleId] = {
 	                        isDefault: attributeToBoolean(node.attributes['w:default']),
 	                        type: node.attributes['w:type'] && node.attributes['w:type'].value
 	                    };
@@ -1043,6 +1047,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        if (exec) {
 	                            this[name] = exec(node);
+	                            result.computed.push({
+	                                selector: '.' + styleId,
+	                                properties: this[name].style
+	                            });
 	                        } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
 	                            attr = attributes['w:val'];
 	                            if (attr && attr.value) {
@@ -1053,7 +1061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        } else if (localName === 'qFormat') {
 	                            this.isPrimary = attributeToBoolean(attributes['w:val']);
 	                        }
-	                    }, result.named[value]);
+	                    }, result.named[styleId]);
 	                }
 	            })();
 	        }
@@ -1104,12 +1112,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        properties: {}
 	    };
 
-	    [].forEach.call(node && node.childNodes || [], function (_ref) {
-	        var attributes = _ref.attributes;
-	        var localName = _ref.localName;
-
+	    [].forEach.call(node && node.childNodes || [], function (node) {
 	        var attr = undefined;
 	        var attrValue = undefined;
+	        var attributes = node.attributes;
+	        var localName = node.localName;
 
 	        switch (localName) {
 	            case 'b':
@@ -1161,7 +1168,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'rStyle':
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
 	                if (attrValue) {
-	                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+	                    if (!result.properties.className) {
+	                        result.properties.className = '';
+	                    } else {
+	                        attrValue = ' ' + attrValue;
+	                    }
+
+	                    result.properties.className += attrValue;
 	                }
 
 	                break;
@@ -1225,9 +1238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        attr = attributes['w:asciiTheme'];
 	                        if (attr) {
 	                            if (/major/ig.test(attr.value)) {
-	                                result.majorFontFamily = true;
+	                                result.properties.majorFontFamily = true;
 	                            } else if (/minor/ig.test(attr.value)) {
-	                                result.minorFontFamily = true;
+	                                result.properties.minorFontFamily = true;
 	                            }
 	                        }
 	                    }
@@ -1235,19 +1248,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'oMath':
-	                result.math = attributeToBoolean(attributes['w:val']);
+	                result.properties.math = attributeToBoolean(attributes['w:val']);
 	                break;
 	            case 'snapToGrid':
-	                result.useDocumentGrid = attributeToBoolean(attributes['w:val']);
+	                result.properties.useDocumentGrid = attributeToBoolean(attributes['w:val']);
 	                break;
 	            case 'webHidden':
-	                result.webHiddenText = attributeToBoolean(attributes['w:val']);
+	                result.properties.webHiddenText = attributeToBoolean(attributes['w:val']);
 	                break;
 	            case 'noProof':
-	                result.checkSpellingGrammar = !attributeToBoolean(attributes['w:val']);
+	                result.properties.checkSpellingGrammar = !attributeToBoolean(attributes['w:val']);
 	                break;
 	            case 'fitText':
-	                result.fitText = result.fitText || {};
+	                result.properties.fitText = result.properties.fitText || {};
 	                attrValue = attributes['w:id'] && attributes['w:id'].value;
 	                result.fitText.id = attrValue || null;
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -1257,10 +1270,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } : null;
 	                break;
 	            case 'effect':
-	                result.effect = (0, _parseStyleEffectProperty2['default'])(node);
+	                result.properties.effect = (0, _parseStyleEffectProperty2['default'])(node);
 	                break;
 	            case 'eastAsianLayout':
-	                result.eastAsianSettings = {
+	                result.properties.eastAsianSettings = {
 	                    id: attributes['w:id'] ? attributes['w:id'].value : null,
 	                    combines: Boolean(attributes['w:combine']),
 	                    isVertical: Boolean(attributes['w:vert']),
@@ -1272,7 +1285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'position':
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
 	                if (!isNaN(attrValue)) {
-	                    result.position = {
+	                    result.properties.position = {
 	                        value: attrValue / 2,
 	                        unit: 'pt'
 	                    };
@@ -1289,10 +1302,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                break;
-	            case 'w':
-	                attrValue = attributes['w:val'] && attributes['w:val'].value;
-	                result.textScale = !isNaN(attrValue) ? Number(attrValue) : result.textScale;
-	                break;
 	            case 'shd':
 	                attrValue = attributes['w:fill'] && attributes['w:fill'].value;
 	                if (attrValue) {
@@ -1301,7 +1310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'em':
-	                result.emphasis = (0, _parseEmphasis2['default'])(attributes['w:val']);
+	                result.properties.emphasis = (0, _parseEmphasis2['default'])(attributes['w:val']);
 	                break;
 	            case 'highlight':
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -1312,24 +1321,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'bdr':
-	                result.textBorder = {
-	                    color: attributes['w:color'] && normalizeColorValue(attributes['w:color'].value) || '',
-	                    themeColor: attributes['w:themeColor'] && normalizeColorValue(attributes['w:themeColor'].value) || '',
-	                    shadow: attributeToBoolean(attributes['w:shadow']),
-	                    frame: attributeToBoolean(attributes['w:frame'])
-	                };
+	                var color = attributes['w:color'] && normalizeColorValue(attributes['w:color'].value);
+	                var width = attributes['w:sz'] && attributes['w:sz'].value / 8;
 
-	                attrValue = attributes['w:sz'] && attributes['w:sz'].value;
-	                if (!isNaN(attrValue)) {
-	                    result.textBorder.width = {
-	                        value: attrValue / 8,
+	                if (color && !isNaN(width)) {
+	                    result.style.borderWidth = {
+	                        //can't show the border with small width
+	                        value: width > 1 || width <= 0 ? width : Math.ceil(width / 8),
 	                        unit: 'pt'
 	                    };
+	                    result.style.borderColor = color;
+	                    result.style.borderStyle = 'solid';
 	                }
 
 	                break;
 	            case 'lang':
-	                result.language = (0, _parseLanguageNode2['default'])(node);
+	                var lang = (0, _parseLanguageNode2['default'])(node).latin;
+	                if (lang) {
+	                    result.properties.lang = lang;
+	                }
+
 	                break;
 	        }
 	    });
@@ -1457,14 +1468,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var localName = node.localName;
 
 	        switch (localName) {
-	            case 'framePr':
-
-	                // TODO: handle Text Frame properties
-	                break;
 	            case 'ind':
 	                attrValue = node.attributes['w:left'] && node.attributes['w:left'].value;
 	                if (!isNaN(attrValue)) {
-	                    result.style.paddingLeft = {
+	                    result.style.marginLeft = {
 	                        unit: 'pt',
 	                        value: attrValue / 20
 	                    };
@@ -1472,7 +1479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                attrValue = node.attributes['w:right'] && node.attributes['w:right'].value;
 	                if (!isNaN(attrValue)) {
-	                    result.style.paddingRight = {
+	                    result.style.marginRight = {
 	                        unit: 'pt',
 	                        value: attrValue / 20
 	                    };
@@ -1511,7 +1518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	            case 'keepNext':
 	            case 'keepLines':
-	                result[localName] = true;
+	                result.properties[localName] = true;
 	                break;
 	            case 'numPr':
 	                var _ref = node.querySelector('numId') || {},
@@ -1539,7 +1546,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'pStyle':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
 	                if (attrValue) {
-	                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+	                    if (!result.properties.className) {
+	                        result.properties.className = '';
+	                    } else {
+	                        attrValue = ' ' + attrValue;
+	                    }
+
+	                    result.properties.className += attrValue;
 	                    var headingInfo = /Heading\s*([0-9]+)/i.exec(attrValue);
 
 	                    if (headingInfo) {
@@ -2274,16 +2287,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        value: 0,
 	                        unit: 'pt'
 	                    };
-	                }
-
-	                if (el.style.paddingLeft) {
-	                    listElement.style.paddingLeft = el.style.paddingLeft;
-	                    delete el.style.paddingLeft;
-	                }
-
-	                if (el.style.marginLeft) {
-	                    listElement.style.marginLeft = el.style.marginLeft;
-	                    delete el.style.marginLeft;
 	                }
 
 	                listElement.children.push(el);
@@ -3377,6 +3380,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = exports['default'];
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	if (!String.prototype.includes) {
+	    String.prototype.includes = function () {
+	        return String.prototype.indexOf.apply(this, arguments) !== -1;
+	    };
+	}
+
+	exports["default"] = {};
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ])

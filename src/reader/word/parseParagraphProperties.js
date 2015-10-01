@@ -22,14 +22,10 @@ export default function (node, documentData) {
         const localName = node.localName;
 
         switch (localName) {
-            case 'framePr':
-
-                // TODO: handle Text Frame properties
-                break;
             case 'ind':
                 attrValue = node.attributes['w:left'] && node.attributes['w:left'].value;
                 if (!isNaN(attrValue)) {
-                    result.style.paddingLeft = {
+                    result.style.marginLeft = {
                         unit: 'pt',
                         value: attrValue / 20
                     };
@@ -37,7 +33,7 @@ export default function (node, documentData) {
 
                 attrValue = node.attributes['w:right'] && node.attributes['w:right'].value;
                 if (!isNaN(attrValue)) {
-                    result.style.paddingRight = {
+                    result.style.marginRight = {
                         unit: 'pt',
                         value: attrValue / 20
                     };
@@ -76,7 +72,7 @@ export default function (node, documentData) {
                 break;
             case 'keepNext':
             case 'keepLines':
-                result[localName] = true;
+                result.properties[localName] = true;
                 break;
             case 'numPr':
                 const {attributes: idAttrs} = node.querySelector('numId') || {};
@@ -100,7 +96,13 @@ export default function (node, documentData) {
             case 'pStyle':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
                 if (attrValue) {
-                    result.properties.className += (result.properties.className ? ' ' : '') + attrValue;
+                    if (!result.properties.className) {
+                        result.properties.className = '';
+                    } else {
+                        attrValue = ' ' + attrValue;
+                    }
+
+                    result.properties.className += attrValue;
                     const headingInfo = (/Heading\s*([0-9]+)/i).exec(attrValue);
 
                     if (headingInfo) {
