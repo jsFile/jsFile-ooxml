@@ -1999,9 +1999,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        var result = {
-	            name: fileName,
-	            wordsCount: documentData.applicationInfo && documentData.applicationInfo.wordsCount || null,
-	            zoom: documentData.settings && documentData.settings.zoom || 100,
+	            meta: {
+	                name: fileName,
+	                wordsCount: documentData.applicationInfo && documentData.applicationInfo.wordsCount || null,
+	                zoom: documentData.settings && documentData.settings.zoom || 100
+	            },
 	            content: [],
 	            styles: documentData.styles.computed
 	        };
