@@ -1,2 +1,32 @@
 # jsFile-ooxml [![Build Status](https://secure.travis-ci.org/jsFile/jsFile-ooxml.png?branch=master)](https://travis-ci.org/jsFile/jsFile-ooxml)
-Engine for jsFile library for working with documents in OOXML format
+Engine for jsFile library for working with documents in [OOXML](http://officeopenxml.com/) format (like .docx)
+
+## Installation
+### via NPM
+
+You can install a <code>jsFile-ooxml</code> package very easily using NPM. After
+installing NPM on your machine, simply run:
+````
+$ npm install jsfile-ooxml
+````
+
+### with Git
+
+You can clone the whole repository with Git:
+````
+$ git clone git://github.com/jsFile/jsFile-ooxml.git
+````
+
+### from latest version
+
+Also you can download [the latest release](https://github.com/jsFile/jsFile-ooxml/tree/master/dist) of `OOXML` engine and include built files to your project.
+
+
+##Usage
+````js
+import JsFile from 'JsFile';
+import JsFileOoxml from 'jsfile-ooxml';
+
+const jf = new JsFile(file, options);
+````
+`file` - a file of [OOXML](http://officeopenxml.com/) type. You may find information about options and `jsFile` in [documentation](https://github.com/jsFile/jsFile#installation)
