@@ -1,4 +1,4 @@
-# jsFile-ooxml [![Build Status](https://secure.travis-ci.org/jsFile/jsFile-ooxml.png?branch=master)](https://travis-ci.org/jsFile/jsFile-ooxml)
+# jsFile-ooxml [![Build Status](https://secure.travis-ci.org/jsFile/jsFile-ooxml.png?branch=master)](https://travis-ci.org/jsFile/jsFile-ooxml) [![Coverage Status](https://coveralls.io/repos/jsFile/jsFile-ooxml/badge.svg?branch=master&service=github)](https://coveralls.io/github/jsFile/jsFile-ooxml?branch=master)
 Engine for jsFile library for working with documents in [OOXML](http://officeopenxml.com/) format (like .docx)
 
 ## Installation
