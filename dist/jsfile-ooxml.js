@@ -1804,6 +1804,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports['default'] = function (node) {
 	    var result = {
+	        properties: {},
 	        style: {}
 	    };
 	    var forEach = [].forEach;
@@ -1915,7 +1916,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // TODO: handle tblLook, tblOverlap, tblpPr
 	            case 'tblStyle':
-	                result.styleId = attributes['w:val'] && attributes['w:val'].value;
+	                attrValue = attributes['w:val'] && attributes['w:val'].value;
+	                if (!result.properties.className) {
+	                    result.properties.className = '';
+	                } else {
+	                    attrValue = ' ' + attrValue;
+	                }
+
+	                result.properties.className += attrValue;
 	                break;
 	            case 'tblStyleColBandSize':
 	                result.colBindSize = Number(attributes['w:val'] && attributes['w:val'].value);
@@ -2038,7 +2046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                documentData: documentData
 	            }).then(function (response) {
 	                var page = Document.elementPrototype;
-	                page.children = response[0];
+	                page.children.push.apply(page.children, response[0]);
 	                page.style = documentData.styles.defaults.sectionProperties && documentData.styles.defaults.sectionProperties.style || {};
 
 	                //TODO: add page break
@@ -3123,9 +3131,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        localColProperties = merge({}, localColProperties, rowProperties.colProperties);
 	                    } else if (localName === 'tc') {
 	                        (function () {
-	                            var col = Document.elementPrototype;
+	                            var cell = Document.elementPrototype;
 	                            var nodes = [].slice.call(node && node.childNodes || [], 0);
-	                            col.properties.tagName = 'TD';
+	                            cell.properties.tagName = 'TD';
 
 	                            if (nodes[0]) {
 	                                if (nodes[0].localName === 'tcPr') {
@@ -3136,12 +3144,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    nodes: nodes,
 	                                    documentData: documentData
 	                                }).then(function (response) {
-	                                    return col.children = response[0][0];
+	                                    cell.children.push.apply(cell.children, response[0]);
 	                                }));
 	                            }
 
-	                            merge(col.style, localColProperties.style);
-	                            merge(col.properties, localColProperties.properties);
+	                            merge(cell.style, localColProperties.style);
+	                            merge(cell.properties, localColProperties.properties);
+	                            row.children.push(cell);
 	                        })();
 	                    }
 	                });

@@ -5,6 +5,7 @@ const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
 
 export default function (node) {
     const result = {
+        properties: {},
         style: {}
     };
     const forEach = [].forEach;
@@ -115,7 +116,14 @@ export default function (node) {
 
             // TODO: handle tblLook, tblOverlap, tblpPr
             case 'tblStyle':
-                result.styleId = attributes['w:val'] && attributes['w:val'].value;
+                attrValue = attributes['w:val'] && attributes['w:val'].value;
+                if (!result.properties.className) {
+                    result.properties.className = '';
+                } else {
+                    attrValue = ' ' + attrValue;
+                }
+
+                result.properties.className += attrValue;
                 break;
             case 'tblStyleColBandSize':
                 result.colBindSize = Number(attributes['w:val'] && attributes['w:val'].value);

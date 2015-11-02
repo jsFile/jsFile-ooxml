@@ -56,9 +56,9 @@ export default function (params) {
             parseDocumentContentNodes({
                 nodes,
                 documentData
-            }).then(response => {
+            }).then((response) => {
                 const page = Document.elementPrototype;
-                page.children = response[0];
+                page.children.push.apply(page.children, response[0]);
                 page.style = documentData.styles.defaults.sectionProperties &&
                     documentData.styles.defaults.sectionProperties.style || {};
 

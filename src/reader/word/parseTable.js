@@ -69,9 +69,9 @@ export default (params) => {
                     merge(tableProperties, rowProperties.tableProperties);
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
-                    const col = Document.elementPrototype;
+                    const cell = Document.elementPrototype;
                     const nodes = [].slice.call(node && node.childNodes || [], 0);
-                    col.properties.tagName = 'TD';
+                    cell.properties.tagName = 'TD';
 
                     if (nodes[0]) {
                         if (nodes[0].localName === 'tcPr') {
@@ -81,11 +81,14 @@ export default (params) => {
                         queue.push(parseDocumentContentNodes({
                             nodes,
                             documentData
-                        }).then(response => col.children = response[0][0]));
+                        }).then((response) => {
+                            cell.children.push.apply(cell.children, response[0]);
+                        }));
                     }
 
-                    merge(col.style, localColProperties.style);
-                    merge(col.properties, localColProperties.properties);
+                    merge(cell.style, localColProperties.style);
+                    merge(cell.properties, localColProperties.properties);
+                    row.children.push(cell);
                 }
             });
 

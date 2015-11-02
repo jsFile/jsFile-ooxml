@@ -10,7 +10,7 @@ function parse(params) {
         queue[0].push(response[0] || response);
     };
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
         let localName = node.localName;
 
         if (localName === 'tbl') {
