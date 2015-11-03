@@ -937,17 +937,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	var parsers = {
 	    rPr: {
 	        name: 'textProperties',
-	        selector: 'p', //set for all content in paragraph
+
+	        /**
+	         * @description set for all content in paragraph
+	         * @param className
+	         * @returns {*}
+	         */
+	        selector: function selector() {
+	            var className = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+	            if (className) {
+	                className = '.' + className;
+	            }
+
+	            return 'p' + className + ' > span';
+	        },
+
 	        exec: _parseTextProperties2['default']
 	    },
 	    pPr: {
 	        name: 'paragraphProperties',
-	        selector: 'p',
+	        selector: function selector() {
+	            var className = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+	            if (className) {
+	                className = '.' + className;
+	            }
+
+	            return 'p' + className;
+	        },
+
 	        exec: _parseParagraphProperties2['default']
 	    },
 	    tblPr: {
 	        name: 'tableProperties',
-	        selector: 'table',
+	        selector: function selector() {
+	            var className = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+	            if (className) {
+	                className = '.' + className;
+	            }
+
+	            return 'table' + className;
+	        },
+
 	        exec: _parseTableProperties2['default']
 	    }
 	};
@@ -988,7 +1021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (exec) {
 	                    result.defaults[name] = exec(node);
 	                    result.computed.push({
-	                        selector: selector,
+	                        selector: selector(),
 	                        properties: result.defaults[name].style
 	                    });
 	                }
@@ -1030,38 +1063,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var styleId = attr && attr.value;
 
 	                if (styleId) {
-	                    result.named[styleId] = {
-	                        isDefault: attributeToBoolean(node.attributes['w:default']),
-	                        type: node.attributes['w:type'] && node.attributes['w:type'].value
-	                    };
+	                    (function () {
+	                        var isDefault = attributeToBoolean(node.attributes['w:default']);
+	                        result.named[styleId] = {
+	                            isDefault: isDefault,
+	                            type: node.attributes['w:type'] && node.attributes['w:type'].value
+	                        };
 
-	                    forEach.call(node.childNodes || [], function (node) {
-	                        var localName = node.localName;
-	                        var attributes = node.attributes;
+	                        forEach.call(node.childNodes || [], function (node) {
+	                            var localName = node.localName;
+	                            var attributes = node.attributes;
 
-	                        var _ref4 = parsers[localName] || {};
+	                            var _ref4 = parsers[localName] || {};
 
-	                        var exec = _ref4.exec;
-	                        var name = _ref4.name;
-	                        var selector = _ref4.selector;
+	                            var exec = _ref4.exec;
+	                            var name = _ref4.name;
+	                            var selector = _ref4.selector;
 
-	                        if (exec) {
-	                            this[name] = exec(node);
-	                            result.computed.push({
-	                                selector: '.' + styleId,
-	                                properties: this[name].style
-	                            });
-	                        } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
-	                            attr = attributes['w:val'];
-	                            if (attr && attr.value) {
-	                                this[localName] = attr.value;
+	                            if (exec) {
+	                                this[name] = exec(node);
+	                                result.computed.push({
+	                                    selector: selector(isDefault ? undefined : styleId),
+	                                    properties: this[name].style
+	                                });
+	                            } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
+	                                attr = attributes['w:val'];
+	                                if (attr && attr.value) {
+	                                    this[localName] = attr.value;
+	                                }
+	                            } else if (localName === 'unhideWhenUsed') {
+	                                this.unHideWhenUsed = attributeToBoolean(attributes['w:val']);
+	                            } else if (localName === 'qFormat') {
+	                                this.isPrimary = attributeToBoolean(attributes['w:val']);
 	                            }
-	                        } else if (localName === 'unhideWhenUsed') {
-	                            this.unHideWhenUsed = attributeToBoolean(attributes['w:val']);
-	                        } else if (localName === 'qFormat') {
-	                            this.isPrimary = attributeToBoolean(attributes['w:val']);
-	                        }
-	                    }, result.named[styleId]);
+	                        }, result.named[styleId]);
+	                    })();
 	                }
 	            })();
 	        }
@@ -1801,6 +1837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
+	var cropUnit = _JsFile$Engine.cropUnit;
 
 	exports['default'] = function (node) {
 	    var result = {
@@ -1932,20 +1969,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.rowBindSize = Number(attributes['w:val'] && attributes['w:val'].value);
 	                break;
 	            case 'tblW':
-	                attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
-	                if (attrValue && !isNaN(attrValue)) {
+	                attrValue = attributes['w:w'] && attributes['w:w'].value;
+	                if (attrValue) {
 	                    type = attributes['w:type'] && attributes['w:type'].value;
 	                    result.style.width = {
 	                        unit: 'pt'
 	                    };
 
-	                    if (type === 'pct') {
+	                    var isPercents = type === 'pct' || attrValue.indexOf('%') > 0;
+	                    var value = cropUnit(attrValue);
+
+	                    if (isPercents) {
 	                        result.style.width.unit = '%';
+	                        value /= 50;
 	                    } else if (!type || type !== 'nil') {
-	                        attrValue /= 20;
+	                        value /= 20;
 	                    }
 
-	                    result.style.width.value = attrValue;
+	                    result.style.width.value = value;
 	                }
 
 	                break;
@@ -3169,7 +3210,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    merge(queue[0].style, tableProperties);
+	    merge(queue[0].style, tableProperties.style);
+	    merge(queue[0].properties, tableProperties.properties);
 	    if (thead) {
 	        queue[0].children.push(thead);
 	    }
@@ -3281,6 +3323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
+	var cropUnit = _JsFile$Engine.cropUnit;
 
 	var verticalAlignValues = {
 	    bottom: 'bottom',
@@ -3358,20 +3401,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'tcW':
-	                attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
-	                if (attrValue && !isNaN(attrValue)) {
+	                attrValue = attributes['w:w'] && attributes['w:w'].value;
+	                if (attrValue) {
 	                    var type = attributes['w:type'] && attributes['w:type'].value;
 	                    result.style.width = {
 	                        unit: 'pt'
 	                    };
 
-	                    if (type === 'pct') {
+	                    var isPercents = type === 'pct' || attrValue.indexOf('%') > 0;
+	                    var value = cropUnit(attrValue);
+
+	                    if (isPercents) {
 	                        result.style.width.unit = '%';
+	                        value /= 50;
 	                    } else if (!type || type !== 'nil') {
-	                        attrValue /= 20;
+	                        value /= 20;
 	                    }
 
-	                    result.style.width.value = attrValue;
+	                    result.style.width.value = value;
 	                }
 
 	                break;

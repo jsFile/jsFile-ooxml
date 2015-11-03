@@ -105,7 +105,8 @@ export default (params) => {
         }
     });
 
-    merge(queue[0].style, tableProperties);
+    merge(queue[0].style, tableProperties.style);
+    merge(queue[0].properties, tableProperties.properties);
     if (thead) {
         queue[0].children.push(thead);
     }

@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
 import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
-const {merge, normalizeColorValue, formatPropertyName} = JsFile.Engine;
+const {merge, normalizeColorValue, formatPropertyName, cropUnit} = JsFile.Engine;
 const verticalAlignValues = {
     bottom: 'bottom',
     top: 'top',
@@ -74,20 +74,24 @@ export default function (node) {
 
                 break;
             case 'tcW':
-                attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
-                if (attrValue && !isNaN(attrValue)) {
+                attrValue = attributes['w:w'] && attributes['w:w'].value;
+                if (attrValue) {
                     const type = attributes['w:type'] && attributes['w:type'].value;
                     result.style.width = {
                         unit: 'pt'
                     };
 
-                    if (type === 'pct') {
+                    const isPercents = type === 'pct' || attrValue.indexOf('%') > 0;
+                    let value = cropUnit(attrValue);
+
+                    if (isPercents) {
                         result.style.width.unit = '%';
+                        value /= 50;
                     } else if (!type || type !== 'nil') {
-                        attrValue /= 20;
+                        value /= 20;
                     }
 
-                    result.style.width.value = attrValue;
+                    result.style.width.value = value;
                 }
 
                 break;

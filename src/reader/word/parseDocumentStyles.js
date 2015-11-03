@@ -6,17 +6,44 @@ const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 const parsers = {
     rPr: {
         name: 'textProperties',
-        selector: 'p',//set for all content in paragraph
+
+        /**
+         * @description set for all content in paragraph
+         * @param className
+         * @returns {*}
+         */
+        selector: (className = '') => {
+            if (className) {
+                className = `.${className}`;
+            }
+
+            return `p${className} > span`;
+        },
+
         exec: parseTextProperties
     },
     pPr: {
         name: 'paragraphProperties',
-        selector: 'p',
+        selector: (className = '') => {
+            if (className) {
+                className = `.${className}`;
+            }
+
+            return `p${className}`;
+        },
+
         exec: parseParagraphProperties
     },
     tblPr: {
         name: 'tableProperties',
-        selector: 'table',
+        selector: (className = '') => {
+            if (className) {
+                className = `.${className}`;
+            }
+
+            return `table${className}`;
+        },
+
         exec: parseTableProperties
     }
 };
@@ -50,7 +77,7 @@ export default function (xml) {
                 if (exec) {
                     result.defaults[name] = exec(node);
                     result.computed.push({
-                        selector: selector,
+                        selector: selector(),
                         properties: result.defaults[name].style
                     });
                 }
@@ -83,8 +110,9 @@ export default function (xml) {
             const styleId = attr && attr.value;
 
             if (styleId) {
+                const isDefault = attributeToBoolean(node.attributes['w:default']);
                 result.named[styleId] = {
-                    isDefault: attributeToBoolean(node.attributes['w:default']),
+                    isDefault,
                     type: node.attributes['w:type'] &&  node.attributes['w:type'].value
                 };
 
@@ -94,7 +122,7 @@ export default function (xml) {
                     if (exec) {
                         this[name] = exec(node);
                         result.computed.push({
-                            selector: `.${styleId}`,
+                            selector: selector(isDefault ? undefined : styleId),
                             properties: this[name].style
                         });
                     } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {
