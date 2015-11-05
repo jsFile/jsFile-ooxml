@@ -1,6 +1,6 @@
 {
   "name": "jsfile-ooxml",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "OOXML engine for jsFile library",
   "main": "dist/jsfile-ooxml.js",
   "scripts": {
