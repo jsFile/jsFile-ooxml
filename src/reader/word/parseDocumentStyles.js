@@ -70,7 +70,8 @@ export default function (xml) {
     const forEach = [].forEach;
 
     forEach.call(node && node.childNodes || [], (node) => {
-        const {localName} = node;
+        const localName = node.localName;
+
         if (localName === 'docDefaults') {
             forEach.call(node.querySelectorAll('rPr, pPr'), (node) => {
                 const {exec, name, selector} = parsers[node.localName] || {};

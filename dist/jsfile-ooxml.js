@@ -2085,13 +2085,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            (0, _parseDocumentContentNodes2['default'])({
 	                nodes: nodes,
 	                documentData: documentData
-	            }).then(function (response) {
+	            }).then(function (elements) {
 	                var page = Document.elementPrototype;
-	                page.children.push.apply(page.children, response[0]);
+	                page.children.push.apply(page.children, elements);
 	                page.style = documentData.styles.defaults.sectionProperties && documentData.styles.defaults.sectionProperties.style || {};
 
-	                //TODO: add page break
-	                // because now it's only 1 page for all content
+	                //TODO: add page break, because now it's only 1 page for all content
 	                if (page.style.height) {
 	                    page.style.minHeight = page.style.height;
 	                    delete page.style.height;
@@ -2302,15 +2301,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function parse(params) {
 	    var listElement = undefined;
-	    var queue = [[]];
+	    var queue = [];
 	    var _params$nodes = params.nodes;
 	    var nodes = _params$nodes === undefined ? [] : _params$nodes;
 	    var _params$documentData = params.documentData;
 	    var documentData = _params$documentData === undefined ? {} : _params$documentData;
-
-	    var push2Result = function push2Result(response) {
-	        queue[0].push(response[0] || response);
-	    };
 
 	    nodes.forEach(function (node) {
 	        var localName = node.localName;
@@ -2320,7 +2315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                node: node,
 	                documentData: documentData,
 	                parseDocumentContentNodes: parse
-	            }).then(push2Result));
+	            }));
 	        } else if (localName === 'p') {
 	            var el = (0, _parseParagraph2['default'])({ node: node, documentData: documentData });
 	            var isListItem = el.properties.tagName === 'LI';
@@ -2343,11 +2338,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                listElement.children.push(el);
 	            } else {
 	                if (listElement) {
-	                    push2Result(listElement);
+	                    queue.push(listElement);
 	                    listElement = null;
 	                }
 
-	                push2Result(el);
+	                queue.push(el);
 	            }
 	        }
 	    });
@@ -2597,11 +2592,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                merge(result, (0, _parseDrawing2['default'])(node, documentData));
 	                break;
 	            case 'noBreakHyphen':
-	                result.properties.textContent = result.properties.textContent || '';
 	                result.properties.textContent += nbHyphen;
 	                break;
 	            case 'softHyphen':
-	                result.properties.textContent = result.properties.textContent || '';
 	                result.properties.textContent += enDash;
 	                break;
 	            case 'rPr':
@@ -2611,11 +2604,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // TODO: parse w:sym. It needs more samples of .docx
 
 	            case 't':
-	                result.properties.textContent = result.properties.textContent || '';
 	                result.properties.textContent += textContent.replace(/\s/g, space);
 	                break;
 	            case 'tab':
-	                result.properties.textContent = result.properties.textContent || '';
 	                result.properties.textContent += tabAsSpaces;
 	                break;
 	            case 'pict':
@@ -3118,15 +3109,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var rowProperties = undefined;
 	    var thead = undefined;
+	    var queue = [];
 	    var forEach = [].forEach;
 	    var tbody = Document.elementPrototype;
-	    var queue = [Document.elementPrototype];
+	    var table = Document.elementPrototype;
 	    var tableProperties = {
 	        style: {},
 	        properties: documentData.styles.defaults.tableProperties && clone(documentData.styles.defaults.tableProperties.properties) || {}
 	    };
 	    var colProperties = clone(tableProperties.colProperties);
-	    queue[0].properties.tagName = 'TABLE';
+	    table.properties.tagName = 'TABLE';
 	    tbody.properties.tagName = 'TBODY';
 
 	    forEach.call(node && node.childNodes || [], function (node) {
@@ -3150,7 +3142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    };
 	                }
 
-	                queue[0].children.push(el);
+	                table.children.push(el);
 	            });
 	        } else if (localName === 'tr') {
 	            (function () {
@@ -3184,8 +3176,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                queue.push(parseDocumentContentNodes({
 	                                    nodes: nodes,
 	                                    documentData: documentData
-	                                }).then(function (response) {
-	                                    cell.children.push.apply(cell.children, response[0]);
+	                                }).then(function (elements) {
+	                                    cell.children.push.apply(cell.children, elements);
+	                                    cell = null;
 	                                }));
 	                            }
 
@@ -3210,14 +3203,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    merge(queue[0].style, tableProperties.style);
-	    merge(queue[0].properties, tableProperties.properties);
+	    merge(table.style, tableProperties.style);
+	    merge(table.properties, tableProperties.properties);
 	    if (thead) {
-	        queue[0].children.push(thead);
+	        table.children.push(thead);
 	    }
 
-	    queue[0].children.push(tbody);
-	    return Promise.all(queue);
+	    table.children.push(tbody);
+	    return Promise.all(queue).then(function () {
+	        return table;
+	    });
 	};
 
 	module.exports = exports['default'];

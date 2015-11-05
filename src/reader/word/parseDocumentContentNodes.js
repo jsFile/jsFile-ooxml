@@ -4,21 +4,18 @@ import {Document} from 'JsFile';
 
 function parse(params) {
     let listElement;
-    const queue = [[]];
+    const queue = [];
     const {nodes = [], documentData = {}} = params;
-    const push2Result = function (response) {
-        queue[0].push(response[0] || response);
-    };
 
     nodes.forEach((node) => {
-        let localName = node.localName;
+        const localName = node.localName;
 
         if (localName === 'tbl') {
             queue.push(parseTable({
                 node,
                 documentData,
                 parseDocumentContentNodes: parse
-            }).then(push2Result));
+            }));
         } else if (localName === 'p') {
             const el = parseParagraph({node, documentData});
             const isListItem = el.properties.tagName === 'LI';
@@ -41,11 +38,11 @@ function parse(params) {
                 listElement.children.push(el);
             } else {
                 if (listElement) {
-                    push2Result(listElement);
+                    queue.push(listElement);
                     listElement = null;
                 }
 
-                push2Result(el);
+                queue.push(el);
             }
         }
     });

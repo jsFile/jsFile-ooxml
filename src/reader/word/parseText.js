@@ -51,11 +51,9 @@ export default function (params = {}) {
                 merge(result, parseDrawing(node, documentData));
                 break;
             case 'noBreakHyphen':
-                result.properties.textContent = result.properties.textContent || '';
                 result.properties.textContent += nbHyphen;
                 break;
             case 'softHyphen':
-                result.properties.textContent = result.properties.textContent || '';
                 result.properties.textContent += enDash;
                 break;
             case 'rPr':
@@ -65,11 +63,9 @@ export default function (params = {}) {
             // TODO: parse w:sym. It needs more samples of .docx
 
             case 't':
-                result.properties.textContent = result.properties.textContent || '';
                 result.properties.textContent += textContent.replace(/\s/g, space);
                 break;
             case 'tab':
-                result.properties.textContent = result.properties.textContent || '';
                 result.properties.textContent += tabAsSpaces;
                 break;
             case 'pict':

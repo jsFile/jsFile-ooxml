@@ -18,16 +18,17 @@ export default (params) => {
 
     let rowProperties;
     let thead;
+    const queue = [];
     const forEach = [].forEach;
     const tbody = Document.elementPrototype;
-    const queue = [Document.elementPrototype];
+    const table = Document.elementPrototype;
     const tableProperties = {
         style: {},
         properties: documentData.styles.defaults.tableProperties &&
             clone(documentData.styles.defaults.tableProperties.properties) || {}
     };
     const colProperties = clone(tableProperties.colProperties);
-    queue[0].properties.tagName = 'TABLE';
+    table.properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
 
     forEach.call(node && node.childNodes || [], (node) => {
@@ -49,7 +50,7 @@ export default (params) => {
                     };
                 }
 
-                queue[0].children.push(el);
+                table.children.push(el);
             });
         } else if (localName === 'tr') {
             const row = Document.elementPrototype;
@@ -69,7 +70,7 @@ export default (params) => {
                     merge(tableProperties, rowProperties.tableProperties);
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
-                    const cell = Document.elementPrototype;
+                    let cell = Document.elementPrototype;
                     const nodes = [].slice.call(node && node.childNodes || [], 0);
                     cell.properties.tagName = 'TD';
 
@@ -81,8 +82,9 @@ export default (params) => {
                         queue.push(parseDocumentContentNodes({
                             nodes,
                             documentData
-                        }).then((response) => {
-                            cell.children.push.apply(cell.children, response[0]);
+                        }).then((elements) => {
+                            cell.children.push.apply(cell.children, elements);
+                            cell = null;
                         }));
                     }
 
@@ -105,12 +107,12 @@ export default (params) => {
         }
     });
 
-    merge(queue[0].style, tableProperties.style);
-    merge(queue[0].properties, tableProperties.properties);
+    merge(table.style, tableProperties.style);
+    merge(table.properties, tableProperties.properties);
     if (thead) {
-        queue[0].children.push(thead);
+        table.children.push(thead);
     }
 
-    queue[0].children.push(tbody);
-    return Promise.all(queue);
+    table.children.push(tbody);
+    return Promise.all(queue).then(() => table);
 };

@@ -56,14 +56,13 @@ export default function (params) {
             parseDocumentContentNodes({
                 nodes,
                 documentData
-            }).then((response) => {
+            }).then((elements) => {
                 const page = Document.elementPrototype;
-                page.children.push.apply(page.children, response[0]);
+                page.children.push.apply(page.children, elements);
                 page.style = documentData.styles.defaults.sectionProperties &&
                     documentData.styles.defaults.sectionProperties.style || {};
 
-                //TODO: add page break
-                // because now it's only 1 page for all content
+                //TODO: add page break, because now it's only 1 page for all content
                 if (page.style.height) {
                     page.style.minHeight = page.style.height;
                     delete page.style.height;
