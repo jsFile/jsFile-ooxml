@@ -56,29 +56,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 	var _JsFile = __webpack_require__(1);
 
-	var _readerCreateDocument = __webpack_require__(2);
+	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _readerCreateDocument2 = _interopRequireDefault(_readerCreateDocument);
+	var _createDocument = __webpack_require__(2);
 
-	var _polyfill = __webpack_require__(36);
+	var _createDocument2 = _interopRequireDefault(_createDocument);
 
-	var _polyfill2 = _interopRequireDefault(_polyfill);
+	__webpack_require__(36);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Engine = _JsFile2.default.Engine;
+	var defineEngine = _JsFile2.default.defineEngine;
 
 	var wordProcessingFiles = {
 	    extension: ['docx'],
@@ -102,42 +105,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    files.mime.push.apply(files.mime, mime);
 	});
 
-	var OoxmlEngine = (function (_Engine) {
+	var OoxmlEngine = function (_Engine) {
 	    _inherits(OoxmlEngine, _Engine);
 
 	    function OoxmlEngine() {
 	        _classCallCheck(this, OoxmlEngine);
 
-	        _get(Object.getPrototypeOf(OoxmlEngine.prototype), 'constructor', this).apply(this, arguments);
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OoxmlEngine).apply(this, arguments));
 
-	        this.createDocument = _readerCreateDocument2['default'];
-	        this.parser = 'readArchive';
-	        this.files = files;
+	        _this.createDocument = _createDocument2.default;
+	        _this.parser = 'readArchive';
+	        _this.files = files;
+	        return _this;
 	    }
 
 	    _createClass(OoxmlEngine, [{
 	        key: 'isWordProcessingDocument',
 	        value: function isWordProcessingDocument() {
-	            return Boolean(this.file && _JsFile.Engine.validateFile(this.file, wordProcessingFiles));
+	            return Boolean(this.file && Engine.validateFile(this.file, wordProcessingFiles));
 	        }
 	    }], [{
 	        key: 'test',
 	        value: function test(file) {
-	            return Boolean(file && _JsFile.Engine.validateFile(file, files));
+	            return Boolean(file && Engine.validateFile(file, files));
 	        }
-	    }, {
-	        key: 'mimeTypes',
-	        value: files.mime.slice(0),
-	        enumerable: true
 	    }]);
 
 	    return OoxmlEngine;
-	})(_JsFile.Engine);
+	}(Engine);
 
-	(0, _JsFile.defineEngine)(OoxmlEngine);
+	OoxmlEngine.mimeTypes = files.mime.slice(0);
+	defineEngine(OoxmlEngine);
 
-	exports['default'] = OoxmlEngine;
-	module.exports = exports['default'];
+	exports.default = OoxmlEngine;
 
 /***/ },
 /* 1 */
@@ -151,26 +151,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.default = createDocument;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _createDocument = __webpack_require__(3);
 
-	var _wordCreateDocument = __webpack_require__(3);
+	var _createDocument2 = _interopRequireDefault(_createDocument);
 
-	var _wordCreateDocument2 = _interopRequireDefault(_wordCreateDocument);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports['default'] = function (data) {
+	function createDocument() {
 	    if (this.isWordProcessingDocument()) {
-	        return _wordCreateDocument2['default'].apply(this, arguments);
+	        return _createDocument2.default.apply(this, arguments);
 	    }
 
 	    return Promise.reject(this.errors.invalidFileType);
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 3 */
@@ -178,11 +176,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = createDocument;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -224,7 +221,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseDocumentContent2 = _interopRequireDefault(_parseDocumentContent);
 
-	var normalizeDataUri = _JsFile2['default'].Engine.normalizeDataUri;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var normalizeDataUri = _JsFile2.default.Engine.normalizeDataUri;
 
 	/**
 	 *
@@ -232,98 +231,100 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 
-	exports['default'] = function (filesEntry) {
-	    return new Promise((function (resolve, reject) {
-	        var queue = [];
-	        var fileName = this.fileName;
-	        var domParser = new DOMParser();
-	        var documentData = {
-	            media: {},
-	            relationships: {},
-	            appInfo: {},
-	            documentInfo: {},
-	            fonts: {},
-	            settings: {},
-	            styles: {},
-	            webSettings: {},
-	            themes: {}
-	        };
-	        var document = undefined;
+	function createDocument(filesEntry) {
+	    var queue = [];
+	    var fileName = this.fileName;
+	    var domParser = new DOMParser();
+	    var documentData = {
+	        media: {},
+	        relationships: {},
+	        appInfo: {},
+	        documentInfo: {},
+	        fonts: {},
+	        settings: {},
+	        styles: {},
+	        webSettings: {},
+	        themes: {}
+	    };
+	    var document = undefined;
 
-	        filesEntry.forEach(function (fileEntry) {
-	            if (!fileEntry.file) {
-	                return;
-	            }
+	    filesEntry.forEach(function (fileEntry) {
+	        if (!fileEntry.file) {
+	            return;
+	        }
 
-	            var method = undefined;
-	            var filename = fileEntry.entry.filename;
-	            var isMediaSource = Boolean(filename && filename.includes('media/'));
+	        var method = undefined;
+	        var filename = fileEntry.entry.filename;
+	        var isMediaSource = Boolean(filename && filename.includes('media/'));
+	        if (isMediaSource) {
+	            method = 'readAsDataURL';
+	        }
+
+	        queue.push(this.readFileEntry({
+	            file: fileEntry.file,
+	            method: method
+	        }).then(function (result) {
+	            var xml = undefined;
 	            if (isMediaSource) {
-	                method = 'readAsDataURL';
-	            }
-
-	            queue.push(this.readFileEntry({
-	                file: fileEntry.file,
-	                method: method
-	            }).then((function (result) {
-	                var xml = undefined;
-	                if (isMediaSource) {
-	                    documentData.media[filename] = {
-	                        fileData: fileEntry,
-	                        data: normalizeDataUri(result, filename)
-	                    };
-	                } else {
-	                    xml = domParser.parseFromString(result, 'application/xml');
-	                    if (filename.includes('_rels/.rels')) {
-	                        documentData.relationships.main = (0, _parseRelationships2['default'])(xml);
-	                    } else if (filename.includes('word/_rels/document')) {
-	                        documentData.relationships.document = (0, _parseRelationships2['default'])(xml);
-	                    } else if (filename.includes('word/_rels/fontTable')) {
-	                        documentData.relationships.fonts = (0, _parseRelationships2['default'])(xml);
-	                    } else if (filename.includes('word/_rels/numbering')) {
-	                        documentData.relationships.numbering = (0, _parseRelationships2['default'])(xml);
-	                    } else if (filename.includes('/app.xml')) {
-	                        documentData.applicationInfo = (0, _parseApplicationInfo2['default'])(xml);
-	                    } else if (filename.includes('/core.xml')) {
-	                        documentData.documentInfo = (0, _parseDocumentInfo2['default'])(xml);
-	                    } else if (filename.includes('/fontTable.xml')) {
-	                        documentData.fonts = (0, _parseFontsInfo2['default'])(xml);
-	                    } else if (filename.includes('theme/')) {
-	                        documentData.themes[filename] = (0, _parseDocumentThemes2['default'])(xml);
-	                    } else if (filename.includes('/settings.xml')) {
-	                        documentData.settings = (0, _parseDocumentSettings2['default'])(xml);
-	                    } else if (filename.includes('/webSettings.xml')) {
-	                        documentData.webSettings = (0, _parseWebSettings2['default'])(xml);
-	                    } else if (filename.includes('/styles.xml')) {
-	                        documentData.styles = (0, _parseDocumentStyles2['default'])(xml);
-	                    } else if (filename.includes('/document.xml')) {
-	                        document = xml;
-	                    }
+	                documentData.media[filename] = {
+	                    fileData: fileEntry,
+	                    data: normalizeDataUri(result, filename)
+	                };
+	            } else {
+	                xml = domParser.parseFromString(result, 'application/xml');
+	                if (filename.includes('_rels/.rels')) {
+	                    documentData.relationships.main = (0, _parseRelationships2.default)(xml);
+	                } else if (filename.includes('word/_rels/document')) {
+	                    documentData.relationships.document = (0, _parseRelationships2.default)(xml);
+	                } else if (filename.includes('word/_rels/fontTable')) {
+	                    documentData.relationships.fonts = (0, _parseRelationships2.default)(xml);
+	                } else if (filename.includes('word/_rels/numbering')) {
+	                    documentData.relationships.numbering = (0, _parseRelationships2.default)(xml);
+	                } else if (filename.includes('/app.xml')) {
+	                    documentData.applicationInfo = (0, _parseApplicationInfo2.default)(xml);
+	                } else if (filename.includes('/core.xml')) {
+	                    documentData.documentInfo = (0, _parseDocumentInfo2.default)(xml);
+	                } else if (filename.includes('/fontTable.xml')) {
+	                    documentData.fonts = (0, _parseFontsInfo2.default)(xml);
+	                } else if (filename.includes('theme/')) {
+	                    documentData.themes[filename] = (0, _parseDocumentThemes2.default)(xml);
+	                } else if (filename.includes('/settings.xml')) {
+	                    documentData.settings = (0, _parseDocumentSettings2.default)(xml);
+	                } else if (filename.includes('/webSettings.xml')) {
+	                    documentData.webSettings = (0, _parseWebSettings2.default)(xml);
+	                } else if (filename.includes('/styles.xml')) {
+	                    documentData.styles = (0, _parseDocumentStyles2.default)(xml);
+	                } else if (filename.includes('/document.xml')) {
+	                    document = xml;
 	                }
-	            }).bind(this)));
-	        }, this);
+	            }
+	        }));
+	    }, this);
 
-	        Promise.all(queue).then((function () {
-	            (0, _parseDocumentContent2['default'])({
-	                xml: document,
-	                documentData: documentData,
-	                fileName: fileName
-	            }).then(function (document) {
-	                resolve(document);
-	            }, reject);
+	    return Promise.all(queue).then(function () {
+	        var result = (0, _parseDocumentContent2.default)({
+	            xml: document,
+	            documentData: documentData,
+	            fileName: fileName
+	        });
 
-	            documentData = document = null;
-	        }).bind(this), reject);
-	    }).bind(this));
-	};
+	        documentData = null;
+	        document = null;
 
-	;
-	module.exports = exports['default'];
+	        return result;
+	    });
+	}
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = parseRelationships;
 	/**
 	 *
 	 * @description Parse info about relations between files
@@ -331,13 +332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {*}
 	 * @private
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function (xml) {
+	function parseRelationships(xml) {
 	    var result = {};
 
 	    Array.prototype.forEach.call(xml && xml.querySelectorAll('Relationship') || [], function (_ref) {
@@ -358,10 +353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 5 */
@@ -369,17 +361,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseApplicationInfo;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var formatPropertyName = _JsFile2.default.Engine.formatPropertyName;
 
 	/**
 	 *
@@ -389,7 +382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Object}
 	 */
 
-	exports['default'] = function (xml) {
+	function parseApplicationInfo(xml) {
 	    var result = {};
 	    var node = xml && xml.querySelector('Properties');
 
@@ -415,15 +408,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = parseDocumentInfo;
 	/**
 	 *
 	 * @description Parsing information about document
@@ -431,13 +427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 * @return {Object}
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function (xml) {
+	function parseDocumentInfo(xml) {
 	    var result = {};
 	    var node = xml && xml.querySelector('coreProperties');
 
@@ -459,10 +449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 7 */
@@ -470,17 +457,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseFontsInfo;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var formatPropertyName = _JsFile2.default.Engine.formatPropertyName;
 
 	/**
 	 *
@@ -490,7 +478,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 
-	exports['default'] = function (xml) {
+	function parseFontsInfo(xml) {
 	    var result = {};
 	    var forEach = [].forEach;
 
@@ -518,10 +506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 8 */
@@ -529,17 +514,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseWebSettings;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var attributeToBoolean = _JsFile2['default'].Engine.attributeToBoolean;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var attributeToBoolean = _JsFile2.default.Engine.attributeToBoolean;
 
 	/**
 	 * @description Parsing document web settings
@@ -548,7 +534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 
-	exports['default'] = function (xml) {
+	function parseWebSettings(xml) {
 	    var result = {};
 	    var node = xml && xml.querySelector('webSettings');
 
@@ -557,10 +543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 9 */
@@ -568,11 +551,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseDocumentSettings;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -582,7 +564,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseLanguageNode2 = _interopRequireDefault(_parseLanguageNode);
 
-	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var formatPropertyName = _JsFile2.default.Engine.formatPropertyName;
 
 	/**
 	 * @description Parse document settings
@@ -591,7 +575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 
-	exports['default'] = function (xml) {
+	function parseDocumentSettings(xml) {
 	    var result = {
 	        zoom: 100,
 	        compat: {},
@@ -680,7 +664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'themeFontLang':
-	                result.themeFontLanguage = (0, _parseLanguageNode2['default'])(node);
+	                result.themeFontLanguage = (0, _parseLanguageNode2.default)(node);
 	                break;
 	            case 'decimalSymbol':
 	                attr = node.attributes['w:val'];
@@ -806,28 +790,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 10 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = parseLanguageNode;
 	/**
 	 *
 	 * @param node
 	 * @return {Object}
 	 * @private
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function (node) {
+	function parseLanguageNode(node) {
 	    var result = {
 	        latin: null,
 	        eastAsia: null,
@@ -846,35 +827,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _JsFile = __webpack_require__(1);
-
-	var _JsFile2 = _interopRequireDefault(_JsFile);
-
+	exports.default = parseDocumentThemes;
 	/**
 	 *
 	 * @param xml
 	 * @returns {*}
 	 * @private
 	 */
-
-	exports['default'] = function (xml) {
+	function parseDocumentThemes(xml) {
 	    var node = xml.querySelector('themeElements');
 	    var result = {
 	        style: {}
@@ -897,10 +868,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 12 */
@@ -908,11 +876,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseDocumentStyles;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -930,7 +897,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseTableProperties2 = _interopRequireDefault(_parseTableProperties);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 
@@ -953,7 +922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return 'p' + className + ' > span';
 	        },
 
-	        exec: _parseTextProperties2['default']
+	        exec: _parseTextProperties2.default
 	    },
 	    pPr: {
 	        name: 'paragraphProperties',
@@ -967,7 +936,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return 'p' + className;
 	        },
 
-	        exec: _parseParagraphProperties2['default']
+	        exec: _parseParagraphProperties2.default
 	    },
 	    tblPr: {
 	        name: 'tableProperties',
@@ -981,7 +950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return 'table' + className;
 	        },
 
-	        exec: _parseTableProperties2['default']
+	        exec: _parseTableProperties2.default
 	    }
 	};
 
@@ -991,8 +960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Object}
 	 * @private
 	 */
-
-	exports['default'] = function (xml) {
+	function parseDocumentStyles(xml) {
 	    var result = {
 	        defaults: {
 	            paragraphProperties: {},
@@ -1104,10 +1072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 13 */
@@ -1115,11 +1080,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseTextProperties;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -1137,12 +1101,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseLanguageNode2 = _interopRequireDefault(_parseLanguageNode);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
-	var merge = _JsFile$Engine.merge;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
-
-	exports['default'] = function (node, documentData) {
+	function parseTextProperties(node) {
 	    var result = {
 	        style: {},
 	        properties: {}
@@ -1306,7 +1270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } : null;
 	                break;
 	            case 'effect':
-	                result.properties.effect = (0, _parseStyleEffectProperty2['default'])(node);
+	                result.properties.effect = (0, _parseStyleEffectProperty2.default)(node);
 	                break;
 	            case 'eastAsianLayout':
 	                result.properties.eastAsianSettings = {
@@ -1346,7 +1310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'em':
-	                result.properties.emphasis = (0, _parseEmphasis2['default'])(attributes['w:val']);
+	                result.properties.emphasis = (0, _parseEmphasis2.default)(attributes['w:val']);
 	                break;
 	            case 'highlight':
 	                attrValue = attributes['w:val'] && attributes['w:val'].value;
@@ -1372,7 +1336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'lang':
-	                var lang = (0, _parseLanguageNode2['default'])(node).latin;
+	                var lang = (0, _parseLanguageNode2.default)(node).latin;
 	                if (lang) {
 	                    result.properties.lang = lang;
 	                }
@@ -1382,9 +1346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 14 */
@@ -1392,9 +1354,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.default = parseStyleEffectProperty;
 	var effectPatterns = {
 	    blinkBackground: 'blinkBackgroundAnimation',
 	    lights: 'lightsAnimation',
@@ -1409,17 +1372,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {String}
 	 * @private
 	 */
-
-	exports['default'] = function () {
+	function parseStyleEffectProperty() {
 	    var node = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var _node$attributes = node.attributes;
 	    var attributes = _node$attributes === undefined ? {} : _node$attributes;
 
 	    return effectPatterns[attributes['w:val'] && attributes['w:val'].value] || 'none';
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 15 */
@@ -1427,9 +1386,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.default = parseEmphasis;
 	var values = {
 	    dot: 'dotted',
 	    comma: 'comma',
@@ -1442,13 +1402,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param attribute
 	 * @returns {string}
 	 */
-
-	exports['default'] = function (attribute) {
+	function parseEmphasis(attribute) {
 	    return attribute && values[attribute.value] || '';
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 16 */
@@ -1456,39 +1412,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseParagraphProperties;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _prepareLineStyle = __webpack_require__(17);
-
-	var _prepareLineStyle2 = _interopRequireDefault(_prepareLineStyle);
-
 	var _parseTextProperties = __webpack_require__(13);
 
 	var _parseTextProperties2 = _interopRequireDefault(_parseTextProperties);
 
-	var _normalizeLineHeight = __webpack_require__(18);
+	var _normalizeLineHeight = __webpack_require__(17);
 
 	var _normalizeLineHeight2 = _interopRequireDefault(_normalizeLineHeight);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(18);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 
 	var alignmentValues = ['left', 'right', 'center'];
 
-	exports['default'] = function (node, documentData) {
+	function parseParagraphProperties(node, documentData) {
 	    var result = {
 	        style: {},
 	        properties: {
@@ -1557,11 +1510,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.properties[localName] = true;
 	                break;
 	            case 'numPr':
-	                var _ref = node.querySelector('numId') || {},
-	                    idAttrs = _ref.attributes;
+	                var _ref = node.querySelector('numId') || {};
 
-	                var _ref2 = node.querySelector('ilvl') || {},
-	                    levelAttrs = _ref2.attributes;
+	                var idAttrs = _ref.attributes;
+
+	                var _ref2 = node.querySelector('ilvl') || {};
+
+	                var levelAttrs = _ref2.attributes;
 
 	                var id = idAttrs && idAttrs['w:val'] && idAttrs['w:val'].value;
 	                var level = levelAttrs && levelAttrs['w:val'] && levelAttrs['w:val'].value;
@@ -1577,7 +1532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.properties.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
 	                break;
 	            case 'pBdr':
-	                merge(result.style, (0, _parseBorderProperties2['default'])(node));
+	                merge(result.style, (0, _parseBorderProperties2.default)(node));
 	                break;
 	            case 'pStyle':
 	                attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
@@ -1606,7 +1561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'rPr':
-	                result.properties.textProperties = merge(result.properties.textProperties, (0, _parseTextProperties2['default'])(node, documentData));
+	                result.properties.textProperties = merge(result.properties.textProperties, (0, _parseTextProperties2.default)(node, documentData));
 	                break;
 	            case 'shd':
 	                attrValue = node.attributes['w:fill'] && node.attributes['w:fill'].value;
@@ -1618,7 +1573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case 'spacing':
 	                attrValue = node.attributes['w:line'] && node.attributes['w:line'].value;
 	                if (!isNaN(attrValue)) {
-	                    result.style.lineHeight = (0, _normalizeLineHeight2['default'])(attrValue);
+	                    result.style.lineHeight = (0, _normalizeLineHeight2.default)(attrValue);
 
 	                    /**
 	                     * @description Fix for empty container
@@ -1660,21 +1615,93 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 17 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.default = normalizeLineHeight;
+	/**
+	 * @description 240 => 1, 360 => 1.5
+	 * @return {Number}
+	 * @private
+	 */
+	function normalizeLineHeight(value) {
+	    var result = Math.round(value / 240 * 100) / 100;
 
-	exports['default'] = function (style) {
+	    return isNaN(result) || result < 1 ? 1 : result;
+	}
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = parseBorderProperties;
+
+	var _JsFile = __webpack_require__(1);
+
+	var _JsFile2 = _interopRequireDefault(_JsFile);
+
+	var _prepareLineStyle = __webpack_require__(19);
+
+	var _prepareLineStyle2 = _interopRequireDefault(_prepareLineStyle);
+
+	var _normalizeSideValue = __webpack_require__(20);
+
+	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var normalizeColorValue = _JsFile2.default.Engine.normalizeColorValue;
+	function parseBorderProperties(node) {
+	    var result = {};
+
+	    [].forEach.call(node && node.childNodes || [], function (_ref) {
+	        var localName = _ref.localName;
+	        var attributes = _ref.attributes;
+
+	        localName = localName || '';
+	        var side = (0, _normalizeSideValue2.default)(localName);
+	        var color = attributes['w:color'] && attributes['w:color'].value;
+	        var style = (0, _prepareLineStyle2.default)(attributes['w:val'] && attributes['w:val'].value);
+	        var width = attributes['w:sz'] && attributes['w:sz'].value || 0;
+
+	        if (side && color) {
+	            var borderName = 'border' + side;
+	            result[borderName + 'Color'] = normalizeColorValue(color);
+	            result[borderName + 'Style'] = style;
+	            result[borderName + 'Width'] = {
+	                value: width / 8,
+	                unit: 'pt'
+	            };
+	        }
+	    }, this);
+
+	    return result;
+	}
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = prepareLineStyle;
+	function prepareLineStyle(style) {
 	    if (!style || style === 'none' || style === 'nil') {
 	        style = 'none';
 	    } else if (style.indexOf('dash') >= 0) {
@@ -1692,88 +1719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    return style;
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	/**
-	 * @description 240 => 1, 360 => 1.5
-	 * @return {Number}
-	 * @private
-	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	exports["default"] = function (value) {
-	  var result = Math.round(value / 240 * 100) / 100;
-
-	  return isNaN(result) || result < 1 ? 1 : result;
-	};
-
-	;
-	module.exports = exports["default"];
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _JsFile = __webpack_require__(1);
-
-	var _JsFile2 = _interopRequireDefault(_JsFile);
-
-	var _prepareLineStyle = __webpack_require__(17);
-
-	var _prepareLineStyle2 = _interopRequireDefault(_prepareLineStyle);
-
-	var _normalizeSideValue = __webpack_require__(20);
-
-	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
-
-	var normalizeColorValue = _JsFile2['default'].Engine.normalizeColorValue;
-
-	exports['default'] = function (node) {
-	    var result = {};
-
-	    [].forEach.call(node && node.childNodes || [], function (_ref) {
-	        var localName = _ref.localName;
-	        var attributes = _ref.attributes;
-
-	        localName = localName || '';
-	        var side = (0, _normalizeSideValue2['default'])(localName);
-	        var color = attributes['w:color'] && attributes['w:color'].value;
-	        var style = (0, _prepareLineStyle2['default'])(attributes['w:val'] && attributes['w:val'].value);
-	        var width = attributes['w:sz'] && attributes['w:sz'].value || 0;
-
-	        if (side && color) {
-	            var borderName = 'border' + side;
-	            result[borderName + 'Color'] = normalizeColorValue(color);
-	            result[borderName + 'Style'] = style;
-	            result[borderName + 'Width'] = {
-	                value: width / 8,
-	                unit: 'pt'
-	            };
-	        }
-	    }, this);
-
-	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 20 */
@@ -1781,17 +1727,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = normalizeSideValue;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var formatPropertyName = _JsFile2['default'].Engine.formatPropertyName;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var formatPropertyName = _JsFile2.default.Engine.formatPropertyName;
 
 	var sides = {
 	    top: 'top',
@@ -1802,12 +1749,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    end: 'end'
 	};
 
-	exports['default'] = function (value) {
+	function normalizeSideValue(value) {
 	    var capitalizedValue = formatPropertyName(value, { capitalize: true });
 	    return sides[capitalizedValue] || capitalizedValue;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 21 */
@@ -1815,17 +1760,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseTableProperties;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(18);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
@@ -1833,13 +1777,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 	var cropUnit = _JsFile$Engine.cropUnit;
-
-	exports['default'] = function (node) {
+	function parseTableProperties(node) {
 	    var result = {
 	        properties: {},
 	        style: {}
@@ -1854,7 +1799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        switch (localName) {
 	            case 'jc':
-	                attrValue = (0, _normalizeSideValue2['default'])(attributes['w:val'] && attributes['w:val'].value);
+	                attrValue = (0, _normalizeSideValue2.default)(attributes['w:val'] && attributes['w:val'].value);
 	                if (attrValue === 'left' || attrValue === 'right') {
 	                    result.style.float = attrValue;
 	                }
@@ -1872,7 +1817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    result.style.borderCollapse = 'collapse';
 	                }
 
-	                merge(result.style, (0, _parseBorderProperties2['default'])(node));
+	                merge(result.style, (0, _parseBorderProperties2.default)(node));
 	                var horizontalBorder = node.querySelector('insideH');
 	                var verticalBorder = node.querySelector('insideV');
 	                if (horizontalBorder || verticalBorder) {
@@ -1881,11 +1826,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    };
 
 	                    if (horizontalBorder) {
-	                        merge(result.colProperties.style, (0, _parseBorderProperties2['default'])(horizontalBorder));
+	                        merge(result.colProperties.style, (0, _parseBorderProperties2.default)(horizontalBorder));
 	                    }
 
 	                    if (verticalBorder) {
-	                        merge(result.colProperties.style, (0, _parseBorderProperties2['default'])(verticalBorder));
+	                        merge(result.colProperties.style, (0, _parseBorderProperties2.default)(verticalBorder));
 	                    }
 	                }
 
@@ -1903,7 +1848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                };
 
 	                forEach.call(node && node.childNodes || [], function (node) {
-	                    var side = formatPropertyName((0, _normalizeSideValue2['default'])(node.localName), {
+	                    var side = formatPropertyName((0, _normalizeSideValue2.default)(node.localName), {
 	                        capitalize: true
 	                    });
 	                    attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
@@ -1994,9 +1939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 22 */
@@ -2004,11 +1947,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseDocumentContent;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -2022,8 +1964,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseDocumentContentNodes2 = _interopRequireDefault(_parseDocumentContentNodes);
 
-	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 	var invalidReadFile = _JsFile$Engine.errors.invalidReadFile;
 
@@ -2034,8 +1978,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 
-	exports['default'] = function (params) {
-	    return new Promise((function (resolve, reject) {
+	function parseDocumentContent(params) {
+	    return new Promise(function (resolve, reject) {
 	        var xml = params.xml;
 	        var _params$documentData = params.documentData;
 	        var documentData = _params$documentData === undefined ? {} : _params$documentData;
@@ -2079,10 +2023,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                 */
 	                nodes.pop();
 
-	                documentData.styles.defaults.sectionProperties = (0, _parseSectionProperties2['default'])(lastNode, documentData);
+	                documentData.styles.defaults.sectionProperties = (0, _parseSectionProperties2.default)(lastNode, documentData);
 	            }
 
-	            (0, _parseDocumentContentNodes2['default'])({
+	            (0, _parseDocumentContentNodes2.default)({
 	                nodes: nodes,
 	                documentData: documentData
 	            }).then(function (elements) {
@@ -2102,11 +2046,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            resolve(new Document(result));
 	        }
-	    }).bind(this));
-	};
-
-	;
-	module.exports = exports['default'];
+	    });
+	}
 
 /***/ },
 /* 23 */
@@ -2114,21 +2055,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseSectionProperties;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
-
-	exports['default'] = function () {
+	function parseSectionProperties() {
 	    var node = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var documentData = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -2273,9 +2214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        properties: properties,
 	        style: style
 	    };
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 24 */
@@ -2283,11 +2222,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _parseParagraph = __webpack_require__(25);
 
@@ -2298,6 +2235,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _parseTable2 = _interopRequireDefault(_parseTable);
 
 	var _JsFile = __webpack_require__(1);
+
+	var _JsFile2 = _interopRequireDefault(_JsFile);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
 
 	function parse(params) {
 	    var listElement = undefined;
@@ -2311,19 +2254,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var localName = node.localName;
 
 	        if (localName === 'tbl') {
-	            queue.push((0, _parseTable2['default'])({
+	            queue.push((0, _parseTable2.default)({
 	                node: node,
 	                documentData: documentData,
 	                parseDocumentContentNodes: parse
 	            }));
 	        } else if (localName === 'p') {
-	            var el = (0, _parseParagraph2['default'])({ node: node, documentData: documentData });
+	            var el = (0, _parseParagraph2.default)({ node: node, documentData: documentData });
 	            var isListItem = el.properties.tagName === 'LI';
 
 	            // if it's a list item
 	            if (isListItem) {
 	                if (!listElement) {
-	                    listElement = _JsFile.Document.elementPrototype;
+	                    listElement = Document.elementPrototype;
 	                    listElement.properties.tagName = 'UL';
 	                    listElement.style.padding = {
 	                        value: 0,
@@ -2350,8 +2293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Promise.all(queue);
 	}
 
-	exports['default'] = parse;
-	module.exports = exports['default'];
+	exports.default = parse;
 
 /***/ },
 /* 25 */
@@ -2359,11 +2301,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseParagraph;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -2381,10 +2322,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseText2 = _interopRequireDefault(_parseText);
 
-	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine = _JsFile2['default'].Engine;
-	var merge = _JsFile$Engine.merge;
-	var clone = _JsFile$Engine.clone;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var merge = _JsFile2.default.Engine.merge;
 
 	/**
 	 *
@@ -2392,7 +2333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {*}
 	 */
 
-	exports['default'] = function (params) {
+	function parseParagraph(params) {
 	    var node = params.node;
 	    var documentData = params.documentData;
 
@@ -2425,7 +2366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'pPr':
-	                var props = (0, _parseParagraphProperties2['default'])(node, documentData);
+	                var props = (0, _parseParagraphProperties2.default)(node, documentData);
 	                if (result.properties.tagName === 'LI') {
 	                    /**
 	                     * @description Clear paragraph styles
@@ -2441,10 +2382,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                el = Document.elementPrototype;
 	                el.properties.tagName = 'A';
 	                attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
-	                var relationship = attrValue && (0, _getRelationship2['default'])(attrValue, documentData) || null;
+	                var relationship = attrValue && (0, _getRelationship2.default)(attrValue, documentData) || null;
 
 	                forEach.call(node && node.childNodes || [], function (node) {
-	                    el.children.push((0, _parseText2['default'])({
+	                    el.children.push((0, _parseText2.default)({
 	                        node: node,
 	                        documentData: documentData
 	                    }));
@@ -2461,7 +2402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.children.push(el);
 	                break;
 	            case 'r':
-	                result.children.push((0, _parseText2['default'])({
+	                result.children.push((0, _parseText2.default)({
 	                    node: node,
 	                    documentData: documentData
 	                }));
@@ -2473,36 +2414,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 26 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = getRelationship;
 	/**
 	 *
 	 * @param relationId
 	 * @param documentData
 	 * @returns {*}
 	 */
-	"use strict";
+	function getRelationship(relationId) {
+	    var documentData = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	    var relationships = documentData.relationships || {};
 
-	exports["default"] = function (relationId) {
-	  var documentData = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-	  var relationships = documentData.relationships || {};
-
-	  return relationships.document[relationId] || relationships.main[relationId];
-	};
-
-	;
-	module.exports = exports["default"];
+	    return relationships.document[relationId] || relationships.main[relationId];
+	}
 
 /***/ },
 /* 27 */
@@ -2510,11 +2446,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseText;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -2532,17 +2467,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parsePicture2 = _interopRequireDefault(_parsePicture);
 
-	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var merge = _JsFile$Engine.merge;
 	var clone = _JsFile$Engine.clone;
-	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 	var nbHyphen = _JsFile$Engine.nbHyphen;
 	var enDash = _JsFile$Engine.enDash;
 	var space = _JsFile$Engine.space;
 	var tabAsSpaces = _JsFile$Engine.tabAsSpaces;
-
-	exports['default'] = function () {
+	function parseText() {
 	    var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var node = params.node;
 	    var documentData = params.documentData;
@@ -2589,7 +2524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // TODO: parse types 'column' & 'page', parse clear 'left' & 'right'
 	                break;
 	            case 'drawing':
-	                merge(result, (0, _parseDrawing2['default'])(node, documentData));
+	                merge(result, (0, _parseDrawing2.default)(node, documentData));
 	                break;
 	            case 'noBreakHyphen':
 	                result.properties.textContent += nbHyphen;
@@ -2598,7 +2533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.properties.textContent += enDash;
 	                break;
 	            case 'rPr':
-	                merge(textProperties, (0, _parseTextProperties2['default'])(node, documentData));
+	                merge(textProperties, (0, _parseTextProperties2.default)(node, documentData));
 	                break;
 
 	            // TODO: parse w:sym. It needs more samples of .docx
@@ -2610,16 +2545,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result.properties.textContent += tabAsSpaces;
 	                break;
 	            case 'pict':
-	                merge(result, (0, _parsePicture2['default'])(node, documentData));
+	                merge(result, (0, _parsePicture2.default)(node, documentData));
 	                break;
 	        }
 	    });
 
 	    merge(result, textProperties);
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 28 */
@@ -2627,11 +2560,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseDrawing;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -2645,12 +2577,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _convertEmu2 = _interopRequireDefault(_convertEmu);
 
-	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
 	var attributeToBoolean = _JsFile$Engine.attributeToBoolean;
-
-	exports['default'] = function (node, documentData) {
+	function parseDrawing(node, documentData) {
 	    var result = Document.elementPrototype;
 	    var attrValue = undefined;
 	    var childNode = node.querySelector('prstGeom');
@@ -2664,14 +2597,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            bottom: 0
 	        }
 	    };
-	    var shapeType = childNode && childNode.attributes.prst && childNode.attributes.prst.value || '';
+
+	    //const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
 	    var forEach = [].forEach;
 
 	    result.properties.tagName = 'IMG';
 	    childNode = node.querySelector('blip');
 	    attrValue = childNode && childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
 	    if (attrValue) {
-	        var media = (0, _getMediaFromRelationship2['default'])(attrValue, documentData);
+	        var media = (0, _getMediaFromRelationship2.default)(attrValue, documentData);
 	        if (media) {
 	            result.properties.src = media.data;
 	        }
@@ -2699,7 +2633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var offset = childNode.querySelector('posOffset');
 	        if (offset && offset.textContent) {
 	            result.style.position = 'relative';
-	            result.style.left = (0, _convertEmu2['default'])(offset.textContent);
+	            result.style.left = (0, _convertEmu2.default)(offset.textContent);
 	        }
 	    }
 
@@ -2708,7 +2642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var offset = childNode.querySelector('posOffset');
 	        if (offset && offset.textContent) {
 	            result.style.position = 'relative';
-	            result.style.top = (0, _convertEmu2['default'])(offset.textContent);
+	            result.style.top = (0, _convertEmu2.default)(offset.textContent);
 	        }
 	    }
 
@@ -2826,9 +2760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // TODO: parse inline, extents objects and shapeType property
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 29 */
@@ -2836,15 +2768,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = getMediaFromRelationship;
 
 	var _getRelationship = __webpack_require__(26);
 
 	var _getRelationship2 = _interopRequireDefault(_getRelationship);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
 	 *
@@ -2852,44 +2785,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param documentData
 	 * @returns {*}
 	 */
+	function getMediaFromRelationship(relationId) {
+	    var documentData = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-	exports['default'] = function (relationId) {
-	  var documentData = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	    var relationship = (0, _getRelationship2.default)(relationId, documentData);
 
-	  var relationship = (0, _getRelationship2['default'])(relationId, documentData);
-
-	  return relationship && documentData.media && documentData.media['word/' + relationship.target] || null;
-	};
-
-	;
-	module.exports = exports['default'];
+	    return relationship && documentData.media && documentData.media['word/' + relationship.target] || null;
+	}
 
 /***/ },
 /* 30 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = convertEmu;
 	/**
 	 * @description 635 - OXML coef., 20 - 20th of a Point
 	 * @param val
 	 * @returns {{value: number, unit: string}}
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function () {
+	function convertEmu() {
 	    var val = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
 	    return {
 	        value: val / (635 * 20),
 	        unit: 'pt'
 	    };
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 31 */
@@ -2897,11 +2823,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parsePicture;
 
 	var _JsFile = __webpack_require__(1);
 
@@ -2919,12 +2844,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseStyleAttribute2 = _interopRequireDefault(_parseStyleAttribute);
 
-	var Document = _JsFile2['default'].Document;
-	var merge = _JsFile2['default'].Engine.merge;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var merge = _JsFile2.default.Engine.merge;
 
 	var denominator = 20;
 
-	exports['default'] = function (node, documentData) {
+	function parsePicture(node, documentData) {
 
 	    // TODO: parse all information about picture. It needs more .docx samples
 	    var result = Document.elementPrototype;
@@ -2939,7 +2866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        attrValue = group.attributes.style && group.attributes.style.value;
 
 	        if (attrValue) {
-	            merge(result.style, (0, _parseStyleAttribute2['default'])({
+	            merge(result.style, (0, _parseStyleAttribute2.default)({
 	                src: attrValue
 	            }));
 	        }
@@ -2952,7 +2879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (localName === 'shape') {
 	                attrValue = node.attributes.style && node.attributes.style.value;
 	                if (attrValue) {
-	                    merge(el.style, (0, _parseStyleAttribute2['default'])({
+	                    merge(el.style, (0, _parseStyleAttribute2.default)({
 	                        src: attrValue,
 	                        denominator: denominator
 	                    }));
@@ -2967,7 +2894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    attrValue = imageData.attributes['r:id'] && imageData.attributes['r:id'].value;
 	                    if (attrValue) {
-	                        var media = (0, _getMediaFromRelationship2['default'])(attrValue, documentData);
+	                        var media = (0, _getMediaFromRelationship2.default)(attrValue, documentData);
 
 	                        if (media) {
 	                            el.style.backgroundImage = 'url(\'' + media.data + '\')';
@@ -2980,7 +2907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else if (localName === 'rect') {
 	                attrValue = node.attributes.style && node.attributes.style.value;
 	                if (attrValue) {
-	                    merge(el.style, (0, _parseStyleAttribute2['default'])({
+	                    merge(el.style, (0, _parseStyleAttribute2.default)({
 	                        src: attrValue,
 	                        denominator: denominator
 	                    }));
@@ -2992,7 +2919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    forEach.call(textBoxContent && textBoxContent.childNodes || [], function (node) {
 	                        if (node.localName === 'p') {
-	                            el.children.push((0, _parseParagraph2['default'])({
+	                            el.children.push((0, _parseParagraph2.default)({
 	                                node: node,
 	                                documentData: documentData
 	                            }));
@@ -3006,9 +2933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 32 */
@@ -3016,13 +2941,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.default = parseStyleAttribute;
 
 	var _JsFile = __webpack_require__(1);
 
-	var cropUnit = _JsFile.Engine.cropUnit;
+	var _JsFile2 = _interopRequireDefault(_JsFile);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var cropUnit = _JsFile2.default.Engine.cropUnit;
 
 	var sides = ['width', 'height', 'left', 'top'];
 	/**
@@ -3030,8 +2960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param params
 	 * @returns {*}
 	 */
-
-	exports['default'] = function (params) {
+	function parseStyleAttribute(params) {
 	    var styles = {};
 	    var _params$value = params.value;
 	    var value = _params$value === undefined ? '' : _params$value;
@@ -3054,10 +2983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return styles;
-	};
-
-	;
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 33 */
@@ -3065,11 +2991,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _JsFile = __webpack_require__(1);
 
@@ -3087,8 +3011,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parseTableColProperties2 = _interopRequireDefault(_parseTableColProperties);
 
-	var Document = _JsFile2['default'].Document;
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Document = _JsFile2.default.Document;
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var merge = _JsFile$Engine.merge;
 	var clone = _JsFile$Engine.clone;
 
@@ -3098,7 +3024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {*}
 	 */
 
-	exports['default'] = function (params) {
+	exports.default = function (params) {
 	    var node = params.node;
 	    var documentData = params.documentData;
 	    var parseDocumentContentNodes = params.parseDocumentContentNodes;
@@ -3125,7 +3051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var localName = node.localName;
 
 	        if (localName === 'tblPr') {
-	            merge(tableProperties, (0, _parseTableProperties2['default'])(node));
+	            merge(tableProperties, (0, _parseTableProperties2.default)(node));
 	            merge(colProperties, tableProperties.colProperties);
 	        } else if (localName === 'tblGrid') {
 	            Array.prototype.forEach.call(node.querySelectorAll('gridCol'), function (_ref) {
@@ -3158,7 +3084,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    // TODO: parse tblPrEx (Table Property Exceptions)
 	                    if (localName === 'trPr') {
-	                        rowProperties = (0, _parseTableRowProperties2['default'])(node);
+	                        rowProperties = (0, _parseTableRowProperties2.default)(node);
 	                        merge(row.style, rowProperties.style);
 	                        merge(tableProperties, rowProperties.tableProperties);
 	                        localColProperties = merge({}, localColProperties, rowProperties.colProperties);
@@ -3170,7 +3096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                            if (nodes[0]) {
 	                                if (nodes[0].localName === 'tcPr') {
-	                                    localColProperties = merge({}, localColProperties, (0, _parseTableColProperties2['default'])(nodes.shift()));
+	                                    localColProperties = merge({}, localColProperties, (0, _parseTableColProperties2.default)(nodes.shift()));
 	                                }
 
 	                                queue.push(parseDocumentContentNodes({
@@ -3215,29 +3141,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	};
 
-	module.exports = exports['default'];
-
 /***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _JsFile = __webpack_require__(1);
-
-	var _JsFile2 = _interopRequireDefault(_JsFile);
+	exports.default = parseTableRowProperties;
 
 	var _normalizeSideValue = __webpack_require__(20);
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	exports['default'] = function (node) {
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function parseTableRowProperties(node) {
 	    var result = {
 	        style: {}
 	    };
@@ -3248,7 +3169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        switch (localName) {
 	            case 'jc':
-	                attrValue = (0, _normalizeSideValue2['default'])(node.attributes['w:val'] && node.attributes['w:val'].value);
+	                attrValue = (0, _normalizeSideValue2.default)(node.attributes['w:val'] && node.attributes['w:val'].value);
 	                if (attrValue) {
 	                    result.style.textAlign = attrValue;
 	                }
@@ -3286,9 +3207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 35 */
@@ -3296,17 +3215,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	exports.default = parseTableColProperties;
 
 	var _JsFile = __webpack_require__(1);
 
 	var _JsFile2 = _interopRequireDefault(_JsFile);
 
-	var _parseBorderProperties = __webpack_require__(19);
+	var _parseBorderProperties = __webpack_require__(18);
 
 	var _parseBorderProperties2 = _interopRequireDefault(_parseBorderProperties);
 
@@ -3314,7 +3232,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _normalizeSideValue2 = _interopRequireDefault(_normalizeSideValue);
 
-	var _JsFile$Engine = _JsFile2['default'].Engine;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _JsFile$Engine = _JsFile2.default.Engine;
 	var merge = _JsFile$Engine.merge;
 	var normalizeColorValue = _JsFile$Engine.normalizeColorValue;
 	var formatPropertyName = _JsFile$Engine.formatPropertyName;
@@ -3326,7 +3246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    center: 'middle'
 	};
 
-	exports['default'] = function (node) {
+	function parseTableColProperties(node) {
 	    var result = {
 	        properties: {},
 	        style: {}
@@ -3360,17 +3280,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                break;
 	            case 'tcBorders':
-	                merge(result.style, (0, _parseBorderProperties2['default'])(node));
+	                merge(result.style, (0, _parseBorderProperties2.default)(node));
 	                var horizontalBorder = node.querySelector('insideH');
 	                var verticalBorder = node.querySelector('insideV');
 
 	                if (horizontalBorder || verticalBorder) {
 	                    if (horizontalBorder) {
-	                        merge(result.style, (0, _parseBorderProperties2['default'])(horizontalBorder));
+	                        merge(result.style, (0, _parseBorderProperties2.default)(horizontalBorder));
 	                    }
 
 	                    if (verticalBorder) {
-	                        merge(result.style, (0, _parseBorderProperties2['default'])(verticalBorder));
+	                        merge(result.style, (0, _parseBorderProperties2.default)(verticalBorder));
 	                    }
 	                }
 
@@ -3382,7 +3302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var localName = _ref.localName;
 	                    var attributes = _ref.attributes;
 
-	                    var side = formatPropertyName((0, _normalizeSideValue2['default'])(localName));
+	                    var side = formatPropertyName((0, _normalizeSideValue2.default)(localName));
 	                    var value = Number(attributes['w:w'] && attributes['w:w'].value);
 
 	                    if (value && !isNaN(value) && side) {
@@ -3430,9 +3350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    return result;
-	};
-
-	module.exports = exports['default'];
+	}
 
 /***/ },
 /* 36 */
@@ -3449,8 +3367,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	}
 
-	exports["default"] = {};
-	module.exports = exports["default"];
+	exports.default = {};
 
 /***/ }
 /******/ ])

@@ -3,9 +3,9 @@ import parseTextProperties from './parseTextProperties';
 import parseDrawing from './parseDrawing';
 import parsePicture from './parsePicture';
 const {Document} = JsFile;
-const {merge, clone, formatPropertyName, nbHyphen, enDash, space, tabAsSpaces} = JsFile.Engine;
+const {merge, clone, nbHyphen, enDash, space, tabAsSpaces} = JsFile.Engine;
 
-export default function (params = {}) {
+export default function parseText (params = {}) {
     const {node, documentData} = params;
     const result = Document.elementPrototype;
     const forEach = [].forEach;

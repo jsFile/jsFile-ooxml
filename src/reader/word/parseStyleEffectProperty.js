@@ -12,8 +12,8 @@ const effectPatterns = {
  * @return {String}
  * @private
  */
-export default function (node = {}) {
-    let {attributes = {}} = node;
+export default function parseStyleEffectProperty (node = {}) {
+    const {attributes = {}} = node;
 
     return effectPatterns[attributes['w:val'] && attributes['w:val'].value] || 'none';
-};
+}

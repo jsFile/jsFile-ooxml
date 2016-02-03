@@ -8,7 +8,7 @@ const verticalAlignValues = {
     center: 'middle'
 };
 
-export default function (node) {
+export default function parseTableColProperties (node) {
     const result = {
         properties: {},
         style: {}

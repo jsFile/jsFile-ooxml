@@ -8,7 +8,7 @@ const {formatPropertyName} = JsFile.Engine;
  * @return {Object}
  * @private
  */
-export default function (xml) {
+export default function parseDocumentSettings (xml) {
     const result = {
         zoom: 100,
         compat: {},
@@ -217,4 +217,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

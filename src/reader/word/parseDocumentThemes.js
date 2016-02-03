@@ -1,12 +1,10 @@
-import JsFile from 'JsFile';
-
 /**
  *
  * @param xml
  * @returns {*}
  * @private
  */
-export default function (xml) {
+export default function parseDocumentThemes (xml) {
     const node = xml.querySelector('themeElements');
     const result = {
         style: {}
@@ -29,4 +27,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

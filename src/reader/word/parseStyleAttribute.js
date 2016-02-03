@@ -1,14 +1,14 @@
-import {Engine} from 'JsFile';
-const {cropUnit} = Engine;
+import JsFile from 'JsFile';
+const {cropUnit} = JsFile.Engine;
 const sides = ['width', 'height', 'left', 'top'];
 /**
  *
  * @param params
  * @returns {*}
  */
-export default function (params) {
-    let styles = {};
-    let {value = '', denominator = 1} = params;
+export default function parseStyleAttribute (params) {
+    const styles = {};
+    const {value = '', denominator = 1} = params;
 
     String(value).split(';').forEach((rule) => {
         const stylePartitionData = rule.split(':');
@@ -26,4 +26,4 @@ export default function (params) {
     });
 
     return styles;
-};
+}

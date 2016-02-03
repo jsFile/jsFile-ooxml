@@ -1,6 +1,8 @@
 import parseParagraph from './parseParagraph';
 import parseTable from './parseTable';
-import {Document} from 'JsFile';
+import JsFile from 'JsFile';
+
+const {Document} = JsFile;
 
 function parse(params) {
     let listElement;

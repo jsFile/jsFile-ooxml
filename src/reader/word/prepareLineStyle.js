@@ -1,4 +1,4 @@
-export default function (style) {
+export default function prepareLineStyle (style) {
     if (!style || style === 'none' || style === 'nil') {
         style = 'none';
     } else if (style.indexOf('dash') >= 0) {

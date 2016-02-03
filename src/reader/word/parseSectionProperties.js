@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
 const {attributeToBoolean, formatPropertyName} = JsFile.Engine;
 
-export default function (node = {}, documentData = {}) {
+export default function parseSectionProperties (node = {}, documentData = {}) {
     let attrValue;
     let height = 0;
     const properties = {};

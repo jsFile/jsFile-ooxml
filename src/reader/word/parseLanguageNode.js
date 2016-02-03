@@ -4,8 +4,8 @@
  * @return {Object}
  * @private
  */
-export default function (node) {
-    let result = {
+export default function parseLanguageNode (node) {
+    const result = {
         latin: null,
         eastAsia: null,
         complexLanguage: null
@@ -23,4 +23,4 @@ export default function (node) {
     }
 
     return result;
-};
+}

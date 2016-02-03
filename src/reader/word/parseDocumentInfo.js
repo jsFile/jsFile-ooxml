@@ -5,7 +5,7 @@
  * @private
  * @return {Object}
  */
-export default function (xml) {
+export default function parseDocumentInfo (xml) {
     const result = {};
     const node = xml && xml.querySelector('coreProperties');
 
@@ -24,4 +24,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

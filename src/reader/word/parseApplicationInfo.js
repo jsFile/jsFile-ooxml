@@ -8,7 +8,7 @@ const {formatPropertyName} = JsFile.Engine;
  * @private
  * @return {Object}
  */
-export default function (xml) {
+export default function parseApplicationInfo (xml) {
     const result = {};
     const node = xml && xml.querySelector('Properties');
 
@@ -34,4 +34,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

@@ -9,7 +9,7 @@ const sides = {
     end: 'end'
 };
 
-export default function (value) {
-    let capitalizedValue = formatPropertyName(value, {capitalize: true});
+export default function normalizeSideValue (value) {
+    const capitalizedValue = formatPropertyName(value, {capitalize: true});
     return sides[capitalizedValue] || capitalizedValue;
 }

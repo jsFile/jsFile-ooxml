@@ -8,7 +8,7 @@ const {formatPropertyName} = JsFile.Engine;
  * @return {Object}
  * @private
  */
-export default function (xml) {
+export default function parseFontsInfo (xml) {
     const result = {};
     const forEach = [].forEach;
 
@@ -30,4 +30,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

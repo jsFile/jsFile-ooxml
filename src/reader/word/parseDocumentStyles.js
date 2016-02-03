@@ -54,7 +54,7 @@ const parsers = {
  * @return {Object}
  * @private
  */
-export default function (xml) {
+export default function parseDocumentStyles (xml) {
     const result = {
         defaults: {
             paragraphProperties: {},
@@ -142,4 +142,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

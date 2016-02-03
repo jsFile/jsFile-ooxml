@@ -3,14 +3,14 @@ import parseParagraphProperties from './parseParagraphProperties';
 import getRelationship from './getRelationship';
 import parseText from './parseText';
 const {Document} = JsFile;
-const {merge, clone} = JsFile.Engine;
+const {merge} = JsFile.Engine;
 
 /**
  *
  * @param params
  * @returns {*}
  */
-export default function (params) {
+export default function parseParagraph (params) {
     const {node, documentData} = params;
     const result = Document.elementPrototype;
     const forEach = [].forEach;

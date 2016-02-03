@@ -4,7 +4,7 @@ import convertEmu from './convertEmu';
 const {Document} = JsFile;
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
-export default function (node, documentData) {
+export default function parseDrawing (node, documentData) {
     let result = Document.elementPrototype;
     let attrValue;
     let childNode = node.querySelector('prstGeom');
@@ -18,7 +18,8 @@ export default function (node, documentData) {
             bottom: 0
         }
     };
-    const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
+
+    //const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
     const forEach = [].forEach;
 
     result.properties.tagName = 'IMG';

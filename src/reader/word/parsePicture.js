@@ -6,7 +6,7 @@ const {Document} = JsFile;
 const {merge} = JsFile.Engine;
 const denominator = 20;
 
-export default function (node, documentData) {
+export default function parsePicture (node, documentData) {
 
     // TODO: parse all information about picture. It needs more .docx samples
     const result = Document.elementPrototype;

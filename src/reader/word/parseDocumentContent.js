@@ -10,8 +10,8 @@ const {normalizeColorValue, errors: {invalidReadFile}} = JsFile.Engine;
  * @return {Object}
  * @private
  */
-export default function (params) {
-    return new Promise(function (resolve, reject) {
+export default function parseDocumentContent (params) {
+    return new Promise((resolve, reject) => {
         const {xml, documentData = {}, fileName = ''} = params;
         let node = xml && xml.querySelector('parsererror');
         if (node) {
@@ -74,6 +74,5 @@ export default function (params) {
         } else {
             resolve(new Document(result));
         }
-
-    }.bind(this));
-};
+    });
+}

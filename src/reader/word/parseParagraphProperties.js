@@ -1,13 +1,12 @@
 import JsFile from 'JsFile';
-import prepareLineStyle from './prepareLineStyle';
 import parseTextProperties from './parseTextProperties';
 import normalizeLineHeight from './normalizeLineHeight';
 import parseBorderProperties from './parseBorderProperties';
 const {merge, normalizeColorValue} = JsFile.Engine;
 const alignmentValues = ['left', 'right', 'center'];
 
-export default function (node, documentData) {
-    let result = {
+export default function parseParagraphProperties (node, documentData) {
+    const result = {
         style: {},
         properties: {
             textProperties: {

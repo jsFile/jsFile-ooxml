@@ -5,8 +5,8 @@
  * @return {*}
  * @private
  */
-export default function (xml) {
-    let result = {};
+export default function parseRelationships (xml) {
+    const result = {};
 
     Array.prototype.forEach.call((xml && xml.querySelectorAll('Relationship')) || [], ({attributes = {}}) => {
         const idAttribute = attributes.Id;
@@ -23,4 +23,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

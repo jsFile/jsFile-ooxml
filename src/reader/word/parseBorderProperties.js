@@ -3,7 +3,7 @@ import prepareLineStyle from './prepareLineStyle';
 import normalizeSideValue from './normalizeSideValue';
 const {normalizeColorValue} = JsFile.Engine;
 
-export default function (node) {
+export default function parseBorderProperties (node) {
     const result = {};
 
     [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {

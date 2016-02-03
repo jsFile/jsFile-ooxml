@@ -3,9 +3,9 @@
  * @param val
  * @returns {{value: number, unit: string}}
  */
-export default function (val = 0) {
+export default function convertEmu (val = 0) {
     return {
         value: val / (635 * 20),
         unit: 'pt'
     };
-};
+}

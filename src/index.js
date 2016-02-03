@@ -1,7 +1,8 @@
-import {Engine, defineEngine} from 'JsFile';
+import JsFile from 'JsFile';
 import createDocument from './reader/createDocument';
-import polyfill from './polyfill';
+import './polyfill';
 
+const {Engine, defineEngine} = JsFile;
 const wordProcessingFiles = {
     extension: ['docx'],
     mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -22,11 +23,12 @@ const files = {
 });
 
 class OoxmlEngine extends Engine {
-    createDocument = createDocument
-
-    parser = 'readArchive'
-
-    files = files
+    constructor () {
+        super(...arguments);
+        this.createDocument = createDocument;
+        this.parser = 'readArchive';
+        this.files = files;
+    }
 
     isWordProcessingDocument () {
         return Boolean(this.file && Engine.validateFile(this.file, wordProcessingFiles));
@@ -35,10 +37,9 @@ class OoxmlEngine extends Engine {
     static test (file) {
         return Boolean(file && Engine.validateFile(file, files));
     }
-
-    static mimeTypes = files.mime.slice(0)
 }
 
+OoxmlEngine.mimeTypes = files.mime.slice(0);
 defineEngine(OoxmlEngine);
 
 export default OoxmlEngine;

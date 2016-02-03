@@ -2,10 +2,10 @@ import JsFile from 'JsFile';
 import parseStyleEffectProperty from './parseStyleEffectProperty';
 import parseEmphasis from './parseEmphasis';
 import parseLanguageNode from './parseLanguageNode';
-const {merge, attributeToBoolean, normalizeColorValue} = JsFile.Engine;
+const {attributeToBoolean, normalizeColorValue} = JsFile.Engine;
 
-export default function (node, documentData) {
-    let result = {
+export default function parseTextProperties (node) {
+    const result = {
         style: {},
         properties: {}
     };

@@ -10,6 +10,6 @@ const values = {
  * @param attribute
  * @returns {string}
  */
-export default function (attribute) {
+export default function parseEmphasis (attribute) {
     return (attribute && values[attribute.value]) || '';
-};
+}

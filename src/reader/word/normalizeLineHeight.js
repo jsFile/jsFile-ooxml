@@ -3,8 +3,8 @@
  * @return {Number}
  * @private
  */
-export default function (value) {
-    let result = Math.round(value / 240 * 100) / 100;
+export default function normalizeLineHeight (value) {
+    const result = Math.round(value / 240 * 100) / 100;
 
     return (isNaN(result) || result < 1) ? 1 : result;
-};
+}

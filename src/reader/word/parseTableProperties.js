@@ -3,7 +3,7 @@ import parseBorderProperties from './parseBorderProperties';
 import normalizeSideValue from './normalizeSideValue';
 const {merge, normalizeColorValue, formatPropertyName, cropUnit} = JsFile.Engine;
 
-export default function (node) {
+export default function parseTableProperties (node) {
     const result = {
         properties: {},
         style: {}

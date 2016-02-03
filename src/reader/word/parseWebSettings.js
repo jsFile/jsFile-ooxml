@@ -7,7 +7,7 @@ const {attributeToBoolean} = JsFile.Engine;
  * @return {Object}
  * @private
  */
-export default function (xml) {
+export default function parseWebSettings (xml) {
     const result = {};
     const node = xml && xml.querySelector('webSettings');
 
@@ -16,4 +16,4 @@ export default function (xml) {
     });
 
     return result;
-};
+}

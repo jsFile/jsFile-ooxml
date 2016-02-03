@@ -1,7 +1,6 @@
-import JsFile from 'JsFile';
 import normalizeSideValue from './normalizeSideValue';
 
-export default function (node) {
+export default function parseTableRowProperties (node) {
     const result = {
         style: {}
     };

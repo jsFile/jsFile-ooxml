@@ -4,7 +4,7 @@ module.exports = function (grunt) {
             options: {
                 target: 'global'
             },
-            src: ['tests/files/*.*'],
+            src: ['tests/files/**/*.*'],
             dest: 'tests/filesCache.js'
         }
     };
