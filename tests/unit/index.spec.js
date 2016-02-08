@@ -13,10 +13,7 @@ describe('jsFile-ooxml', () => {
 
     before(() => {
         files = window.files;
-    });
-
-    it('should exist', () => {
-        assert.isFunction(OoxmlEngine);
+        JsFile.defineEngine(OoxmlEngine);
     });
 
     it('should read the file', function () {

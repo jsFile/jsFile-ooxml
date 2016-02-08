@@ -2,7 +2,7 @@ import JsFile from 'JsFile';
 import createDocument from './reader/createDocument';
 import './polyfill';
 
-const {Engine, defineEngine} = JsFile;
+const {Engine} = JsFile;
 const wordProcessingFiles = {
     extension: ['docx'],
     mime: ['vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -40,6 +40,5 @@ class OoxmlEngine extends Engine {
 }
 
 OoxmlEngine.mimeTypes = files.mime.slice(0);
-defineEngine(OoxmlEngine);
 
 export default OoxmlEngine;

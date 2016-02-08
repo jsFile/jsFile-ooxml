@@ -56,11 +56,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _JsFile = __webpack_require__(1);
 
@@ -81,7 +81,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Engine = _JsFile2.default.Engine;
-	var defineEngine = _JsFile2.default.defineEngine;
 
 	var wordProcessingFiles = {
 	    extension: ['docx'],
@@ -135,7 +134,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(Engine);
 
 	OoxmlEngine.mimeTypes = files.mime.slice(0);
-	defineEngine(OoxmlEngine);
 
 	exports.default = OoxmlEngine;
 
@@ -1118,6 +1116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var attributes = node.attributes;
 	        var localName = node.localName;
 
+
 	        switch (localName) {
 	            case 'b':
 	                result.style.fontWeight = attributeToBoolean(attributes['w:val']) ? 'normal' : 'bold';
@@ -1376,6 +1375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var node = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var _node$attributes = node.attributes;
 	    var attributes = _node$attributes === undefined ? {} : _node$attributes;
+
 
 	    return effectPatterns[attributes['w:val'] && attributes['w:val'].value] || 'none';
 	}
@@ -1796,6 +1796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var type = undefined;
 	        var attributes = node.attributes;
 	        var localName = node.localName;
+
 
 	        switch (localName) {
 	            case 'jc':
@@ -2242,6 +2243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Document = _JsFile2.default.Document;
 
+
 	function parse(params) {
 	    var listElement = undefined;
 	    var queue = [];
@@ -2249,6 +2251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var nodes = _params$nodes === undefined ? [] : _params$nodes;
 	    var _params$documentData = params.documentData;
 	    var documentData = _params$documentData === undefined ? {} : _params$documentData;
+
 
 	    nodes.forEach(function (node) {
 	        var localName = node.localName;
@@ -2500,6 +2503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _node$textContent = node.textContent;
 	        var textContent = _node$textContent === undefined ? '' : _node$textContent;
 	        var attributes = node.attributes;
+
 
 	        switch (node.localName) {
 	            case 'cr':
@@ -2967,6 +2971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _params$denominator = params.denominator;
 	    var denominator = _params$denominator === undefined ? 1 : _params$denominator;
 
+
 	    String(value).split(';').forEach(function (rule) {
 	        var stylePartitionData = rule.split(':');
 	        var name = stylePartitionData[0];
@@ -3257,6 +3262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var attrValue = undefined;
 	        var localName = node.localName;
 	        var attributes = node.attributes;
+
 
 	        switch (localName) {
 	            case 'gridSpan':
