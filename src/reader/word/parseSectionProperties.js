@@ -76,7 +76,7 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 }
 
                 attrValue = attributes['w:footer'] && attributes['w:footer'].value;
-                if (!isNaN(attrValue.value)) {
+                if (attrValue && !isNaN(attrValue.value)) {
                     properties.footer = properties.footer || {};
                     properties.footer.style.height = {
                         value: attrValue / 20,
@@ -85,7 +85,7 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 }
 
                 attrValue = attributes['w:gutter'] && attributes['w:gutter'].value;
-                if (!isNaN(attrValue.value)) {
+                if (attrValue && !isNaN(attrValue.value)) {
                     style.marginTop = {
                         value: attrValue / 20,
                         unit: 'pt'
@@ -116,7 +116,7 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 break;
             case 'docGrid':
                 attrValue = attributes['w:linePitch'] && attributes['w:linePitch'].value;
-                if (!isNaN(attrValue.value)) {
+                if (attrValue && !isNaN(attrValue.value)) {
                     documentData.styles.defaults.linePitch = {
                         value: attrValue / 20,
                         unit: 'pt'
