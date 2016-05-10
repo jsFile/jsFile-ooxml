@@ -11,33 +11,39 @@ module.exports = function (grunt) {
         eslint: {
             app: filesToValidate
         },
-        jscs: {
-            src: filesToValidate
+        blobify: {
+            main: {
+                options: {
+                    target: 'global'
+                },
+                src: ['tests/files/**/*.*'],
+                dest: 'tests/filesCache.js'
+            }
+        },
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'node_modules/jsfile/dist/workers/**/*.js'
+                        ],
+                        dest: 'dist/workers/'
+                    }
+                ]
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-webpack');
-    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-blobify');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    /**
-     * include tasks
-     */
-    require('grunt-config-dir')(grunt, {
-        configDir: require('path').resolve(__dirname + '/grunt_tasks_config'),
-        fileExtensions: ['js']
-    }, function (err) {
-        grunt.log.error(err);
-    });
-
     grunt.registerTask('build', [
         'copy',
-        'jscs',
         'eslint',
-        'webpack',
-        'uglify'
+        'webpack'
     ]);
 };

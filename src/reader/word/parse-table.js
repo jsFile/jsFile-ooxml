@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
-import parseTableProperties from './parseTableProperties';
-import parseTableRowProperties from './parseTableRowProperties';
-import parseTableColProperties from './parseTableColProperties';
+import parseTableProperties from './parse-table-properties';
+import parseTableRowProperties from './parse-table-row-properties';
+import parseTableColProperties from './parse-table-col-properties';
 const {Document} = JsFile;
 const {merge, clone} = JsFile.Engine;
 
@@ -25,7 +25,7 @@ export default (params) => {
     const tableProperties = {
         style: {},
         properties: documentData.styles.defaults.tableProperties &&
-            clone(documentData.styles.defaults.tableProperties.properties) || {}
+        clone(documentData.styles.defaults.tableProperties.properties) || {}
     };
     const colProperties = clone(tableProperties.colProperties);
     table.properties.tagName = 'TABLE';
@@ -57,7 +57,7 @@ export default (params) => {
             let localColProperties = colProperties;
             row.properties.tagName = 'TR';
 
-            //clear old value
+            // clear old value
             rowProperties = {};
 
             forEach.call(node && node.childNodes || [], (node) => {

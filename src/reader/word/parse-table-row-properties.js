@@ -1,4 +1,4 @@
-import normalizeSideValue from './normalizeSideValue';
+import normalizeSideValue from './normalize-side-value';
 
 export default function parseTableRowProperties (node) {
     const result = {
@@ -28,8 +28,8 @@ export default function parseTableRowProperties (node) {
                 const type = node.attributes['w:type'] && node.attributes['w:type'].value;
                 if (attrValue && !isNaN(attrValue)) {
                     result.tableProperties = result.tableProperties || {
-                        style: {}
-                    };
+                            style: {}
+                        };
                     result.tableProperties.style.borderCollapse = 'separate';
                     result.tableProperties.style.borderSpacing = {
                         unit: 'pt',

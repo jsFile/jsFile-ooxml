@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
-import parseTextProperties from './parseTextProperties';
-import parseParagraphProperties from './parseParagraphProperties';
-import parseTableProperties from './parseTableProperties';
+import parseTextProperties from './parse-text-properties';
+import parseParagraphProperties from './parse-paragraph-properties';
+import parseTableProperties from './parse-table-properties';
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 const parsers = {
     rPr: {
@@ -114,7 +114,7 @@ export default function parseDocumentStyles (xml) {
                 const isDefault = attributeToBoolean(node.attributes['w:default']);
                 result.named[styleId] = {
                     isDefault,
-                    type: node.attributes['w:type'] &&  node.attributes['w:type'].value
+                    type: node.attributes['w:type'] && node.attributes['w:type'].value
                 };
 
                 forEach.call(node.childNodes || [], function (node) {

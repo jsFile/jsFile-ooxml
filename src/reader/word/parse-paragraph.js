@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
-import parseParagraphProperties from './parseParagraphProperties';
-import getRelationship from './getRelationship';
-import parseText from './parseText';
+import parseParagraphProperties from './parse-paragraph-properties';
+import getRelationship from './get-relationship';
+import parseText from './parse-text';
 const {Document} = JsFile;
 const {merge} = JsFile.Engine;
 

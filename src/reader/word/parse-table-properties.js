@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import parseBorderProperties from './parseBorderProperties';
-import normalizeSideValue from './normalizeSideValue';
+import parseBorderProperties from './parse-border-properties';
+import normalizeSideValue from './normalize-side-value';
 const {merge, normalizeColorValue, formatPropertyName, cropUnit} = JsFile.Engine;
 
 export default function parseTableProperties (node) {
@@ -40,8 +40,8 @@ export default function parseTableProperties (node) {
                 const verticalBorder = node.querySelector('insideV');
                 if (horizontalBorder || verticalBorder) {
                     result.colProperties = result.colProperties || {
-                        style: {}
-                    };
+                            style: {}
+                        };
 
                     if (horizontalBorder) {
                         merge(result.colProperties.style, parseBorderProperties(horizontalBorder));
@@ -62,8 +62,8 @@ export default function parseTableProperties (node) {
                 break;
             case 'tblCellMar':
                 result.colProperties = result.colProperties || {
-                    style: {}
-                };
+                        style: {}
+                    };
 
                 forEach.call(node && node.childNodes || [], (node) => {
                     const side = formatPropertyName(normalizeSideValue(node.localName), {
@@ -98,9 +98,9 @@ export default function parseTableProperties (node) {
                 if (attrValue && !isNaN(attrValue)) {
                     type = attributes['w:type'] && attributes['w:type'].value;
                     result.style.marginLeft = result.style.marginLeft || {
-                        value: 0,
-                        unit: 'pt'
-                    };
+                            value: 0,
+                            unit: 'pt'
+                        };
 
                     result.style.marginLeft.value += attrValue / (type === 'nil' ? 1 : 20);
                 }

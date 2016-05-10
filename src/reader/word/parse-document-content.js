@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import parseSectionProperties from './parseSectionProperties';
-import parseDocumentContentNodes from './parseDocumentContentNodes';
+import parseSectionProperties from './parse-section-properties';
+import parseDocumentContentNodes from './parse-document-content-nodes';
 const {Document} = JsFile;
 const {normalizeColorValue, errors: {invalidReadFile}} = JsFile.Engine;
 
@@ -62,7 +62,7 @@ export default function parseDocumentContent (params) {
                 page.style = documentData.styles.defaults.sectionProperties &&
                     documentData.styles.defaults.sectionProperties.style || {};
 
-                //TODO: add page break, because now it's only 1 page for all content
+                // TODO: add page break, because now it's only 1 page for all content
                 if (page.style.height) {
                     page.style.minHeight = page.style.height;
                     delete page.style.height;

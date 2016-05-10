@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import getMediaFromRelationship from './getMediaFromRelationship';
-import convertEmu from './convertEmu';
+import getMediaFromRelationship from './get-media-from-relationship';
+import convertEmu from './convert-emu';
 const {Document} = JsFile;
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
@@ -19,7 +19,7 @@ export default function parseDrawing (node, documentData) {
         }
     };
 
-    //const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
+    // const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
     const forEach = [].forEach;
 
     result.properties.tagName = 'IMG';

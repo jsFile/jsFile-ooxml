@@ -1,13 +1,13 @@
 import JsFile from 'JsFile';
-import parseRelationships from './parseRelationships';
-import parseApplicationInfo from './parseApplicationInfo';
-import parseDocumentInfo from './parseDocumentInfo';
-import parseFontsInfo from './parseFontsInfo';
-import parseWebSettings from './parseWebSettings';
-import parseDocumentSettings from './parseDocumentSettings';
-import parseDocumentThemes from './parseDocumentThemes';
-import parseDocumentStyles from './parseDocumentStyles';
-import parseDocumentContent from './parseDocumentContent';
+import parseRelationships from './parse-relationships';
+import parseApplicationInfo from './parse-application-info';
+import parseDocumentInfo from './parse-document-info';
+import parseFontsInfo from './parse-fonts-info';
+import parseWebSettings from './parse-web-settings';
+import parseDocumentSettings from './parse-document-settings';
+import parseDocumentThemes from './parse-document-themes';
+import parseDocumentStyles from './parse-document-styles';
+import parseDocumentContent from './parse-document-content';
 const {normalizeDataUri} = JsFile.Engine;
 
 /**

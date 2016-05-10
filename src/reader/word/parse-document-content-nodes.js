@@ -1,10 +1,10 @@
-import parseParagraph from './parseParagraph';
-import parseTable from './parseTable';
+import parseParagraph from './parse-paragraph';
+import parseTable from './parse-table';
 import JsFile from 'JsFile';
 
 const {Document} = JsFile;
 
-function parse(params) {
+function parse (params) {
     let listElement;
     const queue = [];
     const {nodes = [], documentData = {}} = params;

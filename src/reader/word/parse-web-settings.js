@@ -9,9 +9,9 @@ const {attributeToBoolean} = JsFile.Engine;
  */
 export default function parseWebSettings (xml) {
     const result = {};
-    const node = xml && xml.querySelector('webSettings');
+    const webSettingsNodes = (xml && xml.querySelector('webSettings') || {}).childNodes || [];
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
+    [].forEach.call(webSettingsNodes, (node) => {
         result[node.localName] = attributeToBoolean(node.attributes['w:val']);
     });
 

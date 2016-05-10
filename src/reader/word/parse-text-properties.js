@@ -1,18 +1,18 @@
 import JsFile from 'JsFile';
-import parseStyleEffectProperty from './parseStyleEffectProperty';
-import parseEmphasis from './parseEmphasis';
-import parseLanguageNode from './parseLanguageNode';
+import parseStyleEffectProperty from './parse-style-effect-property';
+import parseEmphasis from './parse-emphasis';
+import parseLanguageNode from './parse-language-node';
 const {attributeToBoolean, normalizeColorValue} = JsFile.Engine;
 
-export default function parseTextProperties (node) {
+export default function parseTextProperties (textNode) {
     const result = {
         style: {},
         properties: {}
     };
 
-    [].forEach.call(node && node.childNodes || [], (node) => {
-        let attr;
-        let attrValue;
+    [].forEach.call(textNode && textNode.childNodes || [], (node) => {
+        let attr = null;
+        let attrValue = '';
         const {attributes, localName} = node;
 
         switch (localName) {
@@ -40,7 +40,7 @@ export default function parseTextProperties (node) {
                     result.style.color = normalizeColorValue(attrValue);
                 }
 
-                //TODO: parse attributes  themeColor, themeShade, themeTint
+                // TODO: parse attributes  themeColor, themeShade, themeTint
                 break;
             case 'dstrike':
             case 'strike':
@@ -122,7 +122,7 @@ export default function parseTextProperties (node) {
 
                 break;
 
-            //TODO parse 'w:cs'
+            // TODO parse 'w:cs'
             case 'rFonts':
                 attr = attributes['w:ascii'];
                 if (attr) {
@@ -223,7 +223,7 @@ export default function parseTextProperties (node) {
 
                 if (color && !isNaN(width)) {
                     result.style.borderWidth = {
-                        //can't show the border with small width
+                        // can't show the border with small width
                         value: (width > 1 || width <= 0) ? width : Math.ceil(width / 8),
                         unit: 'pt'
                     };
@@ -234,11 +234,15 @@ export default function parseTextProperties (node) {
                 break;
             case 'lang':
                 const lang = parseLanguageNode(node).latin;
+
                 if (lang) {
                     result.properties.lang = lang;
                 }
 
                 break;
+
+            default:
+                // do nothing
         }
     });
 

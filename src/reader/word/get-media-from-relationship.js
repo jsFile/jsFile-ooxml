@@ -1,4 +1,4 @@
-import getRelationship from './getRelationship';
+import getRelationship from './get-relationship';
 
 /**
  *

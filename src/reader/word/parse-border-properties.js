@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import prepareLineStyle from './prepareLineStyle';
-import normalizeSideValue from './normalizeSideValue';
+import prepareLineStyle from './prepare-line-style';
+import normalizeSideValue from './normalize-side-value';
 const {normalizeColorValue} = JsFile.Engine;
 
 export default function parseBorderProperties (node) {

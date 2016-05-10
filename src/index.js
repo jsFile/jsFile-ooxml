@@ -1,5 +1,5 @@
 import JsFile from 'JsFile';
-import createDocument from './reader/createDocument';
+import createDocument from './reader/create-document';
 import './polyfill';
 
 const {Engine} = JsFile;

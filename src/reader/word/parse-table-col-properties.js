@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import parseBorderProperties from './parseBorderProperties';
-import normalizeSideValue from './normalizeSideValue';
+import parseBorderProperties from './parse-border-properties';
+import normalizeSideValue from './normalize-side-value';
 const {merge, normalizeColorValue, formatPropertyName, cropUnit} = JsFile.Engine;
 const verticalAlignValues = {
     bottom: 'bottom',

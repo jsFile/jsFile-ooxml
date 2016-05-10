@@ -1,7 +1,7 @@
 import JsFile from 'JsFile';
-import parseTextProperties from './parseTextProperties';
-import normalizeLineHeight from './normalizeLineHeight';
-import parseBorderProperties from './parseBorderProperties';
+import parseTextProperties from './parse-text-properties';
+import normalizeLineHeight from './normalize-line-height';
+import parseBorderProperties from './parse-border-properties';
 const {merge, normalizeColorValue} = JsFile.Engine;
 const alignmentValues = ['left', 'right', 'center'];
 
@@ -38,22 +38,22 @@ export default function parseParagraphProperties (node, documentData) {
                     };
                 }
 
-                //hanging and firstLine are mutually exclusive
+                // hanging and firstLine are mutually exclusive
                 attrValue = node.attributes['w:hanging'] && node.attributes['w:hanging'].value;
                 if (!isNaN(attrValue)) {
                     result.style.textIndent = result.style.textIndent || {
-                        unit: 'pt',
-                        value: 0
-                    };
+                            unit: 'pt',
+                            value: 0
+                        };
 
                     result.style.textIndent.value = -attrValue / 20;
                 } else {
                     attrValue = node.attributes['w:firstLine'] && node.attributes['w:firstLine'].value;
                     if (!isNaN(attrValue)) {
                         result.style.textIndent = result.style.textIndent || {
-                            unit: 'pt',
-                            value: 0
-                        };
+                                unit: 'pt',
+                                value: 0
+                            };
 
                         result.style.textIndent.value = attrValue / 20;
                     }
