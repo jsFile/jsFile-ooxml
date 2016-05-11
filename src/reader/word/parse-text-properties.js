@@ -10,6 +10,7 @@ export default function parseTextProperties (textNode) {
         properties: {}
     };
 
+    // eslint-disable-next-line complexity
     [].forEach.call(textNode && textNode.childNodes || [], (node) => {
         let attr = null;
         let attrValue = '';
@@ -65,10 +66,10 @@ export default function parseTextProperties (textNode) {
             case 'rStyle':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (attrValue) {
-                    if (!result.properties.className) {
-                        result.properties.className = '';
+                    if (result.properties.className) {
+                        attrValue = ` ${ attrValue }`;
                     } else {
-                        attrValue = ' ' + attrValue;
+                        result.properties.className = '';
                     }
 
                     result.properties.className += attrValue;
@@ -161,10 +162,10 @@ export default function parseTextProperties (textNode) {
                 attrValue = attributes['w:id'] && attributes['w:id'].value;
                 result.fitText.id = attrValue || null;
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
-                result.fitText.width = !isNaN(attrValue) ? {
+                result.fitText.width = isNaN(attrValue) ? null : {
                     value: attrValue / 20,
                     unit: 'pt'
-                } : null;
+                };
                 break;
             case 'effect':
                 result.properties.effect = parseStyleEffectProperty(node);
@@ -218,28 +219,32 @@ export default function parseTextProperties (textNode) {
 
                 break;
             case 'bdr':
-                const color = attributes['w:color'] && normalizeColorValue(attributes['w:color'].value);
-                const width = attributes['w:sz'] && (attributes['w:sz'].value / 8);
+                {
+                    const color = attributes['w:color'] && normalizeColorValue(attributes['w:color'].value);
+                    const width = attributes['w:sz'] && (attributes['w:sz'].value / 8);
 
-                if (color && !isNaN(width)) {
-                    result.style.borderWidth = {
-                        // can't show the border with small width
-                        value: (width > 1 || width <= 0) ? width : Math.ceil(width / 8),
-                        unit: 'pt'
-                    };
-                    result.style.borderColor = color;
-                    result.style.borderStyle = 'solid';
+                    if (color && !isNaN(width)) {
+                        result.style.borderWidth = {
+                            // can't show the border with small width
+                            value: (width > 1 || width <= 0) ? width : Math.ceil(width / 8),
+                            unit: 'pt'
+                        };
+                        result.style.borderColor = color;
+                        result.style.borderStyle = 'solid';
+                    }
+
+                    break;
                 }
-
-                break;
             case 'lang':
-                const lang = parseLanguageNode(node).latin;
+                {
+                    const lang = parseLanguageNode(node).latin;
 
-                if (lang) {
-                    result.properties.lang = lang;
+                    if (lang) {
+                        result.properties.lang = lang;
+                    }
+
+                    break;
                 }
-
-                break;
 
             default:
                 // do nothing

@@ -1,8 +1,6 @@
-import createWordProcessingDocument from './word/create-document';
-
-export default function createDocument () {
+export default function createDocument (...args) {
     if (this.isWordProcessingDocument()) {
-        return createWordProcessingDocument.apply(this, arguments);
+        return this.createWordProcessingDocument(...args);
     }
 
     return Promise.reject(this.errors.invalidFileType);

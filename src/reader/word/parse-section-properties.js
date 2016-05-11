@@ -7,6 +7,7 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
     const properties = {};
     const style = {};
 
+    // eslint-disable-next-line complexity
     [].forEach.call(node && node.childNodes || [], ({localName, attributes}) => {
         switch (localName) {
             case 'pgSz':
@@ -97,7 +98,7 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 attrValue = attributes['w:start'] && attributes['w:start'].value;
                 properties.pageNumber = {
                     value: 0,
-                    start: !isNaN(attrValue) ? Number(attrValue) : 1
+                    start: isNaN(attrValue) ? 1 : Number(attrValue)
                 };
                 break;
             case 'cols':
@@ -106,13 +107,13 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 properties.cols.separated = attributeToBoolean(attributes['w:sep']);
 
                 attrValue = attributes['w:num'] && attributes['w:num'].value;
-                properties.cols.number = !isNaN(attrValue) ? Number(attrValue) : properties.cols.number;
+                properties.cols.number = isNaN(attrValue) ? properties.cols.number : Number(attrValue);
 
                 attrValue = attributes['w:space'] && attributes['w:space'].value;
-                properties.cols.space = !isNaN(attrValue) ? {
+                properties.cols.space = isNaN(attrValue) ? properties.cols.space : {
                     value: attrValue / 20,
                     unit: 'pt'
-                } : properties.cols.space;
+                };
                 break;
             case 'docGrid':
                 attrValue = attributes['w:linePitch'] && attributes['w:linePitch'].value;
@@ -124,6 +125,9 @@ export default function parseSectionProperties (node = {}, documentData = {}) {
                 }
 
                 break;
+
+            default:
+                // do nothing
         }
     });
 

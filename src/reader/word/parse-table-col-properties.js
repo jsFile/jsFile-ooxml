@@ -15,6 +15,7 @@ export default function parseTableColProperties (node) {
     };
     const forEach = [].forEach;
 
+    // eslint-disable-next-line complexity
     forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const {localName, attributes} = node;
@@ -41,21 +42,23 @@ export default function parseTableColProperties (node) {
 
                 break;
             case 'tcBorders':
-                merge(result.style, parseBorderProperties(node));
-                const horizontalBorder = node.querySelector('insideH');
-                const verticalBorder = node.querySelector('insideV');
+                {
+                    merge(result.style, parseBorderProperties(node));
+                    const horizontalBorder = node.querySelector('insideH');
+                    const verticalBorder = node.querySelector('insideV');
 
-                if (horizontalBorder || verticalBorder) {
-                    if (horizontalBorder) {
-                        merge(result.style, parseBorderProperties(horizontalBorder));
+                    if (horizontalBorder || verticalBorder) {
+                        if (horizontalBorder) {
+                            merge(result.style, parseBorderProperties(horizontalBorder));
+                        }
+
+                        if (verticalBorder) {
+                            merge(result.style, parseBorderProperties(verticalBorder));
+                        }
                     }
 
-                    if (verticalBorder) {
-                        merge(result.style, parseBorderProperties(verticalBorder));
-                    }
+                    break;
                 }
-
-                break;
 
             // TODO: parse tcFitText
             case 'tcMar':
@@ -65,7 +68,8 @@ export default function parseTableColProperties (node) {
 
                     if (value && !isNaN(value) && side) {
                         const type = attributes['w:type'] && attributes['w:type'].value;
-                        result.style['padding' + side] = {
+
+                        result.style[`padding${ side }`] = {
                             unit: 'pt',
                             value: value / (type === 'nil' ? 1 : 20)
                         };
@@ -77,6 +81,7 @@ export default function parseTableColProperties (node) {
                 attrValue = attributes['w:w'] && attributes['w:w'].value;
                 if (attrValue) {
                     const type = attributes['w:type'] && attributes['w:type'].value;
+
                     result.style.width = {
                         unit: 'pt'
                     };
@@ -103,7 +108,8 @@ export default function parseTableColProperties (node) {
 
                 break;
 
-            // TODO: parse vMerge element
+            default:
+                // TODO: parse vMerge element
         }
     });
 

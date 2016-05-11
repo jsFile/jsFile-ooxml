@@ -18,7 +18,7 @@ const {normalizeDataUri} = JsFile.Engine;
 export default function createDocument (filesEntry) {
     const queue = [];
     const fileName = this.fileName;
-    const domParser = new DOMParser();
+    const domParser = new window.DOMParser();
     let documentData = {
         media: {},
         relationships: {},
@@ -39,7 +39,8 @@ export default function createDocument (filesEntry) {
 
         let method;
         const filename = fileEntry.entry.filename;
-        let isMediaSource = Boolean(filename && (filename.includes('media/')));
+        const isMediaSource = Boolean(filename && (filename.includes('media/')));
+
         if (isMediaSource) {
             method = 'readAsDataURL';
         }
@@ -49,6 +50,7 @@ export default function createDocument (filesEntry) {
             method
         }).then((result) => {
             let xml;
+
             if (isMediaSource) {
                 documentData.media[filename] = {
                     fileData: fileEntry,

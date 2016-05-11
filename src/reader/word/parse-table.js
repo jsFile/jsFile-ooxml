@@ -12,12 +12,13 @@ const {merge, clone} = JsFile.Engine;
  */
 export default (params) => {
     const {node, documentData, parseDocumentContentNodes} = params;
+
     if (!node || !documentData) {
         return Promise.reject();
     }
 
-    let rowProperties;
-    let thead;
+    let rowProperties = null;
+    let thead = null;
     const queue = [];
     const forEach = [].forEach;
     const tbody = Document.elementPrototype;
@@ -28,50 +29,53 @@ export default (params) => {
         clone(documentData.styles.defaults.tableProperties.properties) || {}
     };
     const colProperties = clone(tableProperties.colProperties);
+
     table.properties.tagName = 'TABLE';
     tbody.properties.tagName = 'TBODY';
 
-    forEach.call(node && node.childNodes || [], (node) => {
-        const localName = node.localName;
+    forEach.call(node && node.childNodes || [], (childNode) => {
+        const {localName} = childNode;
 
         if (localName === 'tblPr') {
-            merge(tableProperties, parseTableProperties(node));
+            merge(tableProperties, parseTableProperties(childNode));
             merge(colProperties, tableProperties.colProperties);
         } else if (localName === 'tblGrid') {
-            Array.prototype.forEach.call(node.querySelectorAll('gridCol'), ({attributes}) => {
-                const el = Document.elementPrototype;
+            Array.prototype.forEach.call(childNode.querySelectorAll('gridCol'), ({attributes}) => {
+                const element = Document.elementPrototype;
                 const attrValue = attributes['w:w'] && attributes['w:w'].value;
 
-                el.properties.tagName = 'COL';
+                element.properties.tagName = 'COL';
                 if (attrValue) {
-                    el.style.width = {
+                    element.style.width = {
                         value: attrValue / 20,
                         unit: 'pt'
                     };
                 }
 
-                table.children.push(el);
+                table.children.push(element);
             });
         } else if (localName === 'tr') {
             const row = Document.elementPrototype;
             let localColProperties = colProperties;
+
             row.properties.tagName = 'TR';
 
             // clear old value
             rowProperties = {};
 
-            forEach.call(node && node.childNodes || [], (node) => {
-                const localName = node.localName;
+            forEach.call(childNode && childNode.childNodes || [], (greatChildNode) => {
+                const {localName} = greatChildNode;
 
                 // TODO: parse tblPrEx (Table Property Exceptions)
                 if (localName === 'trPr') {
-                    rowProperties = parseTableRowProperties(node);
+                    rowProperties = parseTableRowProperties(greatChildNode);
                     merge(row.style, rowProperties.style);
                     merge(tableProperties, rowProperties.tableProperties);
                     localColProperties = merge({}, localColProperties, rowProperties.colProperties);
                 } else if (localName === 'tc') {
                     let cell = Document.elementPrototype;
-                    const nodes = [].slice.call(node && node.childNodes || [], 0);
+                    const nodes = [].slice.call(greatChildNode && greatChildNode.childNodes || [], 0);
+
                     cell.properties.tagName = 'TD';
 
                     if (nodes[0]) {

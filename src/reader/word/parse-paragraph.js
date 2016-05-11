@@ -14,6 +14,7 @@ export default function parseParagraph (params) {
     const {node, documentData} = params;
     const result = Document.elementPrototype;
     const forEach = [].forEach;
+
     result.properties.tagName = 'P';
 
     if (!node || !documentData) {
@@ -26,56 +27,62 @@ export default function parseParagraph (params) {
 
     forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
-        let el;
+        let element;
         const localName = node.localName;
 
         switch (localName) {
             case 'bookmarkStart':
                 attrValue = node.attributes['w:name'] && node.attributes['w:name'].value;
                 if (attrValue) {
-                    el = Document.elementPrototype;
-                    el.properties.tagName = 'A';
-                    el.properties.name = attrValue;
-                    result.children.push(el);
+                    element = Document.elementPrototype;
+                    element.properties.tagName = 'A';
+                    element.properties.name = attrValue;
+                    result.children.push(element);
                 }
 
                 break;
             case 'pPr':
-                let props = parseParagraphProperties(node, documentData);
-                if (result.properties.tagName === 'LI') {
-                    /**
-                     * @description Clear paragraph styles
-                     * @type {*}
-                     */
-                    result.style = {};
-                }
+                {
+                    const props = parseParagraphProperties(node, documentData);
 
-                merge(result, props);
-                break;
+                    if (result.properties.tagName === 'LI') {
+                        /**
+                         * @description Clear paragraph styles
+                         * @type {*}
+                         */
+                        result.style = {};
+                    }
+
+                    merge(result, props);
+                    break;
+                }
             case 'hyperlink':
-                let href = '#';
-                el = Document.elementPrototype;
-                el.properties.tagName = 'A';
-                attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
-                const relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
+                {
+                    let href = '#';
 
-                forEach.call(node && node.childNodes || [], (node) => {
-                    el.children.push(parseText({
-                        node,
-                        documentData
-                    }));
-                });
+                    element = Document.elementPrototype;
+                    element.properties.tagName = 'A';
+                    attrValue = node.attributes['r:id'] && node.attributes['r:id'].value;
+                    const relationship = (attrValue && getRelationship(attrValue, documentData)) || null;
 
-                if (relationship) {
-                    href = relationship.target;
-                    el.properties.target = '_blank';
-                } else {
-                    href += (node.attributes['w:anchor'] && node.attributes['w:anchor'].value) || '';
+                    forEach.call(node && node.childNodes || [], (node) => {
+                        element.children.push(parseText({
+                            node,
+                            documentData
+                        }));
+                    });
+
+                    if (relationship) {
+                        href = relationship.target;
+                        element.properties.target = '_blank';
+                    } else {
+                        href += (node.attributes['w:anchor'] && node.attributes['w:anchor'].value) || '';
+                    }
+
+                    element.properties.href = href;
+                    result.children.push(element);
+                    break;
                 }
-
-                el.properties.href = href;
-                result.children.push(el);
-                break;
             case 'r':
                 result.children.push(parseText({
                     node,
@@ -84,7 +91,8 @@ export default function parseParagraph (params) {
 
                 break;
 
-            // ignore fldSimple node
+            default:
+                // ignore fldSimple node
         }
     });
 

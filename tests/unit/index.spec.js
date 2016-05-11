@@ -5,11 +5,11 @@ import JsFile from 'JsFile';
 import OoxmlEngine from './../../src/index';
 
 chai.use(chaiJsonSchema);
-const assert = chai.assert;
 
 describe('jsFile-ooxml', () => {
     let files = {};
     const documentSchema = schemas.document;
+    const {assert} = chai;
 
     before(() => {
         files = window.files;

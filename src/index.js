@@ -1,5 +1,7 @@
 import JsFile from 'JsFile';
 import createDocument from './reader/create-document';
+import createWordProcessingDocument from './reader/word/create-document';
+
 import './polyfill';
 
 const {Engine} = JsFile;
@@ -23,9 +25,10 @@ const files = {
 });
 
 class OoxmlEngine extends Engine {
-    constructor () {
-        super(...arguments);
+    constructor (...args) {
+        super(...args);
         this.createDocument = createDocument;
+        this.createWordProcessingDocument = createWordProcessingDocument;
         this.parser = 'readArchive';
         this.files = files;
     }

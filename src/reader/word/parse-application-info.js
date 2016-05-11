@@ -19,15 +19,15 @@ export default function parseApplicationInfo (xml) {
         const name = formatPropertyName(localName);
 
         // convert to number
-        if (!isNaN(textContent)) {
-            value = Number(textContent);
-        } else {
+        if (isNaN(textContent)) {
             // convert to boolean
             if (textContent === 'true' || textContent === 'false') {
                 value = textContent === 'true';
             } else {
                 value = textContent;
             }
+        } else {
+            value = Number(textContent);
         }
 
         result[name] = value;

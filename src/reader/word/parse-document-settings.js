@@ -25,6 +25,7 @@ export default function parseDocumentSettings (xml) {
     };
     const node = xml && xml.querySelector('settings');
 
+    // eslint-disable-next-line complexity
     [].forEach.call(node && node.childNodes || [], (node) => {
         let attr;
         let subNode;
@@ -56,6 +57,7 @@ export default function parseDocumentSettings (xml) {
                     const nameAttr = attributes['w:name'];
                     const uriAttr = attributes['w:uri'];
                     const valueAttr = attributes['w:val'];
+
                     if (nameAttr && nameAttr.value) {
                         result.compat[nameAttr.value] = {
                             uri: (uriAttr && uriAttr.value) || '',
@@ -118,8 +120,8 @@ export default function parseDocumentSettings (xml) {
                 attr = subNode && subNode.attributes['w:val'];
                 result.rsids.rsidRoot = (attr && attr.value) || '';
 
-                Array.prototype.forEach.call(node.querySelectorAll('rsid'), function (node) {
-                    let attr = node.attributes['w:val'];
+                Array.prototype.forEach.call(node.querySelectorAll('rsid'), (node) => {
+                    const attr = node.attributes['w:val'];
 
                     if (attr && attr.value) {
                         result.rsids.values.push(attr.value);
@@ -130,9 +132,11 @@ export default function parseDocumentSettings (xml) {
             case 'mathPr':
                 result.mathProperties.intLimit = '';
 
+                // eslint-disable-next-line complexity
                 [].forEach.call(node && node.childNodes || [], ({localName, attributes = {}}) => {
                     const attr = attributes['m:val'];
                     const attrValue = attr && attr.value;
+
                     switch (localName) {
                         case 'mathFont':
                             result.mathProperties.mathFont = attrValue || '';
@@ -209,10 +213,16 @@ export default function parseDocumentSettings (xml) {
                             }
 
                             break;
+
+                        default:
+                            // do nothing
                     }
                 });
 
                 break;
+
+            default:
+                // do nothing
         }
     });
 

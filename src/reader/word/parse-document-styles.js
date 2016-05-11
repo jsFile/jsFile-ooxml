@@ -14,10 +14,10 @@ const parsers = {
          */
         selector: (className = '') => {
             if (className) {
-                className = `.${className}`;
+                className = `.${ className }`;
             }
 
-            return `p${className} > span`;
+            return `p${ className } > span`;
         },
 
         exec: parseTextProperties
@@ -26,10 +26,10 @@ const parsers = {
         name: 'paragraphProperties',
         selector: (className = '') => {
             if (className) {
-                className = `.${className}`;
+                className = `.${ className }`;
             }
 
-            return `p${className}`;
+            return `p${ className }`;
         },
 
         exec: parseParagraphProperties
@@ -38,10 +38,10 @@ const parsers = {
         name: 'tableProperties',
         selector: (className = '') => {
             if (className) {
-                className = `.${className}`;
+                className = `.${ className }`;
             }
 
-            return `table${className}`;
+            return `table${ className }`;
         },
 
         exec: parseTableProperties
@@ -75,6 +75,7 @@ export default function parseDocumentStyles (xml) {
         if (localName === 'docDefaults') {
             forEach.call(node.querySelectorAll('rPr, pPr'), (node) => {
                 const {exec, name, selector} = parsers[node.localName] || {};
+
                 if (exec) {
                     result.defaults[name] = exec(node);
                     result.computed.push({
@@ -94,6 +95,7 @@ export default function parseDocumentStyles (xml) {
 
                 forEach.call(node.attributes || [], ({name, value = ''}) => {
                     const formattedName = formatPropertyName(name);
+
                     if (formattedName === 'name') {
                         exName = formattedName;
                         result.latentStyles.exceptions[exName] = data;
@@ -112,6 +114,7 @@ export default function parseDocumentStyles (xml) {
 
             if (styleId) {
                 const isDefault = attributeToBoolean(node.attributes['w:default']);
+
                 result.named[styleId] = {
                     isDefault,
                     type: node.attributes['w:type'] && node.attributes['w:type'].value
@@ -120,10 +123,11 @@ export default function parseDocumentStyles (xml) {
                 forEach.call(node.childNodes || [], function (node) {
                     const {localName, attributes} = node;
                     const {exec, name, selector} = parsers[localName] || {};
+
                     if (exec) {
                         this[name] = exec(node);
                         result.computed.push({
-                            selector: selector(isDefault ? undefined : styleId),
+                            selector: selector(isDefault ? '' : styleId),
                             properties: this[name].style
                         });
                     } else if (['name', 'rsid', 'basedOn', 'next', 'uiPriority', 'link'].indexOf(localName) >= 0) {

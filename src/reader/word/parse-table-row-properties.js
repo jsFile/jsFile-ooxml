@@ -24,20 +24,21 @@ export default function parseTableRowProperties (node) {
                 result.style.display = 'none';
                 break;
             case 'tblCellSpacing':
-                attrValue = Number(node.attributes['w:w'] && node.attributes['w:w'].value);
-                const type = node.attributes['w:type'] && node.attributes['w:type'].value;
-                if (attrValue && !isNaN(attrValue)) {
-                    result.tableProperties = result.tableProperties || {
-                            style: {}
-                        };
-                    result.tableProperties.style.borderCollapse = 'separate';
-                    result.tableProperties.style.borderSpacing = {
-                        unit: 'pt',
-                        value: attrValue / (type === 'nil' ? 1 : 20)
-                    };
-                }
+                {
+                    attrValue = Number(node.attributes['w:w'] && node.attributes['w:w'].value);
+                    const type = node.attributes['w:type'] && node.attributes['w:type'].value;
 
-                break;
+                    if (attrValue && !isNaN(attrValue)) {
+                        result.tableProperties = result.tableProperties || {style: {}};
+                        result.tableProperties.style.borderCollapse = 'separate';
+                        result.tableProperties.style.borderSpacing = {
+                            unit: 'pt',
+                            value: attrValue / (type === 'nil' ? 1 : 20)
+                        };
+                    }
+
+                    break;
+                }
             case 'tblHeader':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
                 if (attrValue !== 'false') {
@@ -45,6 +46,9 @@ export default function parseTableRowProperties (node) {
                 }
 
                 break;
+
+            default:
+            // do nothing
         }
     });
 

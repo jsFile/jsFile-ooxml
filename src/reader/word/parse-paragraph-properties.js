@@ -16,6 +16,7 @@ export default function parseParagraphProperties (node, documentData) {
     };
     const forEach = [].forEach;
 
+    // eslint-disable-next-line complexity
     forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         const localName = node.localName;
@@ -40,23 +41,28 @@ export default function parseParagraphProperties (node, documentData) {
 
                 // hanging and firstLine are mutually exclusive
                 attrValue = node.attributes['w:hanging'] && node.attributes['w:hanging'].value;
-                if (!isNaN(attrValue)) {
-                    result.style.textIndent = result.style.textIndent || {
-                            unit: 'pt',
-                            value: 0
-                        };
-
-                    result.style.textIndent.value = -attrValue / 20;
-                } else {
+                if (isNaN(attrValue)) {
                     attrValue = node.attributes['w:firstLine'] && node.attributes['w:firstLine'].value;
+
                     if (!isNaN(attrValue)) {
-                        result.style.textIndent = result.style.textIndent || {
+                        if (!result.style.textIndent) {
+                            result.style.textIndent = {
                                 unit: 'pt',
                                 value: 0
                             };
+                        }
 
                         result.style.textIndent.value = attrValue / 20;
                     }
+                } else {
+                    if (!result.style.textIndent) {
+                        result.style.textIndent = {
+                            unit: 'pt',
+                            value: 0
+                        };
+                    }
+
+                    result.style.textIndent.value = -attrValue / 20;
                 }
 
                 break;
@@ -74,20 +80,22 @@ export default function parseParagraphProperties (node, documentData) {
                 result.properties[localName] = true;
                 break;
             case 'numPr':
-                const {attributes: idAttrs} = node.querySelector('numId') || {};
-                const {attributes: levelAttrs} = node.querySelector('ilvl') || {};
-                const id = idAttrs && idAttrs['w:val'] && idAttrs['w:val'].value;
-                const level = levelAttrs && levelAttrs['w:val'] && levelAttrs['w:val'].value;
+                {
+                    const {attributes: idAttrs} = node.querySelector('numId') || {};
+                    const {attributes: levelAttrs} = node.querySelector('ilvl') || {};
+                    const id = idAttrs && idAttrs['w:val'] && idAttrs['w:val'].value;
+                    const level = levelAttrs && levelAttrs['w:val'] && levelAttrs['w:val'].value;
 
-                result.properties.numbering = {
-                    id: !isNaN(id) ? Number(id) : 0,
-                    level: !isNaN(level) ? Number(level) : 0
-                };
+                    result.properties.numbering = {
+                        id: isNaN(id) ? 0 : Number(id),
+                        level: isNaN(level) ? 0 : Number(level)
+                    };
 
-                break;
+                    break;
+                }
             case 'outlineLvl':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
-                result.properties.outlineLevel = !isNaN(attrValue) ? Number(attrValue) : 0;
+                result.properties.outlineLevel = isNaN(attrValue) ? 0 : Number(attrValue);
                 break;
             case 'pBdr':
                 merge(result.style, parseBorderProperties(node));
@@ -95,10 +103,10 @@ export default function parseParagraphProperties (node, documentData) {
             case 'pStyle':
                 attrValue = node.attributes['w:val'] && node.attributes['w:val'].value;
                 if (attrValue) {
-                    if (!result.properties.className) {
-                        result.properties.className = '';
+                    if (result.properties.className) {
+                        attrValue = ` ${ attrValue }`;
                     } else {
-                        attrValue = ' ' + attrValue;
+                        result.properties.className = '';
                     }
 
                     result.properties.className += attrValue;
@@ -172,6 +180,9 @@ export default function parseParagraphProperties (node, documentData) {
                 }
 
                 break;
+
+            default:
+            // do nothing
         }
     });
 
