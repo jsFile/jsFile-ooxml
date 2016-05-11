@@ -12,8 +12,9 @@ export default function parseFontsInfo (xml) {
     const result = {};
     const forEach = [].forEach;
 
-    forEach.call((xml && xml.querySelectorAll('font')) || [], function (node) {
-        let name = node.attributes['w:name'] && node.attributes['w:name'].value;
+    forEach.call((xml && xml.querySelectorAll('font')) || [], (node) => {
+        const name = node.attributes['w:name'] && node.attributes['w:name'].value;
+
         if (name) {
             result[name] = {};
             forEach.call(node && node.childNodes || [], ({localName, attributes}) => {

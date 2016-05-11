@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import parseBorderProperties from './parseBorderProperties';
-import normalizeSideValue from './normalizeSideValue';
+import parseBorderProperties from './parse-border-properties';
+import normalizeSideValue from './normalize-side-value';
 const {merge, normalizeColorValue, formatPropertyName, cropUnit} = JsFile.Engine;
 
 export default function parseTableProperties (node) {
@@ -10,6 +10,7 @@ export default function parseTableProperties (node) {
     };
     const forEach = [].forEach;
 
+    // eslint-disable-next-line complexity
     forEach.call(node && node.childNodes || [], (node) => {
         let attrValue;
         let type;
@@ -31,28 +32,29 @@ export default function parseTableProperties (node) {
 
                 break;
             case 'tblBorders':
-                if (!result.style.borderSpacing) {
-                    result.style.borderCollapse = 'collapse';
-                }
-
-                merge(result.style, parseBorderProperties(node));
-                const horizontalBorder = node.querySelector('insideH');
-                const verticalBorder = node.querySelector('insideV');
-                if (horizontalBorder || verticalBorder) {
-                    result.colProperties = result.colProperties || {
-                        style: {}
-                    };
-
-                    if (horizontalBorder) {
-                        merge(result.colProperties.style, parseBorderProperties(horizontalBorder));
+                {
+                    if (!result.style.borderSpacing) {
+                        result.style.borderCollapse = 'collapse';
                     }
 
-                    if (verticalBorder) {
-                        merge(result.colProperties.style, parseBorderProperties(verticalBorder));
-                    }
-                }
+                    merge(result.style, parseBorderProperties(node));
+                    const horizontalBorder = node.querySelector('insideH');
+                    const verticalBorder = node.querySelector('insideV');
 
-                break;
+                    if (horizontalBorder || verticalBorder) {
+                        result.colProperties = result.colProperties || {style: {}};
+
+                        if (horizontalBorder) {
+                            merge(result.colProperties.style, parseBorderProperties(horizontalBorder));
+                        }
+
+                        if (verticalBorder) {
+                            merge(result.colProperties.style, parseBorderProperties(verticalBorder));
+                        }
+                    }
+
+                    break;
+                }
             case 'tblCaption':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
                 if (attrValue) {
@@ -61,18 +63,17 @@ export default function parseTableProperties (node) {
 
                 break;
             case 'tblCellMar':
-                result.colProperties = result.colProperties || {
-                    style: {}
-                };
+                result.colProperties = result.colProperties || {style: {}};
 
                 forEach.call(node && node.childNodes || [], (node) => {
                     const side = formatPropertyName(normalizeSideValue(node.localName), {
                         capitalize: true
                     });
+
                     attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
                     if (attrValue && !isNaN(attrValue) && side) {
                         type = attributes['w:type'] && attributes['w:type'].value;
-                        result.colProperties.style['padding' + side] = {
+                        result.colProperties.style[`padding${ side }`] = {
                             unit: 'pt',
                             value: attrValue / (type === 'nil' ? 1 : 20)
                         };
@@ -97,10 +98,13 @@ export default function parseTableProperties (node) {
                 attrValue = Number(attributes['w:w'] && attributes['w:w'].value);
                 if (attrValue && !isNaN(attrValue)) {
                     type = attributes['w:type'] && attributes['w:type'].value;
-                    result.style.marginLeft = result.style.marginLeft || {
-                        value: 0,
-                        unit: 'pt'
-                    };
+
+                    if (!result.style.marginLeft) {
+                        result.style.marginLeft = {
+                            value: 0,
+                            unit: 'pt'
+                        };
+                    }
 
                     result.style.marginLeft.value += attrValue / (type === 'nil' ? 1 : 20);
                 }
@@ -117,10 +121,10 @@ export default function parseTableProperties (node) {
             // TODO: handle tblLook, tblOverlap, tblpPr
             case 'tblStyle':
                 attrValue = attributes['w:val'] && attributes['w:val'].value;
-                if (!result.properties.className) {
-                    result.properties.className = '';
+                if (result.properties.className) {
+                    attrValue = ` ${ attrValue }`;
                 } else {
-                    attrValue = ' ' + attrValue;
+                    result.properties.className = '';
                 }
 
                 result.properties.className += attrValue;
@@ -153,6 +157,9 @@ export default function parseTableProperties (node) {
                 }
 
                 break;
+
+            default:
+                // do nothing
         }
     });
 

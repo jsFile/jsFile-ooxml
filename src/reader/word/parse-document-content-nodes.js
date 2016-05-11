@@ -1,10 +1,10 @@
-import parseParagraph from './parseParagraph';
-import parseTable from './parseTable';
+import parseParagraph from './parse-paragraph';
+import parseTable from './parse-table';
 import JsFile from 'JsFile';
 
 const {Document} = JsFile;
 
-function parse(params) {
+function parse (params) {
     let listElement;
     const queue = [];
     const {nodes = [], documentData = {}} = params;
@@ -19,8 +19,8 @@ function parse(params) {
                 parseDocumentContentNodes: parse
             }));
         } else if (localName === 'p') {
-            const el = parseParagraph({node, documentData});
-            const isListItem = el.properties.tagName === 'LI';
+            const element = parseParagraph({node, documentData});
+            const isListItem = element.properties.tagName === 'LI';
 
             // if it's a list item
             if (isListItem) {
@@ -37,14 +37,14 @@ function parse(params) {
                     };
                 }
 
-                listElement.children.push(el);
+                listElement.children.push(element);
             } else {
                 if (listElement) {
                     queue.push(listElement);
                     listElement = null;
                 }
 
-                queue.push(el);
+                queue.push(element);
             }
         }
     });

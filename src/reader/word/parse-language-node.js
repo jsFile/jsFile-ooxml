@@ -13,6 +13,7 @@ export default function parseLanguageNode (node) {
 
     if (node) {
         let attr = node.attributes['w:val'];
+
         result.latin = (attr && attr.value) || result.latin;
 
         attr = node.attributes['w:bidi'];

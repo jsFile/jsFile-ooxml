@@ -1,6 +1,7 @@
 import JsFile from 'JsFile';
 const {cropUnit} = JsFile.Engine;
 const sides = ['width', 'height', 'left', 'top'];
+
 /**
  *
  * @param params

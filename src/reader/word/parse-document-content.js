@@ -1,6 +1,6 @@
 import JsFile from 'JsFile';
-import parseSectionProperties from './parseSectionProperties';
-import parseDocumentContentNodes from './parseDocumentContentNodes';
+import parseSectionProperties from './parse-section-properties';
+import parseDocumentContentNodes from './parse-document-content-nodes';
 const {Document} = JsFile;
 const {normalizeColorValue, errors: {invalidReadFile}} = JsFile.Engine;
 
@@ -14,6 +14,7 @@ export default function parseDocumentContent (params) {
     return new Promise((resolve, reject) => {
         const {xml, documentData = {}, fileName = ''} = params;
         let node = xml && xml.querySelector('parsererror');
+
         if (node) {
             return reject(new Error(invalidReadFile));
         }
@@ -28,10 +29,12 @@ export default function parseDocumentContent (params) {
             styles: documentData.styles.computed
         };
         const pagePrototype = {};
+
         node = xml && xml.querySelector('background');
 
         if (node) {
             const attrValue = node.attributes['w:color'] && node.attributes['w:color'].value;
+
             if (attrValue) {
                 pagePrototype.style = pagePrototype.style || {};
                 pagePrototype.style.backgroundColor = normalizeColorValue(attrValue);
@@ -44,6 +47,7 @@ export default function parseDocumentContent (params) {
         if (node) {
             const nodes = [].slice.call(node.childNodes || [], 0);
             const lastNode = nodes[nodes.length - 1];
+
             if (lastNode.localName === 'sectPr') {
                 /**
                  * @description remove last item - sectionProperties
@@ -53,16 +57,17 @@ export default function parseDocumentContent (params) {
                 documentData.styles.defaults.sectionProperties = parseSectionProperties(lastNode, documentData);
             }
 
-            parseDocumentContentNodes({
+            return parseDocumentContentNodes({
                 nodes,
                 documentData
             }).then((elements) => {
                 const page = Document.elementPrototype;
+
                 page.children.push.apply(page.children, elements);
                 page.style = documentData.styles.defaults.sectionProperties &&
                     documentData.styles.defaults.sectionProperties.style || {};
 
-                //TODO: add page break, because now it's only 1 page for all content
+                // TODO: add page break, because now it's only 1 page for all content
                 if (page.style.height) {
                     page.style.minHeight = page.style.height;
                     delete page.style.height;
@@ -71,8 +76,8 @@ export default function parseDocumentContent (params) {
                 result.content.push(page);
                 resolve(new Document(result));
             }, reject);
-        } else {
-            resolve(new Document(result));
         }
+
+        return resolve(new Document(result));
     });
 }

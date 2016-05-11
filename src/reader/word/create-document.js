@@ -1,13 +1,13 @@
 import JsFile from 'JsFile';
-import parseRelationships from './parseRelationships';
-import parseApplicationInfo from './parseApplicationInfo';
-import parseDocumentInfo from './parseDocumentInfo';
-import parseFontsInfo from './parseFontsInfo';
-import parseWebSettings from './parseWebSettings';
-import parseDocumentSettings from './parseDocumentSettings';
-import parseDocumentThemes from './parseDocumentThemes';
-import parseDocumentStyles from './parseDocumentStyles';
-import parseDocumentContent from './parseDocumentContent';
+import parseRelationships from './parse-relationships';
+import parseApplicationInfo from './parse-application-info';
+import parseDocumentInfo from './parse-document-info';
+import parseFontsInfo from './parse-fonts-info';
+import parseWebSettings from './parse-web-settings';
+import parseDocumentSettings from './parse-document-settings';
+import parseDocumentThemes from './parse-document-themes';
+import parseDocumentStyles from './parse-document-styles';
+import parseDocumentContent from './parse-document-content';
 const {normalizeDataUri} = JsFile.Engine;
 
 /**
@@ -18,7 +18,7 @@ const {normalizeDataUri} = JsFile.Engine;
 export default function createDocument (filesEntry) {
     const queue = [];
     const fileName = this.fileName;
-    const domParser = new DOMParser();
+    const domParser = new window.DOMParser();
     let documentData = {
         media: {},
         relationships: {},
@@ -39,7 +39,8 @@ export default function createDocument (filesEntry) {
 
         let method;
         const filename = fileEntry.entry.filename;
-        let isMediaSource = Boolean(filename && (filename.includes('media/')));
+        const isMediaSource = Boolean(filename && (filename.includes('media/')));
+
         if (isMediaSource) {
             method = 'readAsDataURL';
         }
@@ -49,6 +50,7 @@ export default function createDocument (filesEntry) {
             method
         }).then((result) => {
             let xml;
+
             if (isMediaSource) {
                 documentData.media[filename] = {
                     fileData: fileEntry,

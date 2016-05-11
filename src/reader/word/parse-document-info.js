@@ -14,10 +14,10 @@ export default function parseDocumentInfo (xml) {
 
         if (localName === 'created' || localName === 'modified') {
             value = (textContent && new Date(textContent)) || null;
-        } else if (!isNaN(textContent)) {
-            value = Number(textContent);
-        } else {
+        } else if (isNaN(textContent)) {
             value = textContent || '';
+        } else {
+            value = Number(textContent);
         }
 
         result[localName] = value;

@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
     // webpack options
     entry: "./src/index.js",
@@ -26,6 +28,19 @@ module.exports = {
                 amd: "JsFile"
             }
         }
+    ],
+
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: false,
+            screwIE8: true,
+
+            compress: {
+                warnings: false,
+                drop_console: true,
+                drop_debugger: true
+            }
+        })
     ],
 
     stats: {

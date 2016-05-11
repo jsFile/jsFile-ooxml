@@ -13,6 +13,7 @@ export default function parseDocumentThemes (xml) {
     [].some.call(node && node.childNodes || [], (node) => {
         if (node.localName === 'fontScheme') {
             let font = node.querySelector('minorFont > latin');
+
             if (font && font.attributes.typeface && font.attributes.typeface.value) {
                 result.style.fontFamily = font.attributes.typeface.value;
             }
@@ -24,6 +25,8 @@ export default function parseDocumentThemes (xml) {
 
             return true;
         }
+
+        return false;
     });
 
     return result;

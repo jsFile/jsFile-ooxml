@@ -11,5 +11,6 @@ const sides = {
 
 export default function normalizeSideValue (value) {
     const capitalizedValue = formatPropertyName(value, {capitalize: true});
+
     return sides[capitalizedValue] || capitalizedValue;
 }

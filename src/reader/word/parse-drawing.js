@@ -1,13 +1,17 @@
 import JsFile from 'JsFile';
-import getMediaFromRelationship from './getMediaFromRelationship';
-import convertEmu from './convertEmu';
+import getMediaFromRelationship from './get-media-from-relationship';
+import convertEmu from './convert-emu';
+
+const forEach = [].forEach;
 const {Document} = JsFile;
 const {formatPropertyName, attributeToBoolean} = JsFile.Engine;
 
+// eslint-disable-next-line complexity, max-statements
 export default function parseDrawing (node, documentData) {
-    let result = Document.elementPrototype;
+    const result = Document.elementPrototype;
     let attrValue;
-    let childNode = node.querySelector('prstGeom');
+    let offset;
+    let childNode = node.querySelector('blip');
     const extents = {};
     const inline = {
         extent: {},
@@ -19,14 +23,14 @@ export default function parseDrawing (node, documentData) {
         }
     };
 
-    //const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
-    const forEach = [].forEach;
+    // childNode = node.querySelector('prstGeom');
+    // const shapeType = (childNode && childNode.attributes.prst && childNode.attributes.prst.value) || '';
 
     result.properties.tagName = 'IMG';
-    childNode = node.querySelector('blip');
     attrValue = childNode && childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
     if (attrValue) {
         const media = getMediaFromRelationship(attrValue, documentData);
+
         if (media) {
             result.properties.src = media.data;
         }
@@ -51,7 +55,8 @@ export default function parseDrawing (node, documentData) {
 
     childNode = node.querySelector('positionH');
     if (childNode) {
-        const offset = childNode.querySelector('posOffset');
+        offset = childNode.querySelector('posOffset');
+
         if (offset && offset.textContent) {
             result.style.position = 'relative';
             result.style.left = convertEmu(offset.textContent);
@@ -60,7 +65,8 @@ export default function parseDrawing (node, documentData) {
 
     childNode = node.querySelector('positionV');
     if (childNode) {
-        const offset = childNode.querySelector('posOffset');
+        offset = childNode.querySelector('posOffset');
+
         if (offset && offset.textContent) {
             result.style.position = 'relative';
             result.style.top = convertEmu(offset.textContent);
@@ -86,8 +92,8 @@ export default function parseDrawing (node, documentData) {
 
     childNode = node.querySelector('inline');
     if (childNode) {
-        forEach.call(childNode.attributes || [], function (attr) {
-            let value = attr.value;
+        forEach.call(childNode.attributes || [], (attr) => {
+            const value = attr.value;
 
             if (value) {
                 result.properties.inline = result.properties.inline || {};
@@ -99,10 +105,11 @@ export default function parseDrawing (node, documentData) {
         if (childNode) {
             attrValue = childNode.attributes['r:embed'] && childNode.attributes['r:embed'].value;
             const rel = attrValue && documentData.relationships && documentData.relationships.document[attrValue];
+
             if (rel) {
-                for (let k in documentData.media) {
-                    if (documentData.media.hasOwnProperty(k) && k.indexOf(rel.target) >= 0) {
-                        result.properties.src = documentData.media[k].data;
+                for (const key in documentData.media) {
+                    if (documentData.media.hasOwnProperty(key) && key.indexOf(rel.target) >= 0) {
+                        result.properties.src = documentData.media[key].data;
                         break;
                     }
                 }
@@ -131,10 +138,12 @@ export default function parseDrawing (node, documentData) {
 
         // TODO: parse childNode = node.querySelector('extent');
         childNode = node.querySelector('effectExtent');
-        forEach.call((childNode && childNode.attributes) || [], function (attr) {
+        forEach.call((childNode && childNode.attributes) || [], (attr) => {
             const value = attr.value;
+
             if (value) {
                 const attrName = formatPropertyName(attr.name);
+
                 switch (attrName) {
                     case 'l':
                         if (!isNaN(value)) {
