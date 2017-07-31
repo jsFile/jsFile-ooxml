@@ -5,6 +5,8 @@
 
 Engine for jsFile library for working with documents in [OOXML](http://officeopenxml.com/) format (like .docx)
 
+> ### :warning: This project is deprecated in favour of https://github.com/file2html/file2html
+
 ## Installation
 ### via NPM
 
